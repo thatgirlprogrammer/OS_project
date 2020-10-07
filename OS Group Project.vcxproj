@@ -139,8 +139,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Disassemble.cpp" />
     <ClCompile Include="Instruction.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Disassemble.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Instruction.h" />

@@ -1,4 +1,7 @@
+#pragma once
+
 #include <cstdint>
+#include <assert.h>
 
 enum class Opcode {
 	RD,
@@ -42,6 +45,7 @@ public:
 	explicit Instruction(uint32_t inst);
 
 	Opcode opcode();
+	OpcodeType opcodeType() { return this->type;  }
 
 	// Arithmetic instruction arguments
 	uint8_t arithS1();
