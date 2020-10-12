@@ -21,9 +21,6 @@
     <ClCompile Include="Process.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JobScheduling.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="general_register.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -51,12 +48,27 @@
     <ClCompile Include="pcb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PCB_Magager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="runnable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="job_number_compare.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="job_priority_compare.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="job_number.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="job_priority.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Process.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="JobScheduling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="general_register.h">
@@ -84,6 +96,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pcb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PCB_Magager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="runnable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="job_number_compare.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="job_priority_compare.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="job_number.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="job_priority.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

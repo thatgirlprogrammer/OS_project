@@ -6,6 +6,10 @@
 #include "program_counter.h"
 #include "interrupt_register.h"
 #include "pcb.h"
+#include "runnable.h"
+#include "job_number.h"
+#include "PCB_Magager.h"
+#include "job_priority.h"
 
 using namespace OSSim;
 
@@ -26,9 +30,8 @@ int main() {
 
 	struct pcb a;
 	a.job_disk_address = 0xfabee954;
-	std::cout << std::hex << 0xf * 0xf; //a.job_disk_address;
-
-
+		
+	PCB_Magager::run();
 	//delete ir;
 	return 0;
 }
