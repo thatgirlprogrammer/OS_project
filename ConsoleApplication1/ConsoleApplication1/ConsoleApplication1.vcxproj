@@ -157,12 +157,17 @@
     <ClCompile Include="instruction_register.cpp" />
     <ClCompile Include="interrupt.cpp" />
     <ClCompile Include="interrupt_register.cpp" />
-    <ClCompile Include="JobScheduling.cpp" />
+    <ClCompile Include="job_number.cpp" />
+    <ClCompile Include="job_number_compare.cpp" />
+    <ClCompile Include="job_priority.cpp" />
+    <ClCompile Include="job_priority_compare.cpp" />
     <ClCompile Include="memory_address_register.cpp" />
     <ClCompile Include="memory_buffer_register.cpp" />
     <ClCompile Include="pcb.cpp" />
+    <ClCompile Include="PCB_Magager.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="program_counter.cpp" />
+    <ClCompile Include="runnable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Accumulator.h" />
@@ -170,12 +175,17 @@
     <ClInclude Include="instruction_register.h" />
     <ClInclude Include="interrupt.h" />
     <ClInclude Include="interrupt_register.h" />
-    <ClInclude Include="JobScheduling.h" />
+    <ClInclude Include="job_number.h" />
+    <ClInclude Include="job_number_compare.h" />
+    <ClInclude Include="job_priority.h" />
+    <ClInclude Include="job_priority_compare.h" />
     <ClInclude Include="memory_address_register.h" />
     <ClInclude Include="memory_buffer_register.h" />
     <ClInclude Include="pcb.h" />
+    <ClInclude Include="PCB_Magager.h" />
     <ClInclude Include="Process.h" />
     <ClInclude Include="program_counter.h" />
+    <ClInclude Include="runnable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
