@@ -7,10 +7,8 @@ namespace OSSim {
 	public:
 		job_priority() {}
 
-		void add_job(int priority) {
-			PCB_info pi2;
-			pi2.pc.job_priority = priority;
-			job_priority_compare* jc1 = new job_priority_compare(pi2);
+		void add_job(PCB_info job) {
+			job_priority_compare* jc1 = new job_priority_compare(job);
 			compare.push_back(*(jc1));
 		}
 
