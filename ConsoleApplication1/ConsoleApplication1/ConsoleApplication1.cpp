@@ -8,7 +8,6 @@
 #include "pcb.h"
 #include "runnable.h"
 #include "job_number.h"
-#include "PCB_Magager.h"
 #include "job_priority.h"
 
 using namespace OSSim;
@@ -30,8 +29,7 @@ int main() {
 
 	struct pcb a;
 	a.job_disk_address = 0xfabee954;
-		
-	PCB_Magager::run();
+	
 	//delete ir;
 	return 0;
 }

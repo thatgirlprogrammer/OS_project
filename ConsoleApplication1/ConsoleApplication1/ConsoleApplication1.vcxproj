@@ -164,10 +164,10 @@
     <ClCompile Include="memory_address_register.cpp" />
     <ClCompile Include="memory_buffer_register.cpp" />
     <ClCompile Include="pcb.cpp" />
-    <ClCompile Include="PCB_Magager.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="program_counter.cpp" />
     <ClCompile Include="runnable.cpp" />
+    <ClCompile Include="short_term_schedular.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Accumulator.h" />
@@ -182,10 +182,10 @@
     <ClInclude Include="memory_address_register.h" />
     <ClInclude Include="memory_buffer_register.h" />
     <ClInclude Include="pcb.h" />
-    <ClInclude Include="PCB_Magager.h" />
     <ClInclude Include="Process.h" />
     <ClInclude Include="program_counter.h" />
     <ClInclude Include="runnable.h" />
+    <ClInclude Include="short_term_schedular.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

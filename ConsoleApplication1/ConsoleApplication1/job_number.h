@@ -6,10 +6,8 @@ namespace OSSim {
 	public:
 		job_number() {}
 
-		void add_job(int job_num) {
-			PCB_info pi2;
-			pi2.pc.job_number = job_num;
-			job_number_compare* jc1 = new job_number_compare(pi2);
+		void add_job(PCB_info job) {
+			job_number_compare* jc1 = new job_number_compare(job);
 			compare.push_back(*(jc1));
 		}
 

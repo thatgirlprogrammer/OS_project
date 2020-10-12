@@ -11,7 +11,7 @@ namespace OSSim {
 	public:
 		void run();
 		void print_compare();
-		void add_job(int val);
+		void add_job(PCB_info info);
 		PCB_info get_pcb(int index);
 		int pcb_list_size();
 	};
