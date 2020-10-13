@@ -4,15 +4,15 @@
 #include "pcb.h"
 
 namespace OSSim {
-	class priorities {
+	class job_numbers {
 	public:
-		priorities(PCB_info pcb_info, std::vector<Instruction>* instructions1) {
+		job_numbers(PCB_info pcb_info, std::vector<Instruction>* instructions1) {
 			info = pcb_info;
 			instructions = instructions1;
 		}
 
-		bool operator< (const priorities other) const {
-			return info.pc.job_priority < other.info.pc.job_priority;
+		bool operator< (const job_numbers other) const {
+			return info.pc.job_number < other.info.pc.job_number;
 		}
 
 		PCB_info get_pcb_info() {
@@ -29,9 +29,9 @@ namespace OSSim {
 
 		const char* decode_istructions() { return ""; }
 		void execute_instrustions() {}
+
 	private:
 		PCB_info info;
 		std::vector<Instruction>* instructions;
 	};
 }
-

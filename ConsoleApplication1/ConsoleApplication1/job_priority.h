@@ -1,18 +1,19 @@
 #pragma once
 #include "runnable.h"
 #include "pcb.h"
+#include "Instruction.h"
 
 namespace OSSim {
 	class job_priority : public IRunnable {
 	public:
 		job_priority() {}
 
-		void add_job(PCB_info job) {
-			job_priority_compare* jc1 = new job_priority_compare(job);
+		void add_job(PCB_info job, std::vector<Instruction>* lst) {
+			priorities* jc1 = new priorities(job, lst);
 			compare.push_back(*(jc1));
 		}
 
-		void run() {
+		void sort() {
 			std::sort(compare.begin(), compare.end());
 		}
 
@@ -30,7 +31,13 @@ namespace OSSim {
 		int pcb_list_size() {
 			return compare.size();
 		}
+
+		void run_job() {
+			compare.at(0).decode_istructions();
+			compare.at(0).execute_instrustions();
+			compare.erase(compare.begin());
+		}
 	private:
-		std::vector<job_priority_compare> compare;
+		std::vector<priorities> compare;
 	};
 }
