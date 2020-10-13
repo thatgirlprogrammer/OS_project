@@ -10,6 +10,13 @@ OSSim::short_term_schedular::~short_term_schedular() {
 	runnable_process = NULL;
 }
 
-void OSSim::short_term_schedular::add_job(PCB_info info) {
-	runnable_process->add_job(info);
+void OSSim::short_term_schedular::add_job(PCB_info info, std::vector<Instruction>* instructions)
+{
+	runnable_process->add_job(info, instructions);
 }
+
+void OSSim::short_term_schedular::execute_job()
+{
+	runnable_process->run_job();
+}
+
