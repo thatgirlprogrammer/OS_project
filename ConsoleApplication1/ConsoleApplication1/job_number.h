@@ -13,7 +13,7 @@ namespace OSSim {
 		PCB_info get_pcb(int index) {
 			return compare.at(index).get_pcb_info();
 		}
-		int pcb_list_size();
+		size_t pcb_list_size();
 		void run_job() {
 			compare.at(0).decode_istructions();
 			compare.at(0).execute_instrustions();

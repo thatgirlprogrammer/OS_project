@@ -20,7 +20,7 @@ void OSSim::job_number::print_compare()
 	}
 }
 
-int OSSim::job_number::pcb_list_size()
+size_t OSSim::job_number::pcb_list_size()
 {
 	return compare.size();
 }

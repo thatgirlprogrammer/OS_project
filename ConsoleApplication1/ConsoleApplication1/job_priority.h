@@ -28,7 +28,7 @@ namespace OSSim {
 			compare.at(index).get_pcb_info();
 		}
 
-		int pcb_list_size() {
+		size_t pcb_list_size() {
 			return compare.size();
 		}
 
