@@ -6,11 +6,11 @@ OSSim::general_register::general_register(){
 
 OSSim::general_register::~general_register(){}
 
-int OSSim::general_register::get_content(){
+uint32_t OSSim::general_register::get_content(){
 	return content;
 }
 
-void OSSim::general_register::set_content(int contents){
+void OSSim::general_register::set_content(uint32_t contents){
 	content = contents;
 }
 

@@ -14,7 +14,7 @@ namespace OSSim {
 		void print_compare();
 		void add_job(PCB_info info, std::vector<Instruction>* lst);
 		PCB_info get_pcb(int index);
-		int pcb_list_size();
+		size_t pcb_list_size();
 		void run_job();
 	};
 }
