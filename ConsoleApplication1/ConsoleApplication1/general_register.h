@@ -1,15 +1,16 @@
 #pragma once
 #include <string>
+#include <cstdint>
 
 namespace OSSim {
 	class general_register {
 	public:
 		general_register();
 		~general_register();
-		int get_content();
-		void set_content(int contents);
+		uint32_t get_content();
+		void set_content(uint32_t contents);
 		void clear();
 	private:
-		int content;
+		uint32_t content;
 	};
 }
