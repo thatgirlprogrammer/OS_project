@@ -7,10 +7,10 @@ namespace OSSim {
 	public:
 		general_register();
 		~general_register();
-		uint32_t get_content();
-		void set_content(uint32_t contents);
+		int32_t get_content();
+		void set_content(int32_t contents);
 		void clear();
 	private:
-		uint32_t content;
+		int32_t content;
 	};
 }

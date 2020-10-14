@@ -154,6 +154,7 @@
     <ClCompile Include="Accumulator.cpp" />
     <ClCompile Include="ConsoleApplication1.cpp" />
     <ClCompile Include="CPU.cpp" />
+    <ClCompile Include="Disassemble.cpp" />
     <ClCompile Include="general_register.cpp" />
     <ClCompile Include="instruction.cpp" />
     <ClCompile Include="instruction_register.cpp" />
@@ -172,6 +173,7 @@
   <ItemGroup>
     <ClInclude Include="Accumulator.h" />
     <ClInclude Include="CPU.h" />
+    <ClInclude Include="Disassemble.h" />
     <ClInclude Include="general_register.h" />
     <ClInclude Include="instruction.h" />
     <ClInclude Include="instruction_register.h" />
