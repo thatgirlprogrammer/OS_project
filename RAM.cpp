@@ -4,12 +4,12 @@
 
 using namespace std;
 
-class Memory
+class RAM
 {
     private:
         uint8_t storage[1030];
     public:
-        Memory()
+        RAM()
         {
             for(int i = 0; i < 1024; i++)
             {
@@ -21,7 +21,7 @@ class Memory
         uint8_t pass(int index);
 };
 
-void Memory :: store(uint8_t hex)
+void RAM :: store(uint8_t hex)
 {
     Memory check;
     check.isFull();
@@ -35,7 +35,7 @@ void Memory :: store(uint8_t hex)
     }
 }
 
-uint8_t Memory :: pass(int index)
+uint8_t RAM :: pass(int index)
 {
     Memory check;
     uint8_t p;
@@ -44,7 +44,7 @@ uint8_t Memory :: pass(int index)
     storage[index] = 0;
 }
 
-void Memory :: isFull()
+void RAM :: isFull()
 {
     for(int i = 0 ; i < 1024 ; i++)
     {
