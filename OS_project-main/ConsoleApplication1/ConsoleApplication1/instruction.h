@@ -1,7 +1,7 @@
 #pragma once
-
 #include <cstdint>
 #include <cassert>
+#include <vector>
 
 enum class Opcode {
 	RD,
@@ -43,7 +43,6 @@ enum class OpcodeType {
 class Instruction {
 public:
 	explicit Instruction(uint32_t inst);
-
 	Opcode opcode();
 	OpcodeType opcodeType() { return this->type; }
 

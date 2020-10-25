@@ -1,9 +1,9 @@
 #include <iostream>
-
 #include "CPU.h"
 #include "Disassemble.h"
 
-CPU::CPU() {
+OSSim::CPU::CPU() {
+	ram1 = new ram();
 	for (uint8_t i = 0; i < REGISTER_COUNT; i++)
 		this->registers[i] = 0;
 	for (uint32_t i = 0; i < MEMORY; i++)
@@ -11,7 +11,12 @@ CPU::CPU() {
 	this->pc = 0;
 }
 
-int32_t CPU::getReg(uint8_t reg) {
+void OSSim::CPU::load_into_ram(vector<uint32_t>* val, PCB_info pcb)
+{
+	ram1->store(val, pcb);
+}
+
+int32_t OSSim::CPU::getReg(uint8_t reg) {
 	if (reg == 1) {
 		return 0;
 	} else {
@@ -19,14 +24,15 @@ int32_t CPU::getReg(uint8_t reg) {
 	}
 }
 
-void CPU::setReg(uint8_t reg, int32_t value) {
+void OSSim::CPU::setReg(uint8_t reg, int32_t value) {
 	this->registers[reg] = value;
 }
 
-void CPU::step() {
+void OSSim::CPU::step() {
 	// get program counter from PCB
 	// TODO: offset
-	Instruction i = Instruction(this->memory[this->pc++]);
+	Instruction i = Instruction(ram1->get_intructions().at(0)); // Instruction(this->memory[this->pc++]);
+
 
 	switch (i.opcode()) {
 	case Opcode::RD: {

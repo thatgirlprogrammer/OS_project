@@ -7,6 +7,7 @@
 #include "short_term_schedular.h"
 #include "job_number.h"
 #include "Disassemble.h"
+#include "CPU.h"
 
 using namespace OSSim;
 
@@ -70,16 +71,14 @@ int main() {
 	v.push_back(Instruction(0xC10000AC));
 	v.push_back(Instruction(0x92000000));
 	disassemble(v);
-	
-	/*Memory test;
 
-int index = 0;
-uint8_t hex = 0xEE;
-
-test.store(hex);
-uint8_t res = test.pass(0);
-
-cout << "The result Stored was: " << unsigned(res);*/
+	std::vector<uint32_t> instructions1;
+	for (int i = 0; i < v.size(); i++) {
+		instructions1.push_back(std::stoul("0xC050005C", nullptr, 16));
+	}
+	CPU* cpu1 = new CPU();
+	cpu1->load_into_ram(&(instructions1), info);
+	cpu1->step();
 
 	return 0;
 }

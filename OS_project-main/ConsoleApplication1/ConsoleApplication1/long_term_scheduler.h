@@ -3,16 +3,15 @@
 #include "pcb.h"
 #include "ram.h"
 
-namespace OSSim {
+namespace OSSim 
+{
 	class long_term_scheduler
 	{
 	public:
 		long_term_scheduler();
 		~long_term_scheduler();
-		void write_to_ram(uint8_t hex, PCB_info info);
-		void schedule();
+		void write_to_ram(vector<uint32_t>* hex, PCB_info info);
 	private:
-		int calcuate_chunk_size(int cur_disk_address, pcb pcb_val);
 		ram* ram1 = new ram();
 	};
 }

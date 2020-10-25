@@ -11,19 +11,22 @@ namespace OSSim
     class ram
     {
     private:
-        uint8_t storage[1030];
+        std::vector<uint32_t> storage;
         PCB_info pcb_info;
     public:
         ram()
         {
             for (int i = 0; i < 1024; i++)
             {
-                storage[i] = 0;
+                storage.push_back(0);
             }
         }
 
-        void store(uint8_t hex, PCB_info info);
+        void store(vector<uint32_t>* hex, PCB_info info);
         bool isFull();
         uint8_t pass(int index);
+        std::vector<uint32_t> get_intructions() {
+            return storage;
+        }
     };
 }

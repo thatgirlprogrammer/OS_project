@@ -23,16 +23,16 @@ uint8_t OSSim::ram::pass(int index)
     return p;
 }
 
-void OSSim::ram::store(uint8_t hex, PCB_info info)
+void OSSim::ram::store(vector<uint32_t>* hex, PCB_info info)
 {
     ram check;
     pcb_info = info;
     check.isFull();
     for (int i = 0; i < 1024; i++)
     {
-        if (storage[i] == 0)
+        if (storage.at(i) == 0)
         {
-            storage[i] = hex;
+            storage.at(i) = hex->at(i);
             break;
         }
     }
