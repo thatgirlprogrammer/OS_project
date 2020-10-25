@@ -3,6 +3,7 @@
 #include <cassert>
 #include <vector>
 
+
 enum class Opcode {
 	RD,
 	WR,
@@ -62,6 +63,9 @@ public:
 	// Addresses
 	uint16_t shortAddr();
 	uint32_t longAddr();
+	uint32_t get_inst() {
+		return inst;
+	}
 
 private:
 	uint32_t inst;

@@ -10,7 +10,7 @@ namespace OSSim
 	public:
 		long_term_scheduler();
 		~long_term_scheduler();
-		void write_to_ram(vector<uint32_t>* hex, PCB_info info);
+		void write_to_ram(vector<Instruction>* hex, PCB_info info);
 	private:
 		ram* ram1 = new ram();
 	};

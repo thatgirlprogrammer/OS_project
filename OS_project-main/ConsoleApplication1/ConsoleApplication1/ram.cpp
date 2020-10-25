@@ -4,7 +4,7 @@ bool OSSim::ram::isFull()
 {
     for (int i = 0; i < 1024; i++)
     {
-        if (storage[0] != 0 && storage[1024] != 0)
+        if (storage[0].get_inst() != 0 && storage[1024].get_inst() != 0)
         {
             //cout << "RAM FULL";
             return true;
@@ -14,23 +14,21 @@ bool OSSim::ram::isFull()
     return false;
 }
 
-uint8_t OSSim::ram::pass(int index)
+/*Instruction OSSim::ram::pass(int index)
 {
     ram check;
-    uint8_t p;
-    p = storage[index];
-    storage[index] = 0;
+    Instruction p();
     return p;
-}
+}*/
 
-void OSSim::ram::store(vector<uint32_t>* hex, PCB_info info)
+void OSSim::ram::store(vector<Instruction>* hex, PCB_info info)
 {
     ram check;
     pcb_info = info;
     check.isFull();
     for (int i = 0; i < 1024; i++)
     {
-        if (storage.at(i) == 0)
+        if (storage.at(i).get_inst() == 0)
         {
             storage.at(i) = hex->at(i);
             break;

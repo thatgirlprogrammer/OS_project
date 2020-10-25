@@ -42,6 +42,8 @@ Instruction::Instruction(uint32_t inst) {
 		break;
 	}
 
+	if (inst == 0)
+		ok = true;
 	assert(ok);
 }
 

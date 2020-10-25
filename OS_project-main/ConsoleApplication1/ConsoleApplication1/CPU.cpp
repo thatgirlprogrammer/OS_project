@@ -4,16 +4,19 @@
 
 OSSim::CPU::CPU() {
 	ram1 = new ram();
+	this->instructions = instructions;
 	for (uint8_t i = 0; i < REGISTER_COUNT; i++)
 		this->registers[i] = 0;
 	for (uint32_t i = 0; i < MEMORY; i++)
 		this->memory[i] = 0;
 	this->pc = 0;
+
 }
 
-void OSSim::CPU::load_into_ram(vector<uint32_t>* val, PCB_info pcb)
+void OSSim::CPU::load_into_ram(vector<Instruction>* val, PCB_info pcb)
 {
-	ram1->store(val, pcb);
+	//ram1->store(val, pcb);
+	this->instructions = disassemble(*val);
 }
 
 int32_t OSSim::CPU::getReg(uint8_t reg) {
@@ -29,188 +32,219 @@ void OSSim::CPU::setReg(uint8_t reg, int32_t value) {
 }
 
 void OSSim::CPU::step() {
-	// get program counter from PCB
-	// TODO: offset
-	Instruction i = Instruction(ram1->get_intructions().at(0)); // Instruction(this->memory[this->pc++]);
+	for (int j = 0; j < instructions.size(); j++) {
+		disassemabled_instructions i = instructions.at(j);
 
+		switch (i.get_opcode()) {
+		case Opcode::RD: {
+			std::cout << "RD" << std::endl;
+			uint8_t r1 = i.get_val1();
+			int32_t r2 = this->getReg(i.get_val2());
+			uint32_t rdaddr = i.get_val3();
 
-	switch (i.opcode()) {
-	case Opcode::RD: {
-		uint8_t r1 = i.ioR1();
-		int32_t r2 = this->getReg(i.ioR2());
-		uint32_t rdaddr = i.shortAddr();
+			// assuming the same rules as immediate instructions, if r2 is 0,
+			// read from the address instead of the register
+			int32_t data;
+			if (r2 == 0) {
+				data = this->memory[rdaddr];
+			}
+			else {
+				data = this->memory[r2];
+			}
 
-		// assuming the same rules as immediate instructions, if r2 is 0,
-		// read from the address instead of the register
-		int32_t data;
-		if (r2 == 0) {
-			data = this->memory[rdaddr];
-		} else {
-			data = this->memory[r2];
+			this->setReg(r1, data);
+		} break;
+
+		case Opcode::WR: {
+			std::cout << "WR" << std::endl;
+			int32_t wrr1 = this->getReg(i.get_val1());
+			// good luck luke xd
+		} break;
+
+		case Opcode::LW: {
+			std::cout << "LW" << std::endl;
+			int32_t addr = this->getReg(i.get_val1());
+			uint32_t d = i.get_val2();
+
+			// LW and ST are never used with a non-zero shortAddr, and it's unspecified
+			// what they would do with a non-zero shortAddr, so this is the best I've got
+
+			this->setReg(d, this->memory[addr]);
+		} break;
+
+		case Opcode::ST: {
+			std::cout << "ST" << std::endl;
+			int32_t data = this->getReg(i.get_val1());
+			int32_t addr = this->getReg(i.get_val2());
+
+			this->memory[addr] = data;
+		} break;
+
+		case Opcode::MOV: {
+			std::cout << "MOV" << std::endl;
+			// idk which reg is supposed to be moved so I'll just use s1...
+			int32_t s1 = this->getReg(i.get_val1());
+			this->setReg(i.get_val3(), s1);
+		} break;
+
+		case Opcode::ADD: {
+			std::cout << "ADD" << std::endl;
+			int32_t s1 = this->getReg(i.get_val1());
+			int32_t s2 = this->getReg(i.get_val2());
+			this->setReg(i.get_val3(), s1 + s2);
+		} break;
+
+		case Opcode::SUB: {
+			std::cout << "SUB" << std::endl;
+			int32_t s1 = this->getReg(i.get_val1());
+			int32_t s2 = this->getReg(i.get_val2());
+			this->setReg(i.get_val3(), s1 - s2);
+		} break;
+
+		case Opcode::MUL: {
+			std::cout << "MUL" << std::endl;
+			int32_t s1 = this->getReg(i.get_val1());
+			int32_t s2 = this->getReg(i.get_val2());
+			this->setReg(i.get_val3(), s1 * s2);
+		} break;
+
+		case Opcode::DIV: {
+			std::cout << "DIV" << std::endl;
+			int32_t s1 = this->getReg(i.get_val1());
+			int32_t s2 = this->getReg(i.get_val2());
+			this->setReg(i.get_val3(), s1 / s2);
+		} break;
+
+		case Opcode::AND: {
+			std::cout << "AND" << std::endl;
+			int32_t s1 = this->getReg(i.get_val1());
+			int32_t s2 = this->getReg(i.get_val2());
+			this->setReg(i.get_val3(), s1 & s2);
+		} break;
+
+		case Opcode::OR: {
+			std::cout << "OR" << std::endl;
+			int32_t s1 = this->getReg(i.get_val1());
+			int32_t s2 = this->getReg(i.get_val2());
+			this->setReg(i.get_val3(), s1 | s2);
+		} break;
+
+		case Opcode::MOVI: {
+			std::cout << "MOVI" << std::endl;
+			uint32_t b = i.get_val1();
+			uint32_t d = i.get_val2();
+
+			// if the d-reg is 0, the short addr (last 16 bits) contains data
+			if (d == 0) {
+				// which is moved into the b-reg? the spec isn't clear
+				this->setReg(b, i.get_val3());
+			}
+			else {
+				this->setReg(d, this->memory[i.get_val3() + d]);
+			}
+		} break;
+
+			// addi muli divi ldi
+
+		case Opcode::SLT: {
+			std::cout << "SLT" << std::endl;
+			int32_t s1 = this->getReg(i.get_val1());
+			int32_t s2 = this->getReg(i.get_val2());
+
+			// ???
+			uint32_t data1 = this->memory[s1];
+			uint32_t data2 = this->memory[s2];
+
+			if (data1 < data2) {
+				this->setReg(i.get_val1(), 1);
+			}
+			else {
+				this->setReg(i.get_val2(), 0);
+			}
+		} break;
+
+			// slti
+
+		case Opcode::HLT: {
+			std::cout << "HLT" << std::endl;
+			// set process state to finished
+		} break;
+
+		case Opcode::NOP: {
+			std::cout << "NOP" << std::endl;
+		} break;
+
+		case Opcode::JMP: {
+			std::cout << "JMP" << std::endl;
+			this->pc = i.get_val1();
+		} break;
+
+		case Opcode::BEQ: {
+			std::cout << "BEQ" << std::endl;
+			int32_t b = this->getReg(i.get_val1());
+			int32_t d = this->getReg(i.get_val2());
+
+			if (b == d) {
+				this->pc = i.get_val3();
+			}
+		} break;
+
+		case Opcode::BNE: {
+			std::cout << "BNE" << std::endl;
+			int32_t b = this->getReg(i.get_val1());
+			int32_t d = this->getReg(i.get_val2());
+
+			if (b != d) {
+				this->pc = i.get_val3();
+			}
+		} break;
+
+		case Opcode::BEZ: {
+			std::cout << "BEZ" << std::endl;
+			int32_t b = this->getReg(i.get_val1());
+
+			if (b == 0) {
+				this->pc = i.get_val3();
+			}
+		} break;
+
+		case Opcode::BNZ: {
+			std::cout << "BNZ" << std::endl;
+			int32_t b = this->getReg(i.get_val1());
+
+			if (b != 0) {
+				this->pc = i.get_val3();
+			}
+		} break;
+
+		case Opcode::BGZ: {
+			std::cout << "BGZ" << std::endl;
+			int32_t b = this->getReg(i.get_val2());
+
+			if (b > 0) {
+				this->pc = i.get_val3();
+			}
+		} break;
+
+		case Opcode::BLZ: {
+			std::cout << "BLZ" << std::endl;
+			int32_t b = this->getReg(i.get_val1());
+
+			if (b < 0) {
+				this->pc = i.get_val3();
+			}
+		} break;
+		case Opcode::LDI: {
+			//TODO
+			std::cout << "LDI" << std::endl;
+		} break;
+		case Opcode::ADDI: {
+			//TODO
+			std::cout << "ADDI" << std::endl;
+		} break;
+		default:
+			std::cout << "unknown instruction" << std::endl;
+			//disassembleInstruction(i);
 		}
-
-		this->setReg(r1, data);
-	} break;
-
-	case Opcode::WR: {
-		int32_t wrr1 = this->getReg(i.ioR1());
-		// good luck luke xd
-	} break;
-
-	case Opcode::LW: {
-		int32_t addr = this->getReg(i.cimmB());
-		uint32_t d = i.cimmD();
-
-		// LW and ST are never used with a non-zero shortAddr, and it's unspecified
-		// what they would do with a non-zero shortAddr, so this is the best I've got
-
-		this->setReg(d, this->memory[addr]);
-	} break;
-
-	case Opcode::ST: {
-		int32_t data = this->getReg(i.cimmB());
-		int32_t addr = this->getReg(i.cimmD());
-
-		this->memory[addr] = data;
-	} break;
-
-	case Opcode::MOV: {
-		// idk which reg is supposed to be moved so I'll just use s1...
-		int32_t s1 = this->getReg(i.arithS1());
-		this->setReg(i.arithD(), s1);
-	} break;
-
-	case Opcode::ADD: {
-		int32_t s1 = this->getReg(i.arithS1());
-		int32_t s2 = this->getReg(i.arithS2());
-		this->setReg(i.arithD(), s1 + s2);
-	} break;
-
-	case Opcode::SUB: {
-		int32_t s1 = this->getReg(i.arithS1());
-		int32_t s2 = this->getReg(i.arithS2());
-		this->setReg(i.arithD(), s1 - s2);
-	} break;
-
-	case Opcode::MUL: {
-		int32_t s1 = this->getReg(i.arithS1());
-		int32_t s2 = this->getReg(i.arithS2());
-		this->setReg(i.arithD(), s1 * s2);
-	} break;
-
-	case Opcode::DIV: {
-		int32_t s1 = this->getReg(i.arithS1());
-		int32_t s2 = this->getReg(i.arithS2());
-		this->setReg(i.arithD(), s1 / s2);
-	} break;
-
-	case Opcode::AND: {
-		int32_t s1 = this->getReg(i.arithS1());
-		int32_t s2 = this->getReg(i.arithS2());
-		this->setReg(i.arithD(), s1 & s2);
-	} break;
-
-	case Opcode::OR: {
-		int32_t s1 = this->getReg(i.arithS1());
-		int32_t s2 = this->getReg(i.arithS2());
-		this->setReg(i.arithD(), s1 | s2);
-	} break;
-
-	case Opcode::MOVI: {
-		uint32_t b = i.cimmB();
-		uint32_t d = i.cimmD();
-
-		// if the d-reg is 0, the short addr (last 16 bits) contains data
-		if (d == 0) {
-			// which is moved into the b-reg? the spec isn't clear
-			this->setReg(b, i.shortAddr());
-		} else {
-			this->setReg(d, this->memory[i.shortAddr() + d]);
-		}
-	} break;
-
-		// addi muli divi ldi
-
-	case Opcode::SLT: {
-		uint32_t s1 = this->getReg(i.arithS1());
-		uint32_t s2 = this->getReg(i.arithS2());
-
-		// ???
-		uint32_t data1 = this->memory[s1];
-		uint32_t data2 = this->memory[s2];
-
-		if (data1 < data2) {
-			this->setReg(i.arithD(), 1);
-		} else {
-			this->setReg(i.arithD(), 0);
-		}
-	} break;
-
-		// slti
-
-	case Opcode::HLT:
-		// set process state to finished
-		break;
-
-	case Opcode::NOP:
-		break;
-
-	case Opcode::JMP: {
-		this->pc = i.longAddr();
-	} break;
-
-	case Opcode::BEQ: {
-		int32_t b = this->getReg(i.cimmB());
-		int32_t d = this->getReg(i.cimmD());
-
-		if (b == d) {
-			this->pc = i.shortAddr();
-		}
-	} break;
-
-	case Opcode::BNE: {
-		int32_t b = this->getReg(i.cimmB());
-		int32_t d = this->getReg(i.cimmD());
-
-		if (b != d) {
-			this->pc = i.shortAddr();
-		}
-	} break;
-
-	case Opcode::BEZ: {
-		int32_t b = this->getReg(i.cimmB());
-
-		if (b == 0) {
-			this->pc = i.shortAddr();
-		}
-	} break;
-
-	case Opcode::BNZ: {
-		int32_t b = this->getReg(i.cimmB());
-
-		if (b != 0) {
-			this->pc = i.shortAddr();
-		}
-	} break;
-
-	case Opcode::BGZ: {
-		int32_t b = this->getReg(i.cimmB());
-
-		if (b > 0) {
-			this->pc = i.shortAddr();
-		}
-	} break;
-
-	case Opcode::BLZ: {
-		int32_t b = this->getReg(i.cimmB());
-
-		if (b < 0) {
-			this->pc = i.shortAddr();
-		}
-	} break;
-
-	default:
-		std::cout << "unknown instruction" << std::endl;
-		disassembleInstruction(i);
 	}
 }

@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include "disassemabled_instructions.h"
 #include "Disassemble.h"
 
 const char* opcodeToString(Opcode op) {
@@ -37,29 +37,29 @@ const char* opcodeToString(Opcode op) {
 	return "";
 }
 
-void disassembleInstruction(Instruction ins) {
+disassemabled_instructions* disassembleInstruction(Instruction ins) {
 	std::cout << opcodeToString(ins.opcode());
-
 	switch (ins.opcodeType()) {
 	case OpcodeType::ARITHMETIC:
-		std::cout << "\ts1: " << (int)ins.arithS1() << "\ts2: " << (int)ins.arithS2() << "\td: " << (int)ins.arithD();
-		break;
+		std::cout << "\ts1: " << (int)ins.arithS1() << "\ts2: " << (int)ins.arithS2() << "\td: " << (int)ins.arithD() << std::endl;
+		return new disassemabled_instructions(ins.opcode(), (int)ins.arithS1(), (int)ins.arithS2(), (int)ins.arithD());
 	case OpcodeType::CONDIMM:
-		std::cout << "\tb: " << (int)ins.cimmB() << "\td: " << (int)ins.cimmD() << "\taddr: " << std::hex << (int)ins.shortAddr() << std::dec;
-		break;
+		std::cout << "\tb: " << (int)ins.cimmB() << "\td: " << (int)ins.cimmD() << "\taddr: " << std::hex << (int)ins.shortAddr() << std::dec << std::endl;
+		return new disassemabled_instructions(ins.opcode(), (int)ins.cimmB(), (int)ins.cimmB(), (int)ins.shortAddr());
 	case OpcodeType::JUMP:
-		std::cout << "\taddr: " << (int)ins.longAddr();
-		break;
+		std::cout << "\taddr: " << (int)ins.longAddr() << std::endl;
+		return new disassemabled_instructions(ins.opcode(), (int)ins.longAddr(), 0, 0);
 	case OpcodeType::IO:
-		std::cout << "\tr1: " << (int)ins.ioR1() << "\tr2: " << (int)ins.ioR2() << "\taddr: " << std::hex << (int)ins.shortAddr() << std::dec;
-		break;
+		std::cout << "\tr1: " << (int)ins.ioR1() << "\tr2: " << (int)ins.ioR2() << "\taddr: " << std::hex << (int)ins.shortAddr() << std::dec << std::endl;
+		return new disassemabled_instructions(ins.opcode(), (int)ins.ioR1(), (int)ins.ioR2(), (int)ins.shortAddr());
 	}
-
-	std::cout << std::endl;
+	return new disassemabled_instructions(Opcode::HLT, 0, 0, 0);
 }
 
-void disassemble(std::vector<Instruction> ins) {
+std::vector<disassemabled_instructions> disassemble(std::vector<Instruction> ins) {
+	std::vector<disassemabled_instructions> instructions;
 	for (std::vector<Instruction>::iterator it = ins.begin(); it != ins.end(); it++) {
-		disassembleInstruction(*it);
+		instructions.push_back(*disassembleInstruction(*it));
 	}
+	return instructions;
 }

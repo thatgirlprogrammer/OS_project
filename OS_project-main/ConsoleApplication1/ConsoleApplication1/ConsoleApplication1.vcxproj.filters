@@ -72,6 +72,9 @@
     <ClCompile Include="ram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="disassemabled_instructions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Process.h">
@@ -135,6 +138,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="disassemabled_instructions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

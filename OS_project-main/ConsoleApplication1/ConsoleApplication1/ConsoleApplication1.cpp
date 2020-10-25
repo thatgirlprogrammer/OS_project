@@ -8,6 +8,7 @@
 #include "job_number.h"
 #include "Disassemble.h"
 #include "CPU.h"
+#include "disassemabled_instructions.h"
 
 using namespace OSSim;
 
@@ -70,14 +71,10 @@ int main() {
 	v.push_back(Instruction(0x5681003C));
 	v.push_back(Instruction(0xC10000AC));
 	v.push_back(Instruction(0x92000000));
-	disassemble(v);
+	std::vector<disassemabled_instructions> ins = disassemble(v);
 
-	std::vector<uint32_t> instructions1;
-	for (int i = 0; i < v.size(); i++) {
-		instructions1.push_back(std::stoul("0xC050005C", nullptr, 16));
-	}
 	CPU* cpu1 = new CPU();
-	cpu1->load_into_ram(&(instructions1), info);
+	cpu1->load_into_ram(&v, info);
 	cpu1->step();
 
 	return 0;
