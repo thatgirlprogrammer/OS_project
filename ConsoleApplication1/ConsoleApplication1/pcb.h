@@ -34,10 +34,12 @@ namespace OSSim {
 		unsigned int job_number = 0;
 		unsigned int job_priority = 0;
 		unsigned int job_disk_address = 0x0;
+		unsigned int job_memory_address = 0x0;
 		unsigned int job_instruction_count = 0;
 		bool job_in_memory = false;
 		general_register registers[16];
 		PROCESS_STATUS process_status = NEW;
+		int program_counter = 0;
 	};
 
 	struct PCB_info {
