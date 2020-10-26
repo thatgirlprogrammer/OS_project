@@ -6,6 +6,7 @@
 CPU::CPU() {
 	for (uint8_t i = 0; i < REGISTER_COUNT; i++)
 		this->registers[i] = 0;
+	// need to use actual memory
 	for (uint32_t i = 0; i < MEMORY; i++)
 		this->memory[i] = 0;
 	this->pc = 0;
@@ -47,8 +48,20 @@ void CPU::step() {
 	} break;
 
 	case Opcode::WR: {
-		int32_t wrr1 = this->getReg(i.ioR1());
-		// good luck luke xd
+		std::cout << "WR" << std::endl;
+		uint32_t wrr1 = this->getReg(i.get_val1());
+		uint8_t wrr2 = i.get_val2();
+		uint32_t wraddr = i.get_val3();
+
+		int32_t data;
+		if (wrr1 == 0) {
+			data = this->memory[wraddr];
+		}
+		else {
+			data = this->memory[wrr1];
+		}
+
+		this->setReg(wrr2, data);
 	} break;
 
 	case Opcode::LW: {
@@ -111,8 +124,8 @@ void CPU::step() {
 	} break;
 
 	case Opcode::MOVI: {
-		uint32_t b = i.cimmB();
-		uint32_t d = i.cimmD();
+		uint8_t b = i.cimmB();
+		uint8_t d = i.cimmD();
 
 		// if the d-reg is 0, the short addr (last 16 bits) contains data
 		if (d == 0) {
@@ -122,8 +135,32 @@ void CPU::step() {
 			this->setReg(d, this->memory[i.shortAddr() + d]);
 		}
 	} break;
+			
+	case Opcode::ADDI: {
+		std::cout << "ADDI" << std::endl;
+		uint8_t d = i.cimmD();
+		this->setReg(d, this->getReg(d) + i.shortAddr());
+	} break;
 
-		// addi muli divi ldi
+	case Opcode::MULI: {
+		std::cout << "MULI" << std::endl;
+		uint8_t d = i.cimmD();
+		this->setReg(d, this->getReg(d) * i.shortAddr());
+	} break;
+
+	case Opcode::DIVI: {
+		std::cout << "DIVI" << std::endl;
+		uint8_t d = i.cimmD();
+		this->setReg(d, this->getReg(d) / i.shortAddr());
+	} break;
+
+	case Opcode::LDI: {
+
+		std::cout << "LDI" << std::endl;
+		int32_t b = this->getReg(i.get_val1());
+
+		this->setReg(i.get_val3(), b);
+	} break;
 
 	case Opcode::SLT: {
 		uint32_t s1 = this->getReg(i.arithS1());
@@ -140,11 +177,26 @@ void CPU::step() {
 		}
 	} break;
 
-		// slti
+	// ? hmmmmmm
+	case Opcode::SLTI: {
+		std::cout << "SLTI" << std::endl;
+		int32_t s1 = this->getReg(i.cimmB());
+		int32_t s2 = this->getReg(i.cimmD());
 
-	case Opcode::HLT:
+		if (data1 < data2) {
+			this->setReg(i.cimmB(), 1);
+		}
+		else {
+			this->setReg(i.cimmD(), 0);
+		}
+	} break;
+
+	case Opcode::HLT: {
+		std::cout << "HLT" << std::endl;
 		// set process state to finished
-		break;
+		PCB_info pcb_val = ram1->get_info();
+		pcb_val.pc.process_status = TERMINATE;
+	} break;
 
 	case Opcode::NOP:
 		break;
