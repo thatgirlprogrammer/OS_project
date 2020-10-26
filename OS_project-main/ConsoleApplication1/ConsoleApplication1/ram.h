@@ -15,6 +15,9 @@ namespace OSSim
         std::vector<Instruction> storage;
         PCB_info pcb_info;
     public:
+        PCB_info get_info() {
+            return pcb_info;
+        }
         ram()
         {
             for (int i = 0; i < 1024; i++)
