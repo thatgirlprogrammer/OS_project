@@ -296,5 +296,6 @@ void OSSim::CPU::step() {
 			std::cout << "unknown instruction" << std::endl;
 			//disassembleInstruction(i);
 		}
+		ram1->get_info().pc.program_counter++;
 	}
 }

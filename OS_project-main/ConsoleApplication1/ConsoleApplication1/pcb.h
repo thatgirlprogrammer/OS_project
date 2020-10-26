@@ -39,6 +39,7 @@ namespace OSSim {
 		bool job_in_memory = false;
 		general_register registers[16];
 		PROCESS_STATUS process_status = NEW;
+		int program_counter = 0;
 	};
 
 	struct PCB_info {

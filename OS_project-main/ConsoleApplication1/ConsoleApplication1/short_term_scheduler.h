@@ -13,3 +13,4 @@ namespace OSSim {
 		IRunnable* runnable_process;
 	};
 }
+

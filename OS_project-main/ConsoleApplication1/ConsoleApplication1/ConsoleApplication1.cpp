@@ -4,7 +4,7 @@
 #include "pcb.h"
 #include "Runnable.h"
 #include "Instruction.h"
-#include "short_term_schedular.h"
+#include "short_term_scheduler.h"
 #include "job_number.h"
 #include "Disassemble.h"
 #include "CPU.h"
@@ -39,7 +39,7 @@ int main() {
 	uint32_t val = 0x4bd63000;
 	instructions.push_back(*(new Instruction(val)));
 
-	short_term_schedular* schedule = new short_term_schedular(j);
+	short_term_scheduler* schedule = new short_term_scheduler(j);
 	schedule->add_job(info, &instructions);
 	print(info);
 

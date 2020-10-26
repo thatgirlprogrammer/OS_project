@@ -170,7 +170,7 @@
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="program_counter.cpp" />
     <ClCompile Include="ram.cpp" />
-    <ClCompile Include="short_term_schedular.cpp" />
+    <ClCompile Include="short_term_scheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Accumulator.h" />
@@ -194,7 +194,7 @@
     <ClInclude Include="program_counter.h" />
     <ClInclude Include="ram.h" />
     <ClInclude Include="runnable.h" />
-    <ClInclude Include="short_term_schedular.h" />
+    <ClInclude Include="short_term_scheduler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
