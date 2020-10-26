@@ -57,8 +57,19 @@ void OSSim::CPU::step() {
 
 		case Opcode::WR: {
 			std::cout << "WR" << std::endl;
-			int32_t wrr1 = this->getReg(i.get_val1());
-			// good luck luke xd
+			uint32_t wrr1 = this->getReg(i.get_val1());
+			uint8_t wrr2 = i.get_val2();
+			uint32_t wraddr = i.get_val3();
+
+			int32_t data;
+			if (wrr1 == 0) {
+				data = this->memory[wraddr];
+			}
+			else {
+				data = this->memory[wrr1];
+			}
+
+			this->setReg(wrr2, data);
 		} break;
 
 		case Opcode::LW: {
