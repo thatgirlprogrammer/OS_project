@@ -15,7 +15,7 @@ OSSim::CPU::CPU() {
 
 void OSSim::CPU::load_into_ram(vector<Instruction>* val, PCB_info pcb)
 {
-	//ram1->store(val, pcb);
+	ram1->store(val, pcb);
 	this->instructions = disassemble(*val);
 }
 
@@ -210,7 +210,7 @@ void OSSim::CPU::step() {
 			int32_t s1 = this->getReg(i.get_val1());
 			int32_t s2 = this->getReg(i.get_val2());
 
-			if (data1 < data2) {
+			if (s1 < s2) {
 				this->setReg(i.get_val1(), 1);
 			}
 			else {
@@ -223,6 +223,8 @@ void OSSim::CPU::step() {
 			// set process state to finished
 
 			// pcb to terminate
+			PCB_info pcb_val = ram1->get_info();
+			pcb_val.pc.process_status = TERMINATE;
 		} break;
 
 		case Opcode::NOP: {
