@@ -5,7 +5,7 @@ OSSim::short_term_scheduler::short_term_scheduler(IRunnable* queue)
 	runnable_process = queue;
 }
 
-OSSim::short_term_scheduler::~short_term_schedular() {
+OSSim::short_term_scheduler::~short_term_scheduler() {
 	delete runnable_process;
 	runnable_process = NULL;
 }
