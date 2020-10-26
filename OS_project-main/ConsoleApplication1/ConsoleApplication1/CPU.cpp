@@ -72,6 +72,14 @@ void OSSim::CPU::step() {
 			this->setReg(wrr2, data);
 		} break;
 
+		case Opcode::ST: {
+			std::cout << "ST" << std::endl;
+			int32_t data = this->getReg(i.get_val1());
+			int32_t addr = this->getReg(i.get_val2());
+
+			this->memory[addr] = data;
+		} break;
+
 		case Opcode::LW: {
 			std::cout << "LW" << std::endl;
 			int32_t addr = this->getReg(i.get_val1());
@@ -81,14 +89,6 @@ void OSSim::CPU::step() {
 			// what they would do with a non-zero shortAddr, so this is the best I've got
 
 			this->setReg(d, this->memory[addr]);
-		} break;
-
-		case Opcode::ST: {
-			std::cout << "ST" << std::endl;
-			int32_t data = this->getReg(i.get_val1());
-			int32_t addr = this->getReg(i.get_val2());
-
-			this->memory[addr] = data;
 		} break;
 
 		case Opcode::MOV: {
@@ -155,7 +155,37 @@ void OSSim::CPU::step() {
 			}
 		} break;
 
-			// addi muli divi ldi
+		case Opcode::ADDI: {
+			std::cout << "ADDI" << std::endl;
+			int32_t b = this->getReg(i.get_val1());
+			int32_t c = this->getReg(i.get_val3());
+
+			this->setReg(i.get_val3(), b + c);
+		} break;
+
+		case Opcode::MULI: {
+			std::cout << "MULI" << std::endl;
+			int32_t b = this->getReg(i.get_val1());
+			int32_t c = this->getReg(i.get_val3());
+
+			this->setReg(i.get_val3(), b * c);
+		} break;
+
+		case Opcode::DIVI: {
+			std::cout << "DIVI" << std::endl;
+			int32_t b = this->getReg(i.get_val1());
+			int32_t c = this->getReg(i.get_val3());
+
+			this->setReg(i.get_val3(), b / c);
+		} break;
+
+		case Opcode::LDI: {
+
+			std::cout << "LDI" << std::endl;
+			int32_t b = this->getReg(i.get_val1());
+
+			this->setReg(i.get_val3(), b);
+		} break;
 
 		case Opcode::SLT: {
 			std::cout << "SLT" << std::endl;
@@ -174,11 +204,25 @@ void OSSim::CPU::step() {
 			}
 		} break;
 
-			// slti
+			// ? hmmmmmm
+		case Opcode::SLTI: {
+			std::cout << "SLTI" << std::endl;
+			int32_t s1 = this->getReg(i.get_val1());
+			int32_t s2 = this->getReg(i.get_val2());
+
+			if (data1 < data2) {
+				this->setReg(i.get_val1(), 1);
+			}
+			else {
+				this->setReg(i.get_val2(), 0);
+			}
+		} break;
 
 		case Opcode::HLT: {
 			std::cout << "HLT" << std::endl;
 			// set process state to finished
+
+			// pcb to terminate
 		} break;
 
 		case Opcode::NOP: {
@@ -245,14 +289,7 @@ void OSSim::CPU::step() {
 				this->pc = i.get_val3();
 			}
 		} break;
-		case Opcode::LDI: {
-			//TODO
-			std::cout << "LDI" << std::endl;
-		} break;
-		case Opcode::ADDI: {
-			//TODO
-			std::cout << "ADDI" << std::endl;
-		} break;
+		
 		default:
 			std::cout << "unknown instruction" << std::endl;
 			//disassembleInstruction(i);
