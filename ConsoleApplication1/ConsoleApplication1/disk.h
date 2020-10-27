@@ -29,7 +29,7 @@ public:
 	void deallocate(int index);
 	void reformat();
 	int32_t read(int index);
-	void write(uint8_t value, int index);
+	void write(int32_t value, int index);
 	int get_space();
 	int32_t* get_chunk(int index, int length);
 	void delete_chunk(int index, int length);
