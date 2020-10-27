@@ -64,7 +64,7 @@ int disk::get_space() {
  * memory as needed.
  * */
 int32_t* disk::get_chunk(int index, int length) {
-	int32_t_t* temp = new int32_t[length];
+	int32_t* temp = new int32_t[length];
 	for (int i = 0; i < length; ++i) {
 		temp[i] = storage[index + i];
 	}
