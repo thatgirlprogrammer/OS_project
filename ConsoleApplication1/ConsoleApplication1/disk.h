@@ -19,7 +19,7 @@ private:
 	 * */
 	const int size = 2048;
 	int free_space;
-	uint8_t storage[2048];
+	int32_t storage[2048];
 public:
 	/*
 	 * Method declaration.
@@ -27,9 +27,9 @@ public:
 	disk();
 	void deallocate(int index);
 	void reformat();
-	uint8_t read(int index);
+	int32_t read(int index);
 	void write(uint8_t value, int index);
 	int get_space();
-	uint8_t* get_chunk(int index, int length);
+	int32_t* get_chunk(int index, int length);
 	void delete_chunk(int index, int length);
 };
