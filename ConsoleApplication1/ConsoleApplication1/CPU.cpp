@@ -9,7 +9,7 @@ CPU::CPU() {
 	// need to use actual memory
 	for (uint32_t i = 0; i < MEMORY; i++)
 		this->memory[i] = 0;
-
+	/* Program 1
 	this->memory[0] = 0xC050005C;
 	this->memory[1] = 0x4B060000;
 	this->memory[2] = 0x4B010000;
@@ -33,7 +33,6 @@ CPU::CPU() {
 	this->memory[20] = 0x5681003C;
 	this->memory[21] = 0xC10000AC;
 	this->memory[22] = 0x92000000;
-
 	this->memory[23] = 0x0000000A;
 	this->memory[24] = 0x00000006;
 	this->memory[25] = 0x0000002C;
@@ -44,7 +43,219 @@ CPU::CPU() {
 	this->memory[30] = 0x00000001;
 	this->memory[31] = 0x00000005;
 	this->memory[32] = 0x0000000A;
-	this->memory[33] = 0x00000055;
+	this->memory[33] = 0x00000055;*/
+/* Program 2
+		this->memory[0] = 0xC0500070;
+		this->memory[1] = 0x4B060000;
+		this->memory[2] = 0x4B010000;
+		this->memory[3] = 0x4B000000;
+		this->memory[4] = 0x4F0A0070;
+		this->memory[5] = 0x4F0D00F0;
+		this->memory[6] = 0x4C0A0004;
+		this->memory[7] = 0xC0BA0000;
+		this->memory[8] = 0x42BD0000;
+		this->memory[9] = 0x4C0D0004;
+		this->memory[10] = 0x4C060001;
+		this->memory[11] = 0x10658000;
+		this->memory[12] = 0x56810018;
+		this->memory[13] = 0x4B060000;
+		this->memory[14] = 0x4F0900F0;
+		this->memory[15] = 0x43900000;
+		this->memory[16] = 0x4C060001;
+		this->memory[17] = 0x4C090004;
+		this->memory[18] = 0x43920000;
+		this->memory[19] = 0x4C060001;
+		this->memory[20] = 0x4C090004;
+		this->memory[21] = 0x10028000;
+		this->memory[22] = 0x55810060;
+		this->memory[23] = 0x04020000;
+		this->memory[24] = 0x10658000;
+		this->memory[25] = 0x56810048;
+		this->memory[26] = 0xC10000C0;
+		this->memory[27] = 0x92000000;
+
+		this->memory[28] = 0x0000000A;
+		this->memory[29] = 0x00000006;
+		this->memory[30] = 0x0000002C;
+		this->memory[31] = 0x00000045;
+		this->memory[32] = 0x00000001;
+		this->memory[33] = 0x00000007;
+		this->memory[34] = 0x00000000;
+		this->memory[35] = 0x00000001;
+		this->memory[36] = 0x00000005;
+		this->memory[37] = 0x0000000A;
+		this->memory[38] = 0x00000055;
+		this->memory[39] = 0x00000000;
+		this->memory[40] = 0x00000000;
+		this->memory[41] = 0x00000000;
+		this->memory[42] = 0x00000000;
+		this->memory[43] = 0x00000000;
+		this->memory[44] = 0x00000000;
+		this->memory[45] = 0x00000000;
+		this->memory[46] = 0x00000000;
+		this->memory[47] = 0x00000000;
+		this->memory[48] = 0x00000000;
+		this->memory[49] = 0x00000000;
+		this->memory[50] = 0x00000000;
+		this->memory[51] = 0x00000000;
+		this->memory[52] = 0x00000000;
+		this->memory[53] = 0x00000000;
+		this->memory[54] = 0x00000000;
+		this->memory[55] = 0x00000000;
+		this->memory[56] = 0x00000000;
+		this->memory[57] = 0x00000000;
+		this->memory[58] = 0x00000000;
+		this->memory[59] = 0x00000000;
+		this->memory[60] = 0x00000000;
+		this->memory[61] = 0x00000000;
+		this->memory[62] = 0x00000000;
+		this->memory[63] = 0x00000000;
+		this->memory[64] = 0x00000000;
+		this->memory[65] = 0x00000000;
+		this->memory[66] = 0x00000000;
+		this->memory[67] = 0x00000000;
+		this->memory[68] = 0x00000000;
+		this->memory[69] = 0x00000000;
+		this->memory[70] = 0x00000000;
+		this->memory[71] = 0x00000000;*/
+
+/* Program 3*/
+this->memory[0] = 0xC0500060;
+this->memory[1] = 0x4B060000;
+this->memory[2] = 0x4B010000;
+this->memory[3] = 0x4B000000;
+this->memory[4] = 0x4F0A0060;
+this->memory[5] = 0x4F0D00E0;
+this->memory[6] = 0x4C0A0004;
+this->memory[7] = 0xC0BA0000;
+this->memory[8] = 0x42BD0000;
+this->memory[9] = 0x4C0D0004;
+this->memory[10] = 0x4C060001;
+this->memory[11] = 0x10658000;
+this->memory[12] = 0x56810018;
+this->memory[13] = 0x4B060000;
+this->memory[14] = 0x4F0900E0;
+this->memory[15] = 0x43970000;
+this->memory[16] = 0x05070000;
+this->memory[17] = 0x4C060001;
+this->memory[18] = 0x4C090004;
+this->memory[19] = 0x10658000;
+this->memory[20] = 0x5681003C;
+this->memory[21] = 0x08050000;
+this->memory[22] = 0xC10000B0;
+this->memory[23] = 0x92000000;
+
+this->memory[24] = 0x0000000A;
+this->memory[25] = 0x00000006;
+this->memory[26] = 0x0000002C;
+this->memory[27] = 0x00000045;
+this->memory[28] = 0x00000001;
+this->memory[29] = 0x00000009;
+this->memory[30] = 0x000000B0;
+this->memory[31] = 0x00000001;
+this->memory[32] = 0x00000007;
+this->memory[33] = 0x000000AA;
+this->memory[34] = 0x00000055;
+this->memory[35] = 0x00000000;
+this->memory[36] = 0x00000000;
+this->memory[37] = 0x00000000;
+this->memory[37] = 0x00000000;
+this->memory[39] = 0x00000000;
+this->memory[40] = 0x00000000;
+this->memory[41] = 0x00000000;
+this->memory[42] = 0x00000000;
+this->memory[43] = 0x00000000;
+this->memory[44] = 0x00000000;
+this->memory[45] = 0x00000000;
+this->memory[46] = 0x00000000;
+this->memory[47] = 0x00000000;
+this->memory[48] = 0x00000000;
+this->memory[49] = 0x00000000;
+this->memory[50] = 0x00000000;
+this->memory[51] = 0x00000000;
+this->memory[52] = 0x00000000;
+this->memory[53] = 0x00000000;
+this->memory[54] = 0x00000000;
+this->memory[55] = 0x00000000;
+this->memory[56] = 0x00000000;
+this->memory[57] = 0x00000000;
+this->memory[58] = 0x00000000;
+this->memory[59] = 0x00000000;
+this->memory[60] = 0x00000000;
+this->memory[61] = 0x00000000;
+this->memory[62] = 0x00000000;
+this->memory[63] = 0x00000000;
+this->memory[64] = 0x00000000;
+this->memory[65] = 0x00000000;
+this->memory[66] = 0x00000000;
+this->memory[67] = 0x00000000;
+
+/* Program 4
+this->memory[0] = 0xC050004C;
+this->memory[1] = 0x4B060000;
+this->memory[2] = 0x4B000000;
+this->memory[3] = 0x4B010000;
+this->memory[4] = 0x4B020000;
+this->memory[5] = 0x4B030001;
+this->memory[6] = 0x4F07009C;
+this->memory[7] = 0xC1270000;
+this->memory[8] = 0x4C070004;
+this->memory[9] = 0x4C060001;
+this->memory[10] = 0x05320000;
+this->memory[11] = 0xC1070000;
+this->memory[12] = 0x4C070004;
+this->memory[13] = 0x4C060001;
+this->memory[14] = 0x04230000;
+this->memory[15] = 0x04300000;
+this->memory[16] = 0x10658000;
+this->memory[17] = 0x56810028;
+this->memory[18] = 0x92000000;
+
+this->memory[19] = 0x0000000B;
+this->memory[20] = 0x00000000;
+this->memory[21] = 0x00000000;
+this->memory[22] = 0x00000000;
+this->memory[23] = 0x00000000;
+this->memory[24] = 0x00000000;
+this->memory[25] = 0x00000000;
+this->memory[26] = 0x00000000;
+this->memory[27] = 0x00000000;
+this->memory[28] = 0x00000000;
+this->memory[29] = 0x00000000;
+this->memory[30] = 0x00000000;
+this->memory[31] = 0x00000000;
+this->memory[32] = 0x00000000;
+this->memory[33] = 0x00000000;
+this->memory[34] = 0x00000000;
+this->memory[35] = 0x00000000;
+this->memory[36] = 0x00000000;
+this->memory[37] = 0x00000000;
+this->memory[38] = 0x00000000;
+this->memory[39] = 0x00000000;
+this->memory[40] = 0x00000000;
+this->memory[41] = 0x00000000;
+this->memory[42] = 0x00000000;
+this->memory[43] = 0x00000000;
+this->memory[44] = 0x00000000;
+this->memory[45] = 0x00000000;
+this->memory[46] = 0x00000000;
+this->memory[47] = 0x00000000;
+this->memory[48] = 0x00000000;
+this->memory[49] = 0x00000000;
+this->memory[50] = 0x00000000;
+this->memory[51] = 0x00000000;
+this->memory[52] = 0x00000000;
+this->memory[53] = 0x00000000;
+this->memory[54] = 0x00000000;
+this->memory[55] = 0x00000000;
+this->memory[56] = 0x00000000;
+this->memory[57] = 0x00000000;
+this->memory[58] = 0x00000000;
+this->memory[59] = 0x00000000;
+this->memory[60] = 0x00000000;
+this->memory[61] = 0x00000000;
+this->memory[62] = 0x00000000;
+*/
 
 	this->pc = 0;
 }
@@ -91,12 +302,17 @@ void CPU::step() {
 		uint32_t wrr2 = this->getReg(i.ioR2());
 		uint32_t wraddr = i.shortAddr() / 4;
 
-		if (wrr2 > 0) {
-			this->setReg(wrr2, wrr1);
+		//if (wrr2 > 0) {
+		//	this->setReg(wrr2, wrr1);
+		//}
+		//else {
+		if (wraddr == 0) {
+			memory[wrr2] = wrr1;
 		}
 		else {
 			memory[wraddr] = wrr1;
 		}
+	//	}
 	} break;
 
 	case Opcode::LW: {
@@ -120,9 +336,8 @@ void CPU::step() {
 		// idk which reg is supposed to be moved so I'll just use s1...
 		//int32_t s1 = this->getReg(i.arithS1());
 		//this->setReg(i.arithD(), s1);
-		int32_t b = this->getReg(i.cimmB());
-		int32_t d = this->getReg(i.cimmD());
-		this->setReg(d, b);
+		int32_t d = this->getReg(i.arithS2());
+		this->setReg(i.arithS1(), d);
 
 	} break;
 
@@ -165,8 +380,12 @@ void CPU::step() {
 	case Opcode::MOVI: {
 		//uint8_t b = i.cimmB();
 		uint8_t d = i.cimmD();
-
-		this->setReg(d, i.shortAddr() / 4);
+		if (i.shortAddr() < 0x4) {
+			this->setReg(d, i.shortAddr() % 4);
+		}
+		else {
+			this->setReg(d, i.shortAddr() / 4);
+		}	
 
 		//// if the d-reg is 0, the short addr (last 16 bits) contains data
 		//if (d == 0) {
@@ -239,7 +458,7 @@ void CPU::step() {
 		break;
 
 	case Opcode::JMP: {
-		this->pc = i.longAddr();
+		this->pc = i.longAddr() / 4;
 	} break;
 
 	case Opcode::BEQ: {
