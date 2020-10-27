@@ -38,7 +38,7 @@ void disk::reformat() {
  * read returns the item in the memory block
  * index.
  * */
-uint8_t disk::read(int index) {
+int32_t disk::read(int index) {
 	return storage[index];
 }
 /*
@@ -63,8 +63,8 @@ int disk::get_space() {
  * get_chunk returns a larger chunk of specified
  * memory as needed.
  * */
-uint8_t* disk::get_chunk(int index, int length) {
-	uint8_t* temp = new uint8_t[length];
+int32_t* disk::get_chunk(int index, int length) {
+	int32_t_t* temp = new int32_t[length];
 	for (int i = 0; i < length; ++i) {
 		temp[i] = storage[index + i];
 	}
