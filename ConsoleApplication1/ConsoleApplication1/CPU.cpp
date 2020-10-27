@@ -9,6 +9,43 @@ CPU::CPU() {
 	// need to use actual memory
 	for (uint32_t i = 0; i < MEMORY; i++)
 		this->memory[i] = 0;
+
+	this->memory[0] = 0xC050005C;
+	this->memory[1] = 0x4B060000;
+	this->memory[2] = 0x4B010000;
+	this->memory[3] = 0x4B000000;
+	this->memory[4] = 0x4F0A005C;
+	this->memory[5] = 0x4F0D00DC;
+	this->memory[6] = 0x4C0A0004;
+	this->memory[7] = 0xC0BA0000;
+	this->memory[8] = 0x42BD0000;
+	this->memory[9] = 0x4C0D0004;
+	this->memory[10] = 0x4C060001;
+	this->memory[11] = 0x10658000;
+	this->memory[12] = 0x56810018;
+	this->memory[13] = 0x4B060000;
+	this->memory[14] = 0x4F0900DC;
+	this->memory[15] = 0x43970000;
+	this->memory[16] = 0x05070000;
+	this->memory[17] = 0x4C060001;
+	this->memory[18] = 0x4C090004;
+	this->memory[19] = 0x10658000;
+	this->memory[20] = 0x5681003C;
+	this->memory[21] = 0xC10000AC;
+	this->memory[22] = 0x92000000;
+
+	this->memory[0x5c] = 0x0000000A;
+	this->memory[0x5d] = 0x00000006;
+	this->memory[0x5e] = 0x0000002C;
+	this->memory[0x5f] = 0x00000045;
+	this->memory[0x60] = 0x00000001;
+	this->memory[0x61] = 0x00000007;
+	this->memory[0x62] = 0x00000000;
+	this->memory[0x63] = 0x00000001;
+	this->memory[0x64] = 0x00000005;
+	this->memory[0x65] = 0x0000000A;
+	this->memory[0x66] = 0x00000055;
+
 	this->pc = 0;
 }
 
@@ -28,6 +65,7 @@ void CPU::step() {
 	// get program counter from PCB
 	// TODO: offset
 	Instruction i = Instruction(this->memory[this->pc++]);
+	disassembleInstruction(i);
 
 	switch (i.opcode()) {
 	case Opcode::RD: {
@@ -137,26 +175,22 @@ void CPU::step() {
 	} break;
 			
 	case Opcode::ADDI: {
-		std::cout << "ADDI" << std::endl;
 		uint8_t d = i.cimmD();
 		this->setReg(d, this->getReg(d) + i.shortAddr());
 	} break;
 
 	case Opcode::MULI: {
-		std::cout << "MULI" << std::endl;
 		uint8_t d = i.cimmD();
 		this->setReg(d, this->getReg(d) * i.shortAddr());
 	} break;
 
 	case Opcode::DIVI: {
-		std::cout << "DIVI" << std::endl;
 		uint8_t d = i.cimmD();
 		this->setReg(d, this->getReg(d) / i.shortAddr());
 	} break;
 
 	case Opcode::LDI: {
 
-		std::cout << "LDI" << std::endl;
 		int32_t b = this->getReg(i.cimmB());
 
 		this->setReg(i.cimmB(), b);
@@ -179,7 +213,6 @@ void CPU::step() {
 
 	// ? hmmmmmm
 	case Opcode::SLTI: {
-		std::cout << "SLTI" << std::endl;
 		int32_t s1 = this->getReg(i.cimmB());
 		int32_t s2 = this->getReg(i.cimmD());
 
@@ -192,7 +225,6 @@ void CPU::step() {
 	} break;
 
 	case Opcode::HLT: {
-		std::cout << "HLT" << std::endl;
 		// set process state to finished
 		//PCB_info pcb_val = ram1->get_info();
 		//pcb_val.pc.process_status = TERMINATE;
