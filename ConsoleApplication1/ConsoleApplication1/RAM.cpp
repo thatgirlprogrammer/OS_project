@@ -23,7 +23,7 @@ class RAM
 
 void RAM :: store(uint8_t hex)
 {
-    Memory check;
+    RAM check;
     check.isFull();
     for(int i = 0; i < 1024; i++)
     {
@@ -37,7 +37,7 @@ void RAM :: store(uint8_t hex)
 
 uint8_t RAM :: pass(int index)
 {
-    Memory check;
+    RAM check;
     uint8_t p;
     p = storage[index];
     return p;
@@ -59,7 +59,7 @@ void RAM :: isFull()
 
 int main()
 {
-    /*Memory test;
+    /*RAM test;
     
     int index = 0;
     uint8_t hex = 0xEE;
