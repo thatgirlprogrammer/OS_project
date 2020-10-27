@@ -34,17 +34,17 @@ CPU::CPU() {
 	this->memory[21] = 0xC10000AC;
 	this->memory[22] = 0x92000000;
 
-	this->memory[0x5c] = 0x0000000A;
-	this->memory[0x5d] = 0x00000006;
-	this->memory[0x5e] = 0x0000002C;
-	this->memory[0x5f] = 0x00000045;
-	this->memory[0x60] = 0x00000001;
-	this->memory[0x61] = 0x00000007;
-	this->memory[0x62] = 0x00000000;
-	this->memory[0x63] = 0x00000001;
-	this->memory[0x64] = 0x00000005;
-	this->memory[0x65] = 0x0000000A;
-	this->memory[0x66] = 0x00000055;
+	this->memory[23] = 0x0000000A;
+	this->memory[24] = 0x00000006;
+	this->memory[25] = 0x0000002C;
+	this->memory[26] = 0x00000045;
+	this->memory[27] = 0x00000001;
+	this->memory[28] = 0x00000007;
+	this->memory[29] = 0x00000000;
+	this->memory[30] = 0x00000001;
+	this->memory[31] = 0x00000005;
+	this->memory[32] = 0x0000000A;
+	this->memory[33] = 0x00000055;
 
 	this->pc = 0;
 }
@@ -71,7 +71,7 @@ void CPU::step() {
 	case Opcode::RD: {
 		uint8_t r1 = i.ioR1();
 		int32_t r2 = this->getReg(i.ioR2());
-		uint32_t rdaddr = i.shortAddr();
+		uint32_t rdaddr = i.shortAddr() / 4;
 
 		// assuming the same rules as immediate instructions, if r2 is 0,
 		// read from the address instead of the register
@@ -88,18 +88,15 @@ void CPU::step() {
 	case Opcode::WR: {
 		std::cout << "WR" << std::endl;
 		uint32_t wrr1 = this->getReg(i.ioR1());
-		uint8_t wrr2 = i.ioR2();
-		uint32_t wraddr = i.shortAddr();
+		uint32_t wrr2 = this->getReg(i.ioR2());
+		uint32_t wraddr = i.shortAddr() / 4;
 
-		int32_t data;
-		if (wrr1 == 0) {
-			data = this->memory[wraddr];
+		if (wrr2 > 0) {
+			this->setReg(wrr2, wrr1);
 		}
 		else {
-			data = this->memory[wrr1];
+			memory[wraddr] = wrr1;
 		}
-
-		this->setReg(wrr2, data);
 	} break;
 
 	case Opcode::LW: {
@@ -121,8 +118,12 @@ void CPU::step() {
 
 	case Opcode::MOV: {
 		// idk which reg is supposed to be moved so I'll just use s1...
-		int32_t s1 = this->getReg(i.arithS1());
-		this->setReg(i.arithD(), s1);
+		//int32_t s1 = this->getReg(i.arithS1());
+		//this->setReg(i.arithD(), s1);
+		int32_t b = this->getReg(i.cimmB());
+		int32_t d = this->getReg(i.cimmD());
+		this->setReg(d, b);
+
 	} break;
 
 	case Opcode::ADD: {
@@ -165,7 +166,7 @@ void CPU::step() {
 		//uint8_t b = i.cimmB();
 		uint8_t d = i.cimmD();
 
-		this->setReg(d, i.shortAddr());
+		this->setReg(d, i.shortAddr() / 4);
 
 		//// if the d-reg is 0, the short addr (last 16 bits) contains data
 		//if (d == 0) {
@@ -178,21 +179,27 @@ void CPU::step() {
 			
 	case Opcode::ADDI: {
 		uint8_t d = i.cimmD();
-		this->setReg(d, this->getReg(d) + i.shortAddr());
+		if (i.shortAddr() < 4) {
+			this->setReg(d, this->getReg(d) + (i.shortAddr() % 4));
+		}
+		else {
+			this->setReg(d, this->getReg(d) + (i.shortAddr() / 4));
+		}
+		
 	} break;
 
 	case Opcode::MULI: {
 		uint8_t d = i.cimmD();
-		this->setReg(d, this->getReg(d) * i.shortAddr());
+		this->setReg(d, this->getReg(d) * (i.shortAddr()));
 	} break;
 
 	case Opcode::DIVI: {
 		uint8_t d = i.cimmD();
-		this->setReg(d, this->getReg(d) / i.shortAddr());
+		this->setReg(d, this->getReg(d) / (i.shortAddr() / 4));
 	} break;
 
 	case Opcode::LDI: {
-		this->setReg(i.cimmD(), i.shortAddr());
+		this->setReg(i.cimmD(), i.shortAddr() / 4);
 
 		//int32_t b = this->getReg(i.cimmB());
 		//this->setReg(i.cimmB(), b);
@@ -240,7 +247,7 @@ void CPU::step() {
 		int32_t d = this->getReg(i.cimmD());
 
 		if (b == d) {
-			this->pc = i.shortAddr();
+			this->pc = i.shortAddr() / 4;
 		}
 	} break;
 
@@ -249,7 +256,7 @@ void CPU::step() {
 		int32_t d = this->getReg(i.cimmD());
 
 		if (b != d) {
-			this->pc = i.shortAddr();
+			this->pc = i.shortAddr() / 4;
 		}
 	} break;
 
@@ -257,7 +264,7 @@ void CPU::step() {
 		int32_t b = this->getReg(i.cimmB());
 
 		if (b == 0) {
-			this->pc = i.shortAddr();
+			this->pc = i.shortAddr() / 4;
 		}
 	} break;
 
@@ -265,7 +272,7 @@ void CPU::step() {
 		int32_t b = this->getReg(i.cimmB());
 
 		if (b != 0) {
-			this->pc = i.shortAddr();
+			this->pc = i.shortAddr() / 4;
 		}
 	} break;
 
@@ -273,7 +280,7 @@ void CPU::step() {
 		int32_t b = this->getReg(i.cimmB());
 
 		if (b > 0) {
-			this->pc = i.shortAddr();
+			this->pc = i.shortAddr() / 4;
 		}
 	} break;
 
@@ -281,7 +288,7 @@ void CPU::step() {
 		int32_t b = this->getReg(i.cimmB());
 
 		if (b < 0) {
-			this->pc = i.shortAddr();
+			this->pc = i.shortAddr() / 4;
 		}
 	} break;
 
