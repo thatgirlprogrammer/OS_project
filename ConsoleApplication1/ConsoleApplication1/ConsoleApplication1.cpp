@@ -47,13 +47,8 @@ int main() {
 	schedule = nullptr;
 
 	CPU cpu;
-	cpu.step();
-	cpu.step();
-	cpu.step();
-	cpu.step();
-	cpu.step();
-	cpu.step();
-	cpu.step();
+	for (int i = 0; i < 0x17; i++)
+		cpu.step();
 
 	return 0;
 }

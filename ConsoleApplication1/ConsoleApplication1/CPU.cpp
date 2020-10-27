@@ -162,16 +162,18 @@ void CPU::step() {
 	} break;
 
 	case Opcode::MOVI: {
-		uint8_t b = i.cimmB();
+		//uint8_t b = i.cimmB();
 		uint8_t d = i.cimmD();
 
-		// if the d-reg is 0, the short addr (last 16 bits) contains data
-		if (d == 0) {
-			// which is moved into the b-reg? the spec isn't clear
-			this->setReg(b, i.shortAddr());
-		} else {
-			this->setReg(d, this->memory[i.shortAddr() + d]);
-		}
+		this->setReg(d, i.shortAddr());
+
+		//// if the d-reg is 0, the short addr (last 16 bits) contains data
+		//if (d == 0) {
+		//	// which is moved into the b-reg? the spec isn't clear
+		//	this->setReg(b, i.shortAddr());
+		//} else {
+		//	this->setReg(d, this->memory[i.shortAddr() + d]);
+		//}
 	} break;
 			
 	case Opcode::ADDI: {
@@ -190,21 +192,17 @@ void CPU::step() {
 	} break;
 
 	case Opcode::LDI: {
+		this->setReg(i.cimmD(), i.shortAddr());
 
-		int32_t b = this->getReg(i.cimmB());
-
-		this->setReg(i.cimmB(), b);
+		//int32_t b = this->getReg(i.cimmB());
+		//this->setReg(i.cimmB(), b);
 	} break;
 
 	case Opcode::SLT: {
-		uint32_t s1 = this->getReg(i.arithS1());
-		uint32_t s2 = this->getReg(i.arithS2());
+		int32_t s1 = this->getReg(i.arithS1());
+		int32_t s2 = this->getReg(i.arithS2());
 
-		// ???
-		uint32_t data1 = this->memory[s1];
-		uint32_t data2 = this->memory[s2];
-
-		if (data1 < data2) {
+		if (s1 < s2) {
 			this->setReg(i.arithD(), 1);
 		} else {
 			this->setReg(i.arithD(), 0);
