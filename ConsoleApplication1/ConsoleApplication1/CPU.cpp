@@ -49,9 +49,9 @@ void CPU::step() {
 
 	case Opcode::WR: {
 		std::cout << "WR" << std::endl;
-		uint32_t wrr1 = this->getReg(i.get_val1());
-		uint8_t wrr2 = i.get_val2();
-		uint32_t wraddr = i.get_val3();
+		uint32_t wrr1 = this->getReg(i.ioR1());
+		uint8_t wrr2 = i.ioR2();
+		uint32_t wraddr = i.shortAddr();
 
 		int32_t data;
 		if (wrr1 == 0) {
@@ -157,9 +157,9 @@ void CPU::step() {
 	case Opcode::LDI: {
 
 		std::cout << "LDI" << std::endl;
-		int32_t b = this->getReg(i.get_val1());
+		int32_t b = this->getReg(i.cimmB());
 
-		this->setReg(i.get_val3(), b);
+		this->setReg(i.cimmB(), b);
 	} break;
 
 	case Opcode::SLT: {
@@ -183,7 +183,7 @@ void CPU::step() {
 		int32_t s1 = this->getReg(i.cimmB());
 		int32_t s2 = this->getReg(i.cimmD());
 
-		if (data1 < data2) {
+		if (s1 < s2) {
 			this->setReg(i.cimmB(), 1);
 		}
 		else {
@@ -194,8 +194,8 @@ void CPU::step() {
 	case Opcode::HLT: {
 		std::cout << "HLT" << std::endl;
 		// set process state to finished
-		PCB_info pcb_val = ram1->get_info();
-		pcb_val.pc.process_status = TERMINATE;
+		//PCB_info pcb_val = ram1->get_info();
+		//pcb_val.pc.process_status = TERMINATE;
 	} break;
 
 	case Opcode::NOP:
@@ -259,5 +259,5 @@ void CPU::step() {
 		std::cout << "unknown instruction" << std::endl;
 		disassembleInstruction(i);
 	}
-	ram1->get_info().pc.program_counter++;
+	//ram1->get_info().pc.program_counter++;
 }

@@ -30,9 +30,6 @@
     <ClCompile Include="instruction_register.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Accumulator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="interrupt_register.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -57,9 +54,6 @@
     <ClCompile Include="job_priority.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="short_term_schedular.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="instruction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -67,6 +61,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Disassemble.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="short_term_scheduler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -151,7 +151,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Accumulator.cpp" />
     <ClCompile Include="ConsoleApplication1.cpp" />
     <ClCompile Include="CPU.cpp" />
     <ClCompile Include="Disassemble.cpp" />
@@ -168,7 +167,7 @@
     <ClCompile Include="memory_buffer_register.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="program_counter.cpp" />
-    <ClCompile Include="short_term_schedular.cpp" />
+    <ClCompile Include="short_term_scheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Accumulator.h" />
