@@ -46,7 +46,7 @@ int32_t disk::read(int index) {
  * and decrements free_space if that space was
  * already empty.
  * */
-void disk::write(uint8_t value, int index) {
+void disk::write(int32_t value, int index) {
 	if (storage[index] == 0) {
 		free_space--;
 	}
