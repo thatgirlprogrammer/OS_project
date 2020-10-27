@@ -1,4 +1,4 @@
-  
+#pragma once
 #include "driver.h"
 
 namespace OSSim {
