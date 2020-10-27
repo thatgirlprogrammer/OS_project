@@ -7,7 +7,6 @@
 #include <iomanip>
 
 using namespace std;
-using namespace OSSim;
 
 loader::loader(string file_name) {
 	file.open(file_name, ios::in);
@@ -47,6 +46,9 @@ void loader::load_file() {
 				int32_t job_number = strtoul(num1.c_str(), nullptr, 16);
 				int32_t job_priority = strtoul(num2.c_str(), nullptr, 16);
 				int32_t job_count = strtoul(num3.c_str(), nullptr, 16);
+				info.pc.job_number = job_number;
+				info.pc.job_priority = job_priority;
+				info.pc.job_instruction_count = job_count;
 				cout << num1 << " " << num2 << " " << num3 << "\n";
 			}
 			else if (line.find("Data") != std::string::npos) {
@@ -79,6 +81,9 @@ void loader::load_file() {
 				int32_t iBuffer = strtoul(num1.c_str(), nullptr, 16);
 				int32_t oBuffer = strtoul(num2.c_str(), nullptr, 16);
 				int32_t sBuffer = strtoul(num3.c_str(), nullptr, 16);
+				info.b.input_buffer = iBuffer;
+				info.b.output_buffer = oBuffer;
+				info.b.temp_buffer = sBuffer;
 				cout << num1 << " " << num2 << " " << num3 << "\n";
 			}
 			else if (line.find("END") != std::string::npos) {
@@ -93,9 +98,15 @@ void loader::load_file() {
 					int32_t number = strtoul(line.c_str(), nullptr, 16);
 					dsk.write(number, current);
 					++current;
+					info.pc.job_disk_address = number;
 				}
 			}
 		}
 		file.close();
 	}
+}
+
+PCB_info loader::get_info()
+{
+	return info;
 }
