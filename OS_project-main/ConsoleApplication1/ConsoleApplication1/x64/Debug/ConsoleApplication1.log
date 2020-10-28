@@ -1,0 +1,9 @@
+﻿  ConsoleApplication1.cpp
+C:\Users\amymu\source\repos\OS_project-main\ConsoleApplication1\ConsoleApplication1\loader.h(22,25): warning C4200: nonstandard extension used: zero-sized array in struct/union
+C:\Users\amymu\source\repos\OS_project-main\ConsoleApplication1\ConsoleApplication1\loader.h(22,25): message : This member will be ignored by a defaulted constructor or copy/move assignment operator
+  disk.cpp
+  loader.cpp
+C:\Users\amymu\source\repos\OS_project-main\ConsoleApplication1\ConsoleApplication1\loader.h(22,25): warning C4200: nonstandard extension used: zero-sized array in struct/union
+C:\Users\amymu\source\repos\OS_project-main\ConsoleApplication1\ConsoleApplication1\loader.h(22,25): message : This member will be ignored by a defaulted constructor or copy/move assignment operator
+  Generating Code...
+  ConsoleApplication1.vcxproj -> C:\Users\amymu\source\repos\OS_project-main\ConsoleApplication1\x64\Debug\ConsoleApplication1.exe
