@@ -33,12 +33,6 @@
     <ClCompile Include="interrupt_register.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="memory_buffer_register.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_address_register.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="interrupt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,10 +57,10 @@
     <ClCompile Include="Disassemble.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="short_term_scheduler.cpp">
+    <ClCompile Include="disk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Memory.cpp">
+    <ClCompile Include="long_term_scheduler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -81,9 +75,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="instruction_register.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Accumulator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="interrupt_register.h">
@@ -125,7 +116,16 @@
     <ClInclude Include="Disassemble.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Memory.h">
+    <ClInclude Include="disk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="long_term_scheduler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="short_term_scheduler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -34,3 +34,4 @@ public:
 	int32_t* get_chunk(int index, int length);
 	void delete_chunk(int index, int length);
 };
+

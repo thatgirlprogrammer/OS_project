@@ -154,6 +154,7 @@
     <ClCompile Include="ConsoleApplication1.cpp" />
     <ClCompile Include="CPU.cpp" />
     <ClCompile Include="Disassemble.cpp" />
+    <ClCompile Include="disk.cpp" />
     <ClCompile Include="general_register.cpp" />
     <ClCompile Include="instruction.cpp" />
     <ClCompile Include="instruction_register.cpp" />
@@ -163,17 +164,14 @@
     <ClCompile Include="job_number_compare.cpp" />
     <ClCompile Include="job_priority.cpp" />
     <ClCompile Include="job_priority_compare.cpp" />
-    <ClCompile Include="Memory.cpp" />
-    <ClCompile Include="memory_address_register.cpp" />
-    <ClCompile Include="memory_buffer_register.cpp" />
+    <ClCompile Include="long_term_scheduler.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="program_counter.cpp" />
-    <ClCompile Include="short_term_scheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Accumulator.h" />
     <ClInclude Include="CPU.h" />
     <ClInclude Include="Disassemble.h" />
+    <ClInclude Include="disk.h" />
     <ClInclude Include="general_register.h" />
     <ClInclude Include="instruction.h" />
     <ClInclude Include="instruction_register.h" />
@@ -183,13 +181,15 @@
     <ClInclude Include="job_numbers.h" />
     <ClInclude Include="job_priority.h" />
     <ClInclude Include="job_priority_compare.h" />
-    <ClInclude Include="Memory.h" />
+    <ClInclude Include="long_term_scheduler.h" />
     <ClInclude Include="memory_address_register.h" />
     <ClInclude Include="memory_buffer_register.h" />
     <ClInclude Include="pcb.h" />
     <ClInclude Include="Process.h" />
     <ClInclude Include="program_counter.h" />
+    <ClInclude Include="ram.h" />
     <ClInclude Include="runnable.h" />
+    <ClInclude Include="short_term_scheduler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
