@@ -49,7 +49,7 @@ CPU::CPU() {
 	this->setMem(33 * 4, 0x00000055);
 	// */
 
-	///*
+	/*
 	// job 2
 	this->setMem(0 * 4, 0xC0500070);
 	this->setMem(1 * 4, 0x4B060000);
@@ -93,7 +93,7 @@ CPU::CPU() {
 	this->setMem(38 * 4, 0x00000055);
 	// */
 
-	/*
+	///*
 	// program C
 	this->setMem(0 * 4, 0xC0500070);
 	this->setMem(1 * 4, 0x4B060000);
@@ -153,6 +153,9 @@ void CPU::setReg(uint8_t reg, int32_t value) {
 }
 
 int32_t CPU::getMem(uint16_t addr) {
+	assert(addr % 4 == 0);
+
+	// TODO: get offset from PCB
 	int32_t result = this->memory[addr] << 24;
 	result |= this->memory[addr + 1] << 16;
 	result |= this->memory[addr + 2] << 8;
@@ -161,6 +164,9 @@ int32_t CPU::getMem(uint16_t addr) {
 }
 
 void CPU::setMem(uint16_t addr, int32_t data) {
+	assert(addr % 4 == 0);
+
+	// TODO: get offset from PCB
 	this->memory[addr] = data >> 24;
 	this->memory[addr + 1] = data >> 16;
 	this->memory[addr + 2] = data >> 8;
@@ -168,8 +174,7 @@ void CPU::setMem(uint16_t addr, int32_t data) {
 }
 
 void CPU::step() {
-	// get program counter from PCB
-	// TODO: offset
+	// TODO: get program counter from PCB
 	std::cout << std::hex << this->pc << std::dec << " ";
 	Instruction i = Instruction(this->getMem(this->pc));
 	this->pc += 4;
