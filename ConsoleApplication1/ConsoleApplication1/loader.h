@@ -11,11 +11,14 @@ using namespace OSSim;
 class loader
 {
 public:
-	loader(string file_name, disk* d);
+	loader(string file_name);
 	void load_file();
 	PCB_info get_info();
+	uint32_t* get_instructions();
 private: 
 	fstream file;
-	disk* dsk;
+	disk dsk;
 	PCB_info info;
+	uint32_t instructions[];
 };
+

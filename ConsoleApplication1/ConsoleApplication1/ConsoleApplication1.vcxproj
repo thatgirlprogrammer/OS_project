@@ -164,6 +164,7 @@
     <ClCompile Include="job_number_compare.cpp" />
     <ClCompile Include="job_priority.cpp" />
     <ClCompile Include="job_priority_compare.cpp" />
+    <ClCompile Include="loader.cpp" />
     <ClCompile Include="long_term_scheduler.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="program_counter.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="job_numbers.h" />
     <ClInclude Include="job_priority.h" />
     <ClInclude Include="job_priority_compare.h" />
+    <ClInclude Include="loader.h" />
     <ClInclude Include="long_term_scheduler.h" />
     <ClInclude Include="memory_address_register.h" />
     <ClInclude Include="memory_buffer_register.h" />

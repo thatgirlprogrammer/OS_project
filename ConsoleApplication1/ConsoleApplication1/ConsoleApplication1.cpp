@@ -4,12 +4,10 @@
 #include "pcb.h"
 #include "Runnable.h"
 #include "Instruction.h"
-//#include "short_term_scheduler.h"
+#include "short_term_scheduler.h"
 #include "job_number.h"
 #include "Disassemble.h"
 #include "CPU.h"
-#include "disk.h"
-#include "ram.h"
 #include "loader.h"
 
 using namespace OSSim;
@@ -81,14 +79,11 @@ int main() {
 	//	i.push_back(Instruction(0x92000000));
 	//	disassemble(i);
 
-	disk* dsk = new disk;
-	RAM* ram = new RAM;
-	loader load("./Program-File.txt", dsk);
-	load.load_file();
-	
 	CPU cpu;
 	while (!cpu.isDone())
 		cpu.step();
 
+	loader* l = new loader("C:/Users/amymu/source/repos/OS_project-main/ConsoleApplication1/ConsoleApplication1/Program-File-Wordversion-30-JOBS.txt");
+	l->load_file();
 	return 0;
 }
