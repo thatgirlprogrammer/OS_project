@@ -78,6 +78,11 @@ int main() {
 	//	i.push_back(Instruction(0x92000000));
 	//	disassemble(i);
 
+	disk* dsk = new disk;
+	RAM* ram = new RAM;
+	loader load("./Program-File.txt", dsk);
+	load.load_file();
+	
 	CPU cpu;
 	while (!cpu.isDone())
 		cpu.step();
