@@ -8,6 +8,7 @@
 #include "job_number.h"
 #include "Disassemble.h"
 #include "CPU.h"
+#include "Memory.h"
 
 using namespace OSSim;
 
@@ -77,9 +78,13 @@ int main() {
 //	i.push_back(Instruction(0x92000000));
 //	disassemble(i);
 
-	CPU cpu;
+	Memory* memory = new Memory();
+
+	CPU cpu(memory);
 	while (!cpu.isDone())
 		cpu.step();
+
+	memory->dump();
 
 	return 0;
 }

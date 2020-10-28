@@ -66,6 +66,9 @@
     <ClCompile Include="short_term_scheduler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Memory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Process.h">
@@ -110,9 +113,6 @@
     <ClInclude Include="job_priority.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="short_term_schedular.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="job_numbers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -123,6 +123,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Disassemble.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -3,166 +3,163 @@
 #include "CPU.h"
 #include "Disassemble.h"
 
-CPU::CPU() {
+CPU::CPU(Memory* memory) {
 	for (uint8_t i = 0; i < REGISTER_COUNT; i++)
 		this->registers[i] = 0;
-	// need to use actual memory
-	for (uint32_t i = 0; i < MEMORY; i++)
-		this->memory[i] = 0;
+	this->memory = memory;
+	this->pc = 0;
 
 	/*
 	// job 1
-	this->setMem(0, 0xC050005C);
-	this->setMem(1 * 4, 0x4B060000);
-	this->setMem(2 * 4, 0x4B010000);
-	this->setMem(3 * 4, 0x4B000000);
-	this->setMem(4 * 4, 0x4F0A005C);
-	this->setMem(5 * 4, 0x4F0D00DC);
-	this->setMem(6 * 4, 0x4C0A0004);
-	this->setMem(7 * 4, 0xC0BA0000);
-	this->setMem(8 * 4, 0x42BD0000);
-	this->setMem(9 * 4, 0x4C0D0004);
-	this->setMem(10 * 4, 0x4C060001);
-	this->setMem(11 * 4, 0x10658000);
-	this->setMem(12 * 4, 0x56810018);
-	this->setMem(13 * 4, 0x4B060000);
-	this->setMem(14 * 4, 0x4F0900DC);
-	this->setMem(15 * 4, 0x43970000);
-	this->setMem(16 * 4, 0x05070000);
-	this->setMem(17 * 4, 0x4C060001);
-	this->setMem(18 * 4, 0x4C090004);
-	this->setMem(19 * 4, 0x10658000);
-	this->setMem(20 * 4, 0x5681003C);
-	this->setMem(21 * 4, 0xC10000AC);
-	this->setMem(22 * 4, 0x92000000);
+	this->memory->setMem(0, 0xC050005C);
+	this->memory->setMem(1 * 4, 0x4B060000);
+	this->memory->setMem(2 * 4, 0x4B010000);
+	this->memory->setMem(3 * 4, 0x4B000000);
+	this->memory->setMem(4 * 4, 0x4F0A005C);
+	this->memory->setMem(5 * 4, 0x4F0D00DC);
+	this->memory->setMem(6 * 4, 0x4C0A0004);
+	this->memory->setMem(7 * 4, 0xC0BA0000);
+	this->memory->setMem(8 * 4, 0x42BD0000);
+	this->memory->setMem(9 * 4, 0x4C0D0004);
+	this->memory->setMem(10 * 4, 0x4C060001);
+	this->memory->setMem(11 * 4, 0x10658000);
+	this->memory->setMem(12 * 4, 0x56810018);
+	this->memory->setMem(13 * 4, 0x4B060000);
+	this->memory->setMem(14 * 4, 0x4F0900DC);
+	this->memory->setMem(15 * 4, 0x43970000);
+	this->memory->setMem(16 * 4, 0x05070000);
+	this->memory->setMem(17 * 4, 0x4C060001);
+	this->memory->setMem(18 * 4, 0x4C090004);
+	this->memory->setMem(19 * 4, 0x10658000);
+	this->memory->setMem(20 * 4, 0x5681003C);
+	this->memory->setMem(21 * 4, 0xC10000AC);
+	this->memory->setMem(22 * 4, 0x92000000);
 
-	this->setMem(23 * 4, 0x0000000A);
-	this->setMem(24 * 4, 0x00000006);
-	this->setMem(25 * 4, 0x0000002C);
-	this->setMem(26 * 4, 0x00000045);
-	this->setMem(27 * 4, 0x00000001);
-	this->setMem(28 * 4, 0x00000007);
-	this->setMem(29 * 4, 0x00000000);
-	this->setMem(30 * 4, 0x00000001);
-	this->setMem(31 * 4, 0x00000005);
-	this->setMem(32 * 4, 0x0000000A);
-	this->setMem(33 * 4, 0x00000055);
+	this->memory->setMem(23 * 4, 0x0000000A);
+	this->memory->setMem(24 * 4, 0x00000006);
+	this->memory->setMem(25 * 4, 0x0000002C);
+	this->memory->setMem(26 * 4, 0x00000045);
+	this->memory->setMem(27 * 4, 0x00000001);
+	this->memory->setMem(28 * 4, 0x00000007);
+	this->memory->setMem(29 * 4, 0x00000000);
+	this->memory->setMem(30 * 4, 0x00000001);
+	this->memory->setMem(31 * 4, 0x00000005);
+	this->memory->setMem(32 * 4, 0x0000000A);
+	this->memory->setMem(33 * 4, 0x00000055);
 	// */
 
 	/*
 	// job 2
-	this->setMem(0 * 4, 0xC0500070);
-	this->setMem(1 * 4, 0x4B060000);
-	this->setMem(2 * 4, 0x4B010000);
-	this->setMem(3 * 4, 0x4B000000);
-	this->setMem(4 * 4, 0x4F0A0070);
-	this->setMem(5 * 4, 0x4F0D00F0);
-	this->setMem(6 * 4, 0x4C0A0004);
-	this->setMem(7 * 4, 0xC0BA0000);
-	this->setMem(8 * 4, 0x42BD0000);
-	this->setMem(9 * 4, 0x4C0D0004);
-	this->setMem(10 * 4, 0x4C060001);
-	this->setMem(11 * 4, 0x10658000);
-	this->setMem(12 * 4, 0x56810018);
-	this->setMem(13 * 4, 0x4B060000);
-	this->setMem(14 * 4, 0x4F0900F0);
-	this->setMem(15 * 4, 0x43900000);
-	this->setMem(16 * 4, 0x4C060001);
-	this->setMem(17 * 4, 0x4C090004);
-	this->setMem(18 * 4, 0x43920000);
-	this->setMem(19 * 4, 0x4C060001);
-	this->setMem(20 * 4, 0x4C090004);
-	this->setMem(21 * 4, 0x10028000);
-	this->setMem(22 * 4, 0x55810060);
-	this->setMem(23 * 4, 0x04020000);
-	this->setMem(24 * 4, 0x10658000);
-	this->setMem(25 * 4, 0x56810048);
-	this->setMem(26 * 4, 0xC10000C0);
-	this->setMem(27 * 4, 0x92000000);
+	this->memory->setMem(0 * 4, 0xC0500070);
+	this->memory->setMem(1 * 4, 0x4B060000);
+	this->memory->setMem(2 * 4, 0x4B010000);
+	this->memory->setMem(3 * 4, 0x4B000000);
+	this->memory->setMem(4 * 4, 0x4F0A0070);
+	this->memory->setMem(5 * 4, 0x4F0D00F0);
+	this->memory->setMem(6 * 4, 0x4C0A0004);
+	this->memory->setMem(7 * 4, 0xC0BA0000);
+	this->memory->setMem(8 * 4, 0x42BD0000);
+	this->memory->setMem(9 * 4, 0x4C0D0004);
+	this->memory->setMem(10 * 4, 0x4C060001);
+	this->memory->setMem(11 * 4, 0x10658000);
+	this->memory->setMem(12 * 4, 0x56810018);
+	this->memory->setMem(13 * 4, 0x4B060000);
+	this->memory->setMem(14 * 4, 0x4F0900F0);
+	this->memory->setMem(15 * 4, 0x43900000);
+	this->memory->setMem(16 * 4, 0x4C060001);
+	this->memory->setMem(17 * 4, 0x4C090004);
+	this->memory->setMem(18 * 4, 0x43920000);
+	this->memory->setMem(19 * 4, 0x4C060001);
+	this->memory->setMem(20 * 4, 0x4C090004);
+	this->memory->setMem(21 * 4, 0x10028000);
+	this->memory->setMem(22 * 4, 0x55810060);
+	this->memory->setMem(23 * 4, 0x04020000);
+	this->memory->setMem(24 * 4, 0x10658000);
+	this->memory->setMem(25 * 4, 0x56810048);
+	this->memory->setMem(26 * 4, 0xC10000C0);
+	this->memory->setMem(27 * 4, 0x92000000);
 
-	this->setMem(28 * 4, 0x0000000A);
-	this->setMem(29 * 4, 0x00000006);
-	this->setMem(30 * 4, 0x0000002C);
-	this->setMem(31 * 4, 0x00000045);
-	this->setMem(32 * 4, 0x00000001);
-	this->setMem(33 * 4, 0x00000007);
-	this->setMem(34 * 4, 0x00000000);
-	this->setMem(35 * 4, 0x00000001);
-	this->setMem(36 * 4, 0x00000005);
-	this->setMem(37 * 4, 0x0000000A);
-	this->setMem(38 * 4, 0x00000055);
+	this->memory->setMem(28 * 4, 0x0000000A);
+	this->memory->setMem(29 * 4, 0x00000006);
+	this->memory->setMem(30 * 4, 0x0000002C);
+	this->memory->setMem(31 * 4, 0x00000045);
+	this->memory->setMem(32 * 4, 0x00000001);
+	this->memory->setMem(33 * 4, 0x00000007);
+	this->memory->setMem(34 * 4, 0x00000000);
+	this->memory->setMem(35 * 4, 0x00000001);
+	this->memory->setMem(36 * 4, 0x00000005);
+	this->memory->setMem(37 * 4, 0x0000000A);
+	this->memory->setMem(38 * 4, 0x00000055);
 	// */
 
 	// /*
 	// program 4
-	this->setMem(0 * 4, 0xC050004C);
-	this->setMem(1 * 4, 0x4B060000);
-	this->setMem(2 * 4, 0x4B000000);
-	this->setMem(3 * 4, 0x4B010000);
-	this->setMem(4 * 4, 0x4B020000);
-	this->setMem(5 * 4, 0x4B030001);
-	this->setMem(6 * 4, 0x4F07009C);
-	this->setMem(7 * 4, 0xC1270000);
-	this->setMem(8 * 4, 0x4C070004);
-	this->setMem(9 * 4, 0x4C060001);
-	this->setMem(10 * 4, 0x05320000);
-	this->setMem(11 * 4, 0xC1070000);
-	this->setMem(12 * 4, 0x4C070004);
-	this->setMem(13 * 4, 0x4C060001);
-	this->setMem(14 * 4, 0x04230000);
-	this->setMem(15 * 4, 0x04300000);
-	this->setMem(16 * 4, 0x10658000);
-	this->setMem(17 * 4, 0x56810028);
-	this->setMem(18 * 4, 0x92000000);
+	this->memory->setMem(0 * 4, 0xC050004C);
+	this->memory->setMem(1 * 4, 0x4B060000);
+	this->memory->setMem(2 * 4, 0x4B000000);
+	this->memory->setMem(3 * 4, 0x4B010000);
+	this->memory->setMem(4 * 4, 0x4B020000);
+	this->memory->setMem(5 * 4, 0x4B030001);
+	this->memory->setMem(6 * 4, 0x4F07009C);
+	this->memory->setMem(7 * 4, 0xC1270000);
+	this->memory->setMem(8 * 4, 0x4C070004);
+	this->memory->setMem(9 * 4, 0x4C060001);
+	this->memory->setMem(10 * 4, 0x05320000);
+	this->memory->setMem(11 * 4, 0xC1070000);
+	this->memory->setMem(12 * 4, 0x4C070004);
+	this->memory->setMem(13 * 4, 0x4C060001);
+	this->memory->setMem(14 * 4, 0x04230000);
+	this->memory->setMem(15 * 4, 0x04300000);
+	this->memory->setMem(16 * 4, 0x10658000);
+	this->memory->setMem(17 * 4, 0x56810028);
+	this->memory->setMem(18 * 4, 0x92000000);
 
-	this->setMem(19 * 4, 0x0000000B);
+	this->memory->setMem(19 * 4, 0x0000000B);
 	/**/
 
 	/*
 	// program C
-	this->setMem(0 * 4, 0xC0500070);
-	this->setMem(1 * 4, 0x4B060000);
-	this->setMem(2 * 4, 0x4B010000);
-	this->setMem(3 * 4, 0x4B000000);
-	this->setMem(4 * 4, 0x4F0A0070);
-	this->setMem(5 * 4, 0x4F0D00F0);
-	this->setMem(6 * 4, 0x4C0A0004);
-	this->setMem(7 * 4, 0xC0BA0000);
-	this->setMem(8 * 4, 0x42BD0000);
-	this->setMem(9 * 4, 0x4C0D0004);
-	this->setMem(10 * 4, 0x4C060001);
-	this->setMem(11 * 4, 0x10658000);
-	this->setMem(12 * 4, 0x56810018);
-	this->setMem(13 * 4, 0x4B060000);
-	this->setMem(14 * 4, 0x4F0900F0);
-	this->setMem(15 * 4, 0x43900000);
-	this->setMem(16 * 4, 0x4C060001);
-	this->setMem(17 * 4, 0x4C090004);
-	this->setMem(18 * 4, 0x43920000);
-	this->setMem(19 * 4, 0x4C060001);
-	this->setMem(20 * 4, 0x4C090004);
-	this->setMem(21 * 4, 0x10028000);
-	this->setMem(22 * 4, 0x55810060);
-	this->setMem(23 * 4, 0x04020000);
-	this->setMem(24 * 4, 0x10658000);
-	this->setMem(25 * 4, 0x56810048);
-	this->setMem(26 * 4, 0xC10000C0);
-	this->setMem(27 * 4, 0x92000000);
+	this->memory->setMem(0 * 4, 0xC0500070);
+	this->memory->setMem(1 * 4, 0x4B060000);
+	this->memory->setMem(2 * 4, 0x4B010000);
+	this->memory->setMem(3 * 4, 0x4B000000);
+	this->memory->setMem(4 * 4, 0x4F0A0070);
+	this->memory->setMem(5 * 4, 0x4F0D00F0);
+	this->memory->setMem(6 * 4, 0x4C0A0004);
+	this->memory->setMem(7 * 4, 0xC0BA0000);
+	this->memory->setMem(8 * 4, 0x42BD0000);
+	this->memory->setMem(9 * 4, 0x4C0D0004);
+	this->memory->setMem(10 * 4, 0x4C060001);
+	this->memory->setMem(11 * 4, 0x10658000);
+	this->memory->setMem(12 * 4, 0x56810018);
+	this->memory->setMem(13 * 4, 0x4B060000);
+	this->memory->setMem(14 * 4, 0x4F0900F0);
+	this->memory->setMem(15 * 4, 0x43900000);
+	this->memory->setMem(16 * 4, 0x4C060001);
+	this->memory->setMem(17 * 4, 0x4C090004);
+	this->memory->setMem(18 * 4, 0x43920000);
+	this->memory->setMem(19 * 4, 0x4C060001);
+	this->memory->setMem(20 * 4, 0x4C090004);
+	this->memory->setMem(21 * 4, 0x10028000);
+	this->memory->setMem(22 * 4, 0x55810060);
+	this->memory->setMem(23 * 4, 0x04020000);
+	this->memory->setMem(24 * 4, 0x10658000);
+	this->memory->setMem(25 * 4, 0x56810048);
+	this->memory->setMem(26 * 4, 0xC10000C0);
+	this->memory->setMem(27 * 4, 0x92000000);
 
-	this->setMem(28 * 4, 0x0000000A);
-	this->setMem(29 * 4, 0x00000006);
-	this->setMem(30 * 4, 0x0000002C);
-	this->setMem(31 * 4, 0x00000045);
-	this->setMem(32 * 4, 0x000000E1);
-	this->setMem(33 * 4, 0x00000017);
-	this->setMem(34 * 4, 0x00000000);
-	this->setMem(35 * 4, 0x00000002);
-	this->setMem(36 * 4, 0x00000005);
-	this->setMem(37 * 4, 0x000000AA);
-	this->setMem(38 * 4, 0x00000055);
+	this->memory->setMem(28 * 4, 0x0000000A);
+	this->memory->setMem(29 * 4, 0x00000006);
+	this->memory->setMem(30 * 4, 0x0000002C);
+	this->memory->setMem(31 * 4, 0x00000045);
+	this->memory->setMem(32 * 4, 0x000000E1);
+	this->memory->setMem(33 * 4, 0x00000017);
+	this->memory->setMem(34 * 4, 0x00000000);
+	this->memory->setMem(35 * 4, 0x00000002);
+	this->memory->setMem(36 * 4, 0x00000005);
+	this->memory->setMem(37 * 4, 0x000000AA);
+	this->memory->setMem(38 * 4, 0x00000055);
 	/**/
-
-	this->pc = 0;
 }
 
 int32_t CPU::getReg(uint8_t reg) {
@@ -177,31 +174,10 @@ void CPU::setReg(uint8_t reg, int32_t value) {
 	this->registers[reg] = value;
 }
 
-int32_t CPU::getMem(uint16_t addr) {
-	assert(addr % 4 == 0);
-
-	// TODO: get offset from PCB
-	int32_t result = this->memory[addr] << 24;
-	result |= this->memory[addr + 1] << 16;
-	result |= this->memory[addr + 2] << 8;
-	result |= this->memory[addr + 3];
-	return result;
-}
-
-void CPU::setMem(uint16_t addr, int32_t data) {
-	assert(addr % 4 == 0);
-
-	// TODO: get offset from PCB
-	this->memory[addr] = data >> 24;
-	this->memory[addr + 1] = data >> 16;
-	this->memory[addr + 2] = data >> 8;
-	this->memory[addr + 3] = data;
-}
-
 void CPU::step() {
 	// TODO: get program counter from PCB
 	std::cout << std::hex << this->pc << std::dec << " ";
-	Instruction i = Instruction(this->getMem(this->pc));
+	Instruction i = Instruction(this->memory->getMem(this->pc));
 	this->pc += 4;
 	disassembleInstruction(i);
 
@@ -215,9 +191,9 @@ void CPU::step() {
 		// read from the address instead of the register
 		int32_t data;
 		if (rdaddr == 0) {
-			data = this->getMem(r2);
+			data = this->memory->getMem(r2);
 		} else {
-			data = this->getMem(rdaddr);
+			data = this->memory->getMem(rdaddr);
 		}
 
 		this->setReg(r1, data);
@@ -229,9 +205,9 @@ void CPU::step() {
 		uint32_t wraddr = i.shortAddr();
 
 		if (wraddr == 0) {
-			this->setMem(wrr2, wrr1);
+			this->memory->setMem(wrr2, wrr1);
 		} else {
-			this->setMem(wraddr, wrr1);
+			this->memory->setMem(wraddr, wrr1);
 		}
 	} break;
 
@@ -242,14 +218,14 @@ void CPU::step() {
 		// LW and ST are never used with a non-zero shortAddr, and it's unspecified
 		// what they would do with a non-zero shortAddr, so this is the best I've got
 
-		this->setReg(d, this->getMem(addr));
+		this->setReg(d, this->memory->getMem(addr));
 	} break;
 
 	case Opcode::ST: {
 		int32_t data = this->getReg(i.cimmB());
 		int32_t addr = this->getReg(i.cimmD());
 
-		this->setMem(addr, data);
+		this->memory->setMem(addr, data);
 	} break;
 
 	case Opcode::MOV: {

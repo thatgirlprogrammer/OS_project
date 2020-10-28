@@ -163,6 +163,7 @@
     <ClCompile Include="job_number_compare.cpp" />
     <ClCompile Include="job_priority.cpp" />
     <ClCompile Include="job_priority_compare.cpp" />
+    <ClCompile Include="Memory.cpp" />
     <ClCompile Include="memory_address_register.cpp" />
     <ClCompile Include="memory_buffer_register.cpp" />
     <ClCompile Include="Process.cpp" />
@@ -182,13 +183,13 @@
     <ClInclude Include="job_numbers.h" />
     <ClInclude Include="job_priority.h" />
     <ClInclude Include="job_priority_compare.h" />
+    <ClInclude Include="Memory.h" />
     <ClInclude Include="memory_address_register.h" />
     <ClInclude Include="memory_buffer_register.h" />
     <ClInclude Include="pcb.h" />
     <ClInclude Include="Process.h" />
     <ClInclude Include="program_counter.h" />
     <ClInclude Include="runnable.h" />
-    <ClInclude Include="short_term_schedular.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
