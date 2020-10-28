@@ -9,6 +9,9 @@
 #include "Disassemble.h"
 #include "CPU.h"
 #include "Memory.h"
+#include "disk.h"
+#include "ram.h"
+#include "loader.h"
 
 using namespace OSSim;
 
@@ -78,6 +81,11 @@ int main() {
 //	i.push_back(Instruction(0x92000000));
 //	disassemble(i);
 
+	disk* dsk = new disk;
+	RAM* ram = new RAM;
+	loader load("./Program-File.txt", dsk);
+	load.load_file();
+	
 	Memory* memory = new Memory();
 
 	CPU cpu(memory);
