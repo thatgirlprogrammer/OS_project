@@ -2,12 +2,14 @@
 #include <cstddef>
 #include <cstdint>
 #include <cassert>
+#include <vector>
 
 using namespace std;
 
 class RAM
 {
 private:
+    vector<uint8_t*> queue;
     uint8_t storage[1030];
 public:
     RAM()
@@ -17,21 +19,23 @@ public:
             storage[i] = 0;
         }
     }
-    void store(uint8_t hex, int start, int end);
+    void store(uint8_t hex[], int start, int end, uint8_t* process);
     void isFull();
     uint8_t pass(int index);
 };
 
-void RAM::store(uint8_t hex, int start, int end)
+void RAM::store(uint8_t hex[], int start, int end, uint8_t* process)
 {
     assert(end < 1024);
     RAM check;
     check.isFull();
+    queue.push_back(process);
+
     for (int i = start; i < end; i++)
     {
         if (storage[i] == 0)
         {
-            storage[i] = hex;
+            storage[i] = hex[i-start];
             break;
         }
     }
