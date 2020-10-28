@@ -8,6 +8,9 @@
 #include "job_number.h"
 #include "Disassemble.h"
 #include "CPU.h"
+#include "disk.h"
+#include "ram.h"
+#include "loader.h"
 
 using namespace OSSim;
 
