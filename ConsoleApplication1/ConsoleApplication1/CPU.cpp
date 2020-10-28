@@ -93,7 +93,32 @@ CPU::CPU() {
 	this->setMem(38 * 4, 0x00000055);
 	// */
 
-	///*
+	// /*
+	// program 4
+	this->setMem(0 * 4, 0xC050004C);
+	this->setMem(1 * 4, 0x4B060000);
+	this->setMem(2 * 4, 0x4B000000);
+	this->setMem(3 * 4, 0x4B010000);
+	this->setMem(4 * 4, 0x4B020000);
+	this->setMem(5 * 4, 0x4B030001);
+	this->setMem(6 * 4, 0x4F07009C);
+	this->setMem(7 * 4, 0xC1270000);
+	this->setMem(8 * 4, 0x4C070004);
+	this->setMem(9 * 4, 0x4C060001);
+	this->setMem(10 * 4, 0x05320000);
+	this->setMem(11 * 4, 0xC1070000);
+	this->setMem(12 * 4, 0x4C070004);
+	this->setMem(13 * 4, 0x4C060001);
+	this->setMem(14 * 4, 0x04230000);
+	this->setMem(15 * 4, 0x04300000);
+	this->setMem(16 * 4, 0x10658000);
+	this->setMem(17 * 4, 0x56810028);
+	this->setMem(18 * 4, 0x92000000);
+
+	this->setMem(19 * 4, 0x0000000B);
+	/**/
+
+	/*
 	// program C
 	this->setMem(0 * 4, 0xC0500070);
 	this->setMem(1 * 4, 0x4B060000);
