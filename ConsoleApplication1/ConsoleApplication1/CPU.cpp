@@ -44,7 +44,7 @@ CPU::CPU() {
 	this->memory[31] = 0x00000005;
 	this->memory[32] = 0x0000000A;
 	this->memory[33] = 0x00000055;*/
-/* Program 2
+/* Program 2*/
 		this->memory[0] = 0xC0500070;
 		this->memory[1] = 0x4B060000;
 		this->memory[2] = 0x4B010000;
@@ -117,9 +117,9 @@ CPU::CPU() {
 		this->memory[68] = 0x00000000;
 		this->memory[69] = 0x00000000;
 		this->memory[70] = 0x00000000;
-		this->memory[71] = 0x00000000;*/
+		this->memory[71] = 0x00000000;
 
-/* Program 3*/
+/* Program 3
 this->memory[0] = 0xC0500060;
 this->memory[1] = 0x4B060000;
 this->memory[2] = 0x4B010000;
@@ -188,7 +188,7 @@ this->memory[63] = 0x00000000;
 this->memory[64] = 0x00000000;
 this->memory[65] = 0x00000000;
 this->memory[66] = 0x00000000;
-this->memory[67] = 0x00000000;
+this->memory[67] = 0x00000000;*/
 
 /* Program 4
 this->memory[0] = 0xC050004C;
@@ -254,8 +254,8 @@ this->memory[58] = 0x00000000;
 this->memory[59] = 0x00000000;
 this->memory[60] = 0x00000000;
 this->memory[61] = 0x00000000;
-this->memory[62] = 0x00000000;
-*/
+this->memory[62] = 0x00000000;*/
+
 
 	this->pc = 0;
 }
@@ -273,6 +273,78 @@ void CPU::setReg(uint8_t reg, int32_t value) {
 }
 
 void CPU::step() {
+	/*
+	this->pc = 0;
+	this->memory[0] = 0xC0500060;
+this->memory[1] = 0x4B060000;
+this->memory[2] = 0x4B010000;
+this->memory[3] = 0x4B000000;
+this->memory[4] = 0x4F0A0060;
+this->memory[5] = 0x4F0D00E0;
+this->memory[6] = 0x4C0A0004;
+this->memory[7] = 0xC0BA0000;
+this->memory[8] = 0x42BD0000;
+this->memory[9] = 0x4C0D0004;
+this->memory[10] = 0x4C060001;
+this->memory[11] = 0x10658000;
+this->memory[12] = 0x56810018;
+this->memory[13] = 0x4B060000;
+this->memory[14] = 0x4F0900E0;
+this->memory[15] = 0x43970000;
+this->memory[16] = 0x05070000;
+this->memory[17] = 0x4C060001;
+this->memory[18] = 0x4C090004;
+this->memory[19] = 0x10658000;
+this->memory[20] = 0x5681003C;
+this->memory[21] = 0x08050000;
+this->memory[22] = 0xC10000B0;
+this->memory[23] = 0x92000000;
+
+this->memory[24] = 0x0000000A;
+this->memory[25] = 0x00000006;
+this->memory[26] = 0x0000002C;
+this->memory[27] = 0x00000045;
+this->memory[28] = 0x00000001;
+this->memory[29] = 0x00000009;
+this->memory[30] = 0x000000B0;
+this->memory[31] = 0x00000001;
+this->memory[32] = 0x00000007;
+this->memory[33] = 0x000000AA;
+this->memory[34] = 0x00000055;
+this->memory[35] = 0x00000000;
+this->memory[36] = 0x00000000;
+this->memory[37] = 0x00000000;
+this->memory[37] = 0x00000000;
+this->memory[39] = 0x00000000;
+this->memory[40] = 0x00000000;
+this->memory[41] = 0x00000000;
+this->memory[42] = 0x00000000;
+this->memory[43] = 0x00000000;
+this->memory[44] = 0x00000000;
+this->memory[45] = 0x00000000;
+this->memory[46] = 0x00000000;
+this->memory[47] = 0x00000000;
+this->memory[48] = 0x00000000;
+this->memory[49] = 0x00000000;
+this->memory[50] = 0x00000000;
+this->memory[51] = 0x00000000;
+this->memory[52] = 0x00000000;
+this->memory[53] = 0x00000000;
+this->memory[54] = 0x00000000;
+this->memory[55] = 0x00000000;
+this->memory[56] = 0x00000000;
+this->memory[57] = 0x00000000;
+this->memory[58] = 0x00000000;
+this->memory[59] = 0x00000000;
+this->memory[60] = 0x00000000;
+this->memory[61] = 0x00000000;
+this->memory[62] = 0x00000000;
+this->memory[63] = 0x00000000;
+this->memory[64] = 0x00000000;
+this->memory[65] = 0x00000000;
+this->memory[66] = 0x00000000;
+this->memory[67] = 0x00000000;*/
+		//this->pc = 0;
 	// get program counter from PCB
 	// TODO: offset
 	Instruction i = Instruction(this->memory[this->pc++]);
@@ -287,10 +359,10 @@ void CPU::step() {
 		// assuming the same rules as immediate instructions, if r2 is 0,
 		// read from the address instead of the register
 		int32_t data;
-		if (r2 == 0) {
-			data = this->memory[rdaddr];
-		} else {
+		if (rdaddr == 0) {
 			data = this->memory[r2];
+		} else {
+			data = this->memory[rdaddr];
 		}
 
 		this->setReg(r1, data);
