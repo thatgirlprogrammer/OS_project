@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Instruction.h"
 
 Instruction::Instruction(uint32_t inst) {
@@ -42,7 +43,10 @@ Instruction::Instruction(uint32_t inst) {
 		break;
 	}
 
-	assert(ok);
+	if (!ok) {
+		std::cout << "bad instruction " << std::hex << inst << std::dec << std::endl;
+		assert(ok);
+	}
 }
 
 Opcode Instruction::opcode() {

@@ -46,8 +46,39 @@ int main() {
 	delete schedule;
 	schedule = nullptr;
 
+//	std::vector<Instruction> i;
+//	i.push_back(Instruction(0xC0500070));
+//	i.push_back(Instruction(0x4B060000));
+//	i.push_back(Instruction(0x4B010000));
+//	i.push_back(Instruction(0x4B000000));
+//	i.push_back(Instruction(0x4F0A0070));
+//	i.push_back(Instruction(0x4F0D00F0));
+//	i.push_back(Instruction(0x4C0A0004));
+//	i.push_back(Instruction(0xC0BA0000));
+//	i.push_back(Instruction(0x42BD0000));
+//	i.push_back(Instruction(0x4C0D0004));
+//	i.push_back(Instruction(0x4C060001));
+//	i.push_back(Instruction(0x10658000));
+//	i.push_back(Instruction(0x56810018));
+//	i.push_back(Instruction(0x4B060000));
+//	i.push_back(Instruction(0x4F0900F0));
+//	i.push_back(Instruction(0x43900000));
+//	i.push_back(Instruction(0x4C060001));
+//	i.push_back(Instruction(0x4C090004));
+//	i.push_back(Instruction(0x43920000));
+//	i.push_back(Instruction(0x4C060001));
+//	i.push_back(Instruction(0x4C090004));
+//	i.push_back(Instruction(0x10028000));
+//	i.push_back(Instruction(0x55810060));
+//	i.push_back(Instruction(0x04020000));
+//	i.push_back(Instruction(0x10658000));
+//	i.push_back(Instruction(0x56810048));
+//	i.push_back(Instruction(0xC10000C0));
+//	i.push_back(Instruction(0x92000000));
+//	disassemble(i);
+
 	CPU cpu;
-	for (int i = 0; i < 0x17; i++)
+	while (!cpu.isDone())
 		cpu.step();
 
 	return 0;
