@@ -36,6 +36,7 @@ namespace OSSim {
 		unsigned int job_disk_address = 0x0;
 		unsigned int job_memory_address = 0x0;
 		unsigned int job_instruction_count = 0;
+		unsigned int job_size = 0;
 		bool job_in_memory = false;
 		general_register registers[16];
 		PROCESS_STATUS process_status = NEW;
