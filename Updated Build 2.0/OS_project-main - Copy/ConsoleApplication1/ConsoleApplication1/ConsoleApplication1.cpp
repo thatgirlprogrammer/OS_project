@@ -12,8 +12,11 @@
 #include "CPU.h"
 #include "Memory.h"
 #include "long_term_scheduler.h"
+#include <algorithm>
 
 using namespace OSSim;
+
+enum SORT_METHOD { NUMBER, PRIORITY, LENGTH };
 
 void print(PCB_info info) {
 	std::cout << "pcb info:" << std::endl;
@@ -42,14 +45,7 @@ int main() {
 	
 	uint32_t val = 0x4bd63000;
 	instructions.push_back(*(new Instruction(val)));
-	/*
-	short_term_scheduler* schedule = new short_term_scheduler(j);
-	schedule->add_job(info, &instructions);
-	print(info);*/
 
-	//delete ir;
-	//delete schedule;
-	//schedule = nullptr;
 
 //	std::vector<Instruction> i;
 //	i.push_back(Instruction(0xC0500070));
@@ -82,45 +78,80 @@ int main() {
 //	i.push_back(Instruction(0x92000000));
 //	disassemble(i);
 
+
+	SORT_METHOD method = NUMBER;
 	disk* dsk = new disk;
 	//RAM* ram = new RAM;
 	
 	loader* load = new loader("./Program-File.txt", dsk);
 	load->load_file();
-
-	for (int i = 0; i < 30; ++i) {
-		print(load->get_info(i));
+	PCB_info pcbs[30];
+	int priorities[30];
+	
+	switch (method)
+	{
+	case NUMBER:
+		for (int i = 0; i < 30; ++i) {
+			pcbs[i] = load->get_info(i);
+		}
+		break;
+	case PRIORITY:
+		for (int i = 0; i < 30; ++i) {
+			priorities[i] = load->get_info(i).pc.job_priority;
+			pcbs[i] = load->get_info(priorities[i]);
+		}
+		break;
+	case LENGTH:
+		for (int i = 0; i < 30; ++i) {
+			priorities[i] = load->get_info(i).pc.job_instruction_count;
+			pcbs[i] = load->get_info(priorities[i]);
+		}
+		break;
+	default:
+		break;
 	}
+	
+	//std::sort(priorities);
+	for (int i = 0; i < 30; i++)
+		print(pcbs[i]);
 
 	for (int i = 0; i < 2048; ++i) {
 		std::cout << dsk->read(i) << "\n";
 	}
 
 	long_term_scheduler* lts = new long_term_scheduler();
-
-	PCB_info i = load->get_info(0);
-
-	//int32_t chunk[67]; 
-	
 	for (int i = 0; i < 67; ++i) {
 		lts->write_to_ram(dsk->read(i), i);
 	}
 
 	std::cout << "Printing RAM" << std::endl;
-
 	for (int i = 0; i < 67; ++i) {
 		cout << lts->read(i) << endl;
 	}
+
 	Memory* mem = new Memory;
 	short_term_scheduler* sts = new short_term_scheduler(mem);
 
+	int32_t chunks[67];
 	for (int i = 0; i < 67; ++i) {
-		sts->add_memory(i, lts->read(i));
+		chunks[i] = lts->read(i);
+	}
+
+	for (int i = 0; i < 67; ++i) {
+		sts->add_memory(i, chunks[i]);
 	}
 
 	CPU cpu(mem);
 	while (!cpu.isDone())
 		cpu.step();
 
+	delete dsk;
+	dsk = nullptr;
+	delete load;
+	load = nullptr;
+	delete mem;
+	mem = nullptr;
+	delete lts;
+	lts = nullptr;
 	return 0;
 }

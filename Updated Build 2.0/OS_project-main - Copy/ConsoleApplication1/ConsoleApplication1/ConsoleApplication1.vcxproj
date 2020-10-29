@@ -156,7 +156,6 @@
     <ClCompile Include="Disassemble.cpp" />
     <ClCompile Include="disk.cpp" />
     <ClCompile Include="instruction.cpp" />
-    <ClCompile Include="interrupt.cpp" />
     <ClCompile Include="job_number.cpp" />
     <ClCompile Include="loader.cpp" />
     <ClCompile Include="long_term_scheduler.cpp" />
@@ -170,7 +169,6 @@
     <ClInclude Include="Disassemble.h" />
     <ClInclude Include="disk.h" />
     <ClInclude Include="instruction.h" />
-    <ClInclude Include="interrupt.h" />
     <ClInclude Include="job_number.h" />
     <ClInclude Include="job_numbers.h" />
     <ClInclude Include="job_priority.h" />

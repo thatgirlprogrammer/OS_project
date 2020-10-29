@@ -21,9 +21,6 @@
     <ClCompile Include="Process.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="interrupt.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="job_number.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="memory_address_register.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="interrupt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pcb.h">
