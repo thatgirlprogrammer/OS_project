@@ -92,6 +92,7 @@ CPU::CPU(Memory* memory) {
 
 	// /*
 	// program 4
+	/*
 	this->memory->setMem(0 * 4, 0xC050004C);
 	this->memory->setMem(1 * 4, 0x4B060000);
 	this->memory->setMem(2 * 4, 0x4B000000);
@@ -112,7 +113,7 @@ CPU::CPU(Memory* memory) {
 	this->memory->setMem(17 * 4, 0x56810028);
 	this->memory->setMem(18 * 4, 0x92000000);
 
-	this->memory->setMem(19 * 4, 0x0000000B);
+	this->memory->setMem(19 * 4, 0x0000000B);*/
 	/**/
 
 	/*
