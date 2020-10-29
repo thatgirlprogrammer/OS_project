@@ -8,10 +8,10 @@
 #include "job_number.h"
 #include "Disassemble.h"
 #include "disk.h"
-#include "ram.h"
 #include "loader.h"
 #include "CPU.h"
 #include "Memory.h"
+#include "long_term_scheduler.h"
 
 using namespace OSSim;
 
@@ -23,6 +23,7 @@ void print(PCB_info info) {
 	std::cout << "\tinstruction count: " << info.pc.job_instruction_count << std::endl;
 	std::cout << "\tin memory: " << info.pc.job_in_memory << std::endl;
 	std::cout << "\tstatus: " << info.pc.process_status << std::endl;
+	std::cout << "\tsize: " << info.pc.job_size << std::endl;
 }
 
 int main() {
@@ -41,14 +42,14 @@ int main() {
 	
 	uint32_t val = 0x4bd63000;
 	instructions.push_back(*(new Instruction(val)));
-
+	/*
 	short_term_scheduler* schedule = new short_term_scheduler(j);
 	schedule->add_job(info, &instructions);
-	print(info);
+	print(info);*/
 
 	//delete ir;
-	delete schedule;
-	schedule = nullptr;
+	//delete schedule;
+	//schedule = nullptr;
 
 //	std::vector<Instruction> i;
 //	i.push_back(Instruction(0xC0500070));
@@ -82,10 +83,40 @@ int main() {
 //	disassemble(i);
 
 	disk* dsk = new disk;
-	RAM* ram = new RAM;
+	//RAM* ram = new RAM;
+	
+	loader* load = new loader("./Program-File.txt", dsk);
+	load->load_file();
+
+	for (int i = 0; i < 30; ++i) {
+		print(load->get_info(i));
+	}
+
+	for (int i = 0; i < 2048; ++i) {
+		std::cout << dsk->read(i) << "\n";
+	}
+
+	long_term_scheduler* lts = new long_term_scheduler();
+
+	PCB_info i = load->get_info(0);
+
+	//int32_t chunk[67]; 
+	
+	for (int i = 0; i < 67; ++i) {
+		lts->write_to_ram(dsk->read(i), i);
+	}
+
+	std::cout << "Printing RAM" << std::endl;
+
+	for (int i = 0; i < 67; ++i) {
+		cout << lts->read(i) << endl;
+	}
 	Memory* mem = new Memory;
-	loader load("./Program-File.txt", dsk);
-	load.load_file();
+	short_term_scheduler* sts = new short_term_scheduler(mem);
+
+	for (int i = 0; i < 67; ++i) {
+		sts->add_memory(i, lts->read(i));
+	}
 
 	CPU cpu(mem);
 	while (!cpu.isDone())
