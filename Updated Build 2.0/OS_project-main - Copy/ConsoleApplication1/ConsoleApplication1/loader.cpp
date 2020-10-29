@@ -11,15 +11,21 @@ using namespace std;
 loader::loader(string file_name, disk* d) {
 	file.open(file_name, ios::in);
 	dsk = d;
+	new_q = new vector<PCB_info*>;
+	ready = new vector<PCB_info*>;
+	running = new vector<PCB_info*>;
+	waiting = new vector<PCB_info*>;
+	terminated = new vector<PCB_info*>;
 }
 void loader::load_file() {
-	PCB_info info;
+	PCB_info* info = new PCB_info;
 	if (file.is_open()) {
 		string line;
 		int current = 0;
 		int start = 0;
 		while (getline(file, line)) {
 			if (line.find("JOB") != std::string::npos) {
+				info = new PCB_info;
 				start = current;
 				cout << "Job encountered." << "\n";
 				string num1 = "0x";
@@ -50,10 +56,10 @@ void loader::load_file() {
 				int32_t job_number = strtoul(num1.c_str(), nullptr, 16);
 				int32_t job_count = strtoul(num2.c_str(), nullptr, 16);
 				int32_t job_priority = strtoul(num3.c_str(), nullptr, 16);
-				info.pc.job_number = job_number;
-				info.pc.job_priority = job_priority;
-				info.pc.job_instruction_count = job_count;
-				info.pc.job_disk_address = current;
+				info->pc.job_number = job_number;
+				info->pc.job_priority = job_priority;
+				info->pc.job_instruction_count = job_count;
+				info->pc.job_disk_address = current;
 				cout << num1 << " " << num2 << " " << num3 << "\n";
 			}
 			else if (line.find("Data") != std::string::npos) {
@@ -86,15 +92,15 @@ void loader::load_file() {
 				int32_t iBuffer = strtoul(num1.c_str(), nullptr, 16);
 				int32_t oBuffer = strtoul(num2.c_str(), nullptr, 16);
 				int32_t sBuffer = strtoul(num3.c_str(), nullptr, 16);
-				info.b.input_buffer = iBuffer;
-				info.b.output_buffer = oBuffer;
-				info.b.temp_buffer = sBuffer;
+				info->b.input_buffer = iBuffer;
+				info->b.output_buffer = oBuffer;
+				info->b.temp_buffer = sBuffer;
 				cout << num1 << " " << num2 << " " << num3 << "\n";
 			}
 			else if (line.find("END") != std::string::npos) {
-				info.pc.job_size = current - start;
+				info->pc.job_size = current - start;
 				cout << current - start << endl;
-				collection.push_back(info);
+				new_q->push_back(info);
 				cout << "End of file." << "\n";
 			}
 			else {
@@ -114,7 +120,33 @@ void loader::load_file() {
 	}
 }
 
-PCB_info loader::get_info(int index)
-{
-	return collection.at(index);
+void loader::move_new_ready(int index) {
+	PCB_info* process = new_q->at(index);
+	new_q->erase(new_q->begin() + index);
+	process->pc.process_status = READY;
+	ready->push_back(process);
+}
+void loader::move_waiting_ready(int index) {
+	PCB_info* process = waiting->at(index);
+	waiting->erase(waiting->begin() + index);
+	process->pc.process_status = RUN;
+	ready->push_back(process);
+}
+void loader::move_running(int index) {
+	PCB_info* process = ready->at(index);
+	ready->erase(ready->begin() + index);
+	process->pc.process_status = RUN;
+	running->push_back(process);
+}
+void loader::move_waiting(int index) {
+	PCB_info* process = running->at(index);
+	running->erase(running->begin() + index);
+	process->pc.process_status = WAIT;
+	waiting->push_back(process);
+}
+void loader::move_terminate(int index) {
+	PCB_info* process = running->at(index);
+	running->erase(running->begin() + index);
+	process->pc.process_status = TERMINATE;
+	terminated->push_back(process);
 }
