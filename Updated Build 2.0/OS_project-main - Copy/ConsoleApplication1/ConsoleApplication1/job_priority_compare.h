@@ -1,36 +1,37 @@
 #pragma once
-#include <vector>
-#include "instruction.h"
+#include "runnable.h"
 #include "pcb.h"
 
 namespace OSSim {
-	class priorities {
+	class job_priority : public IRunnable {
 	public:
-		priorities(PCB_info pcb_info, std::vector<Instruction>* instructions1) {
-			info = pcb_info;
-			instructions = instructions1;
+		job_priority() {}
+
+		void add_job(PCB_info job) {
+			priorities* jc1 = new priorities(job);
+			compare.push_back(*(jc1));
 		}
 
-		bool operator< (const priorities other) const {
-			return info.pc.job_priority < other.info.pc.job_priority;
+		void sort() {
+			std::sort(compare.begin(), compare.end());
 		}
 
-		PCB_info get_pcb_info() {
-			return info;
+		void print_compare() {
+			for (int i = 0; i < compare.size(); i++) {
+				auto val = compare.at(i);
+				std::cout << "job priority " << val.get_pcb_info().pc.job_priority << std::endl;
+			}
 		}
 
-		void set_PCB_info(pcb pc, data d, buffer b, process_details pd) {
-			info.pc = pc;
-			info.d = d;
-			info.b = b;
-			info.pd = pd;
+		PCB_info get_pcb(int index) {
+			return compare.at(index).get_pcb_info();
 		}
 
-		const char* decode_istructions() { return ""; }
-		void execute_instrustions() {}
+		size_t pcb_list_size() {
+			return compare.size();
+		}
+
 	private:
-		PCB_info info;
-		std::vector<Instruction>* instructions;
+		std::vector<priorities> compare;
 	};
 }
-
