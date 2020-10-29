@@ -15,7 +15,9 @@ public:
 	void step();
 
 	uint32_t getPC() { return this->pc; }
+	void setPC() { pc = 0; }
 	bool isDone() { return this->done; }
+	void setDone() { this->done = false; }
 private:
 	int32_t registers[REGISTER_COUNT];
 	uint32_t pc;
