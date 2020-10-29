@@ -1,24 +1,22 @@
 #pragma once
 #include <vector>
 #include "runnable.h"
-//#include "ram.h"
+#include "Memory.h"
 
 namespace OSSim {
 	class short_term_scheduler {
 	public:
-		short_term_scheduler(std::vector<uint8_t*>* queue)
+		short_term_scheduler(Memory* memory)
 		{
-			runnable_process = queue;
+			mem = memory;
 		}
 		~short_term_scheduler() {
-			delete runnable_process;
-			runnable_process = NULL;
-		}
-		void add_job(PCB_info info, uint8_t* process) {
 
+		}
+		void add_memory(uint16_t index, int32_t value) {
+			mem->setMem(index * 4, value);
 		}
 	private:
-		std::vector<uint8_t*>* runnable_process;
+		Memory* mem;
 	};
 }
-
