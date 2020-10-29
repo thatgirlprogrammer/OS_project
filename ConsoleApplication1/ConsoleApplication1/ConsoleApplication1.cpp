@@ -7,8 +7,11 @@
 #include "short_term_scheduler.h"
 #include "job_number.h"
 #include "Disassemble.h"
-#include "CPU.h"
+#include "disk.h"
+#include "ram.h"
 #include "loader.h"
+#include "CPU.h"
+#include "Memory.h"
 
 using namespace OSSim;
 
@@ -20,12 +23,6 @@ void print(PCB_info info) {
 	std::cout << "\tinstruction count: " << info.pc.job_instruction_count << std::endl;
 	std::cout << "\tin memory: " << info.pc.job_in_memory << std::endl;
 	std::cout << "\tstatus: " << info.pc.process_status << std::endl;
-	std::cout << "\tstatus: " << info.pc.program_counter << std::endl;
-	
-	std::cout << "\nBuffer" << std::endl;
-	std::cout << "\tinput buffer" << info.b.input_buffer << std::endl;
-	std::cout << "\toutput buffer" << info.b.output_buffer << std::endl;
-	std::cout << "\ttemp buffer" << info.b.temp_buffer << std::endl;
 }
 
 int main() {
@@ -34,56 +31,65 @@ int main() {
 	//reg1->set_content(new std::string("65b810aa"));
 	//std::cout << reg1->get_content() << std::endl;
 	//delete reg1;
-
+	
 	//interrupt_register* ir = new interrupt_register();
 	//ir->proccess_interrupt(*print);
 
+	IRunnable* j = new job_number();
 	PCB_info info;
+	std::vector<Instruction> instructions;
+	
+	uint32_t val = 0x4bd63000;
+	instructions.push_back(*(new Instruction(val)));
 
-
-	//short_term_scheduler* schedule = new short_term_scheduler();
+	short_term_scheduler* schedule = new short_term_scheduler(j);
+	schedule->add_job(info, &instructions);
 	print(info);
 
 	//delete ir;
-	//delete schedule;
-	//schedule = nullptr;
+	delete schedule;
+	schedule = nullptr;
 
-	//	std::vector<Instruction> i;
-	//	i.push_back(Instruction(0xC0500070));
-	//	i.push_back(Instruction(0x4B060000));
-	//	i.push_back(Instruction(0x4B010000));
-	//	i.push_back(Instruction(0x4B000000));
-	//	i.push_back(Instruction(0x4F0A0070));
-	//	i.push_back(Instruction(0x4F0D00F0));
-	//	i.push_back(Instruction(0x4C0A0004));
-	//	i.push_back(Instruction(0xC0BA0000));
-	//	i.push_back(Instruction(0x42BD0000));
-	//	i.push_back(Instruction(0x4C0D0004));
-	//	i.push_back(Instruction(0x4C060001));
-	//	i.push_back(Instruction(0x10658000));
-	//	i.push_back(Instruction(0x56810018));
-	//	i.push_back(Instruction(0x4B060000));
-	//	i.push_back(Instruction(0x4F0900F0));
-	//	i.push_back(Instruction(0x43900000));
-	//	i.push_back(Instruction(0x4C060001));
-	//	i.push_back(Instruction(0x4C090004));
-	//	i.push_back(Instruction(0x43920000));
-	//	i.push_back(Instruction(0x4C060001));
-	//	i.push_back(Instruction(0x4C090004));
-	//	i.push_back(Instruction(0x10028000));
-	//	i.push_back(Instruction(0x55810060));
-	//	i.push_back(Instruction(0x04020000));
-	//	i.push_back(Instruction(0x10658000));
-	//	i.push_back(Instruction(0x56810048));
-	//	i.push_back(Instruction(0xC10000C0));
-	//	i.push_back(Instruction(0x92000000));
-	//	disassemble(i);
+//	std::vector<Instruction> i;
+//	i.push_back(Instruction(0xC0500070));
+//	i.push_back(Instruction(0x4B060000));
+//	i.push_back(Instruction(0x4B010000));
+//	i.push_back(Instruction(0x4B000000));
+//	i.push_back(Instruction(0x4F0A0070));
+//	i.push_back(Instruction(0x4F0D00F0));
+//	i.push_back(Instruction(0x4C0A0004));
+//	i.push_back(Instruction(0xC0BA0000));
+//	i.push_back(Instruction(0x42BD0000));
+//	i.push_back(Instruction(0x4C0D0004));
+//	i.push_back(Instruction(0x4C060001));
+//	i.push_back(Instruction(0x10658000));
+//	i.push_back(Instruction(0x56810018));
+//	i.push_back(Instruction(0x4B060000));
+//	i.push_back(Instruction(0x4F0900F0));
+//	i.push_back(Instruction(0x43900000));
+//	i.push_back(Instruction(0x4C060001));
+//	i.push_back(Instruction(0x4C090004));
+//	i.push_back(Instruction(0x43920000));
+//	i.push_back(Instruction(0x4C060001));
+//	i.push_back(Instruction(0x4C090004));
+//	i.push_back(Instruction(0x10028000));
+//	i.push_back(Instruction(0x55810060));
+//	i.push_back(Instruction(0x04020000));
+//	i.push_back(Instruction(0x10658000));
+//	i.push_back(Instruction(0x56810048));
+//	i.push_back(Instruction(0xC10000C0));
+//	i.push_back(Instruction(0x92000000));
+//	disassemble(i);
 
-	CPU cpu;
+	disk* dsk = new disk;
+	RAM* ram = new RAM;
+	Memory* mem = new Memory;
+	loader load("./Program-File.txt", dsk);
+	load.load_file();
+
+	CPU cpu(mem);
 	while (!cpu.isDone())
 		cpu.step();
 
-	loader* l = new loader("C:/Users/amymu/source/repos/OS_project-main/ConsoleApplication1/ConsoleApplication1/Program-File-Wordversion-30-JOBS.txt");
-	l->load_file();
 	return 0;
 }
