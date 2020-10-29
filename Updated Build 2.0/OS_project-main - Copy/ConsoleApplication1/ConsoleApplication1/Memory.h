@@ -15,8 +15,11 @@ public:
 
 	int32_t getMem(uint16_t);
 	void setMem(uint16_t addr, int32_t data);
-
+	bool hasHole(int size);
+	bool isOccupied(uint16_t addr);
+	uint16_t holeStart(int size);
 	void dump();
 private:
 	uint8_t memory[MEMORY];
+	bool free[MEMORY] = { false };
 };
