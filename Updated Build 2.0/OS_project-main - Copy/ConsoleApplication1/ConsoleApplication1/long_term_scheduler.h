@@ -1,24 +1,36 @@
 #pragma once
 #include <vector>
 #include "pcb.h"
-#include "ram.h"
+#include "Memory.h"
 #include "disk.h"
+#include "loader.h"
 
 namespace OSSim
 {
 	class long_term_scheduler
 	{
 	public:
-		long_term_scheduler() { ram1 = new RandomAccess; }
-		~long_term_scheduler() { delete ram1; ram1 = nullptr; }
-		void write_to_ram(int32_t hex, int start) {
-			ram1->store(hex, start);
+		long_term_scheduler(Memory* memory, disk* dk, loader* ld) { 
+			ram = memory; 
+			dsk = dk;
+			load = ld; 
+			new_q = load->get_new_q();
+			ready = load->get_ready();
 		}
-		int32_t read(int index) {
-			return ram1->pass(index);
+		~long_term_scheduler() { delete ram; ram = nullptr; }
+		void write_to_ram(uint16_t index, int32_t data) {
+			ram->setMem(index * 4, data);
 		}
-		RandomAccess get_RAM() { return *ram1; }
+		int32_t read(uint16_t index) {
+			return ram->getMem(index);
+		}
+		void schedule();
+		Memory get_RAM() { return *ram; }
 	private:
-		RandomAccess* ram1;
+		Memory* ram;
+		disk* dsk;
+		loader* load;
+		vector<PCB_info*>* new_q;
+		vector<PCB_info*>* ready;
 	};
 }
