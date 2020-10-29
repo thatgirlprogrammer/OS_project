@@ -8,8 +8,9 @@
 
 using namespace std;
 
-loader::loader(string file_name) {
+loader::loader(string file_name, disk* d) {
 	file.open(file_name, ios::in);
+	dsk = d;
 }
 void loader::load_file() {
 	if (file.is_open()) {
@@ -96,9 +97,7 @@ void loader::load_file() {
 				else {
 					cout << "Writing to disk" << "\n";
 					int32_t number = strtoul(line.c_str(), nullptr, 16);
-
-					std::cout << number << std::endl;
-					dsk.write(number, current);
+					dsk->write(number, current);
 					++current;
 					info.pc.job_disk_address = number;
 				}
@@ -111,9 +110,4 @@ void loader::load_file() {
 PCB_info loader::get_info()
 {
 	return info;
-}
-
-uint32_t* loader::get_instructions()
-{
-	return instructions;
 }
