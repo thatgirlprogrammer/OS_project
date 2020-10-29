@@ -8,7 +8,7 @@ namespace OSSim
 	class long_term_scheduler
 	{
 	public:
-		long_term_scheduler() { ram1 = new RAM(); }
+		long_term_scheduler(RAM* ram) { ram1 = ram; }
 		~long_term_scheduler() { delete ram1; ram1 = nullptr; }
 		void write_to_ram(uint8_t hex[], int start, int end, uint8_t* process, PCB_info pcb1) {
 			ram1->store(hex, start, end, process, pcb1);
@@ -18,4 +18,3 @@ namespace OSSim
 		RAM* ram1;
 	};
 }
-
