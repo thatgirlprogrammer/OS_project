@@ -145,6 +145,27 @@ int main() {
 	while (!cpu.isDone())
 		cpu.step();
 
+	for (int i = 67; i < 139; ++i) {
+		lts->write_to_ram(dsk->read(i), i - 67);
+	}
+
+	int32_t chunk[139 - 67];
+
+	for (int i = 67; i < 139; ++i) {
+		chunk[i - 67] = lts->read(i - 67);
+	}
+
+	for (int i = 0; i < (139 - 67); ++i) {
+		sts->add_memory(i, chunk[i]);
+	}
+
+	cout << "\n";
+
+	cpu.setDone();
+	cpu.setPC();
+	while (!cpu.isDone())
+		cpu.step();
+
 	delete dsk;
 	dsk = nullptr;
 	delete load;
