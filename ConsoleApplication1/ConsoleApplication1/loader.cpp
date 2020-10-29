@@ -13,11 +13,14 @@ loader::loader(string file_name, disk* d) {
 	dsk = d;
 }
 void loader::load_file() {
+	PCB_info info;
 	if (file.is_open()) {
 		string line;
-		uint8_t current = 0;
+		int current = 0;
+		int start = 0;
 		while (getline(file, line)) {
 			if (line.find("JOB") != std::string::npos) {
+				start = current;
 				cout << "Job encountered." << "\n";
 				string num1 = "0x";
 				string num2 = "0x";
@@ -45,11 +48,12 @@ void loader::load_file() {
 				}
 				++i;
 				int32_t job_number = strtoul(num1.c_str(), nullptr, 16);
-				int32_t job_priority = strtoul(num2.c_str(), nullptr, 16);
-				int32_t job_count = strtoul(num3.c_str(), nullptr, 16);
+				int32_t job_count = strtoul(num2.c_str(), nullptr, 16);
+				int32_t job_priority = strtoul(num3.c_str(), nullptr, 16);
 				info.pc.job_number = job_number;
 				info.pc.job_priority = job_priority;
 				info.pc.job_instruction_count = job_count;
+				info.pc.job_disk_address = current;
 				cout << num1 << " " << num2 << " " << num3 << "\n";
 			}
 			else if (line.find("Data") != std::string::npos) {
@@ -88,6 +92,9 @@ void loader::load_file() {
 				cout << num1 << " " << num2 << " " << num3 << "\n";
 			}
 			else if (line.find("END") != std::string::npos) {
+				info.pc.job_size = current - start;
+				cout << current - start << endl;
+				collection.push_back(info);
 				cout << "End of file." << "\n";
 			}
 			else {
@@ -99,7 +106,7 @@ void loader::load_file() {
 					int32_t number = strtoul(line.c_str(), nullptr, 16);
 					dsk->write(number, current);
 					++current;
-					info.pc.job_disk_address = number;
+					cout << current << "\n";
 				}
 			}
 		}
@@ -107,7 +114,7 @@ void loader::load_file() {
 	}
 }
 
-PCB_info loader::get_info()
+PCB_info loader::get_info(int index)
 {
-	return info;
+	return collection.at(index);
 }
