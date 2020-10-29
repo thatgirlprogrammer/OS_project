@@ -88,30 +88,26 @@ int main() {
 	PCB_info pcbs[30];
 	int priorities[30];
 	
-	switch (method)
-	{
-	case NUMBER:
-		for (int i = 0; i < 30; ++i) {
-			pcbs[i] = load->get_info(i);
-		}
-		break;
-	case PRIORITY:
+	for (int i = 0; i < 30; ++i) {
+		pcbs[i] = load->get_info(i);
+	}
+	
+	switch (method) {
+	case SORT_METHOD::PRIORITY: {
 		for (int i = 0; i < 30; ++i) {
 			priorities[i] = load->get_info(i).pc.job_priority;
-			pcbs[i] = load->get_info(priorities[i]);
 		}
-		break;
-	case LENGTH:
+		sort(priorities, priorities + 30);
+	} break;
+	case SORT_METHOD::LENGTH: {
 		for (int i = 0; i < 30; ++i) {
 			priorities[i] = load->get_info(i).pc.job_instruction_count;
-			pcbs[i] = load->get_info(priorities[i]);
 		}
-		break;
+		sort(priorities, priorities + 30);
+	} break;
 	default:
 		break;
 	}
-	
-	//std::sort(priorities);
 	for (int i = 0; i < 30; i++)
 		print(pcbs[i]);
 
