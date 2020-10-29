@@ -6,6 +6,7 @@
 #include "Instruction.h"
 #include "short_term_scheduler.h"
 #include "job_number.h"
+#include "job_numbers.h"
 #include "Disassemble.h"
 #include "disk.h"
 #include "loader.h"
@@ -13,14 +14,16 @@
 #include "Memory.h"
 #include "long_term_scheduler.h"
 #include <algorithm>
+#include "job_priority.h"
+#include "job_priority_compare.h"
 
 using namespace OSSim;
 
-enum SORT_METHOD { NUMBER, PRIORITY, LENGTH };
+enum class SORT_METHOD { NUMBER, PRIORITY, LENGTH };
 
 void print(PCB_info info) {
 	std::cout << "pcb info:" << std::endl;
-	std::cout << "\tnumber: " << info.pc.job_number << std::endl;
+	std::cout << "\tnumber: " << info.pc.job_len << std::endl;
 	std::cout << "\tpriority: " << info.pc.job_priority << std::endl;
 	std::cout << "\tdisk address: " << info.pc.job_disk_address << std::endl;
 	std::cout << "\tinstruction count: " << info.pc.job_instruction_count << std::endl;
@@ -39,13 +42,9 @@ int main() {
 	//interrupt_register* ir = new interrupt_register();
 	//ir->proccess_interrupt(*print);
 
-	IRunnable* j = new job_number();
-	PCB_info info;
 	std::vector<Instruction> instructions;
-	
 	uint32_t val = 0x4bd63000;
 	instructions.push_back(*(new Instruction(val)));
-
 
 //	std::vector<Instruction> i;
 //	i.push_back(Instruction(0xC0500070));
@@ -78,38 +77,44 @@ int main() {
 //	i.push_back(Instruction(0x92000000));
 //	disassemble(i);
 
-
-	SORT_METHOD method = NUMBER;
+	SORT_METHOD method = SORT_METHOD::LENGTH;
 	disk* dsk = new disk;
 	//RAM* ram = new RAM;
 	
 	loader* load = new loader("./Program-File.txt", dsk);
 	load->load_file();
 	PCB_info pcbs[30];
-	int priorities[30];
 	
 	for (int i = 0; i < 30; ++i) {
 		pcbs[i] = load->get_info(i);
 	}
-	
+			
 	switch (method) {
 	case SORT_METHOD::PRIORITY: {
-		for (int i = 0; i < 30; ++i) {
-			priorities[i] = load->get_info(i).pc.job_priority;
+		job_priority j;
+		for (int i = 0; i < 30; i++)
+			j.add_job(pcbs[i]);
+		j.sort();
+		for (int i = 0; i < 30; i++) {
+			pcbs[i] = j.get_pcb(i);
 		}
-		sort(priorities, priorities + 30);
+		for (int i = 0; i < 30; i++)
+			print(pcbs[i]);
 	} break;
 	case SORT_METHOD::LENGTH: {
-		for (int i = 0; i < 30; ++i) {
-			priorities[i] = load->get_info(i).pc.job_instruction_count;
+		job_len j;
+		for (int i = 0; i < 30; i++)
+			j.add_job(pcbs[i]);
+		j.sort();
+		for (int i = 0; i < 30; i++) {
+			pcbs[i] = j.get_pcb(i);
 		}
-		sort(priorities, priorities + 30);
+		for (int i = 0; i < 30; i++)
+			print(pcbs[i]);
 	} break;
 	default:
 		break;
 	}
-	for (int i = 0; i < 30; i++)
-		print(pcbs[i]);
 
 	for (int i = 0; i < 2048; ++i) {
 		std::cout << dsk->read(i) << "\n";
@@ -138,27 +143,6 @@ int main() {
 	}
 
 	CPU cpu(mem);
-	while (!cpu.isDone())
-		cpu.step();
-
-	for (int i = 67; i < 139; ++i) {
-		lts->write_to_ram(dsk->read(i), i - 67);
-	}
-
-	int32_t chunk[139 - 67];
-
-	for (int i = 67; i < 139; ++i) {
-		chunk[i - 67] = lts->read(i - 67);
-	}
-
-	for (int i = 0; i < (139 - 67); ++i) {
-		sts->add_memory(i, chunk[i]);
-	}
-
-	cout << "\n";
-
-	cpu.setDone();
-	cpu.setPC();
 	while (!cpu.isDone())
 		cpu.step();
 
