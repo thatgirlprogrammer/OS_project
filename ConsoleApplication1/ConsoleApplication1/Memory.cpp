@@ -13,6 +13,14 @@ int32_t Memory::getMem(uint16_t addr) {
 	return result;
 }
 
+bool Memory::isOccupied(uint16_t addr) {
+	assert(addr % 4 == 0);
+
+	bool result = this->free[addr];
+
+	return result;
+}
+
 void Memory::setMem(uint16_t addr, int32_t data) {
 	assert(addr % 4 == 0);
 
@@ -21,6 +29,24 @@ void Memory::setMem(uint16_t addr, int32_t data) {
 	this->memory[addr + 1] = data >> 16;
 	this->memory[addr + 2] = data >> 8;
 	this->memory[addr + 3] = data;
+}
+
+void Memory::allocate(uint16_t addr) {
+	assert(addr % 4 == 0);
+
+	this->free[addr] = true;
+	this->free[addr + 1] = true;
+	this->free[addr + 2] = true;
+	this->free[addr + 3] = true;
+}
+
+void Memory::deallocate(uint16_t addr) {
+	assert(addr % 4 == 0);
+
+	this->free[addr] = false;
+	this->free[addr + 1] = false;
+	this->free[addr + 2] = false;
+	this->free[addr + 3] = false;
 }
 
 void Memory::dump() {
@@ -46,3 +72,45 @@ void Memory::dump() {
 	}
 }
 
+bool Memory::hasHole(int size) {
+	uint16_t current = 0;
+	int hole = 0;
+	while (current < 1024) {
+		if (isOccupied(current * 4) != false) {
+			hole = 0;
+		}
+		else {
+			++hole;
+		}
+		if (hole >= size) {
+			return true;
+		}
+		++current;
+	}
+	return false;
+}
+
+uint16_t Memory::holeStart(int size) {
+	int current = 0;
+	int start = 0;
+	int hole = 0;
+	while (current < 1024) {
+		if (isOccupied(current * 4) != false) {
+			hole = 0;
+			++current;
+			start = current;
+		}
+		else {
+			++hole;
+		}
+		if (hole >= size) {
+			std::cout << "\n" << start;
+			++current;
+			return start;
+		}
+		++current;
+	}
+	std::cout << "\n" << start;
+	++current;
+	return start;
+}
