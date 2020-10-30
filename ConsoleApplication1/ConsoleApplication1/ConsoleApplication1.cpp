@@ -13,6 +13,7 @@
 #include <algorithm>
 #include "job_priority.h"
 #include "job_number.h"
+#include "DMA.h"
 
 using namespace OSSim;
 
@@ -65,10 +66,11 @@ int main() {
 //	i.push_back(Instruction(0x92000000));
 //	disassemble(i);
 
-	SORT_METHOD method = PRIORITY;
+	SORT_METHOD method = NUMBER;
 	disk* dsk = new disk;
 	Memory* ram = new Memory;
-	CPU* cpu = new CPU(ram);
+	DMA* dma = new DMA(ram);
+	CPU* cpu = new CPU(ram, dma);
 	loader* load = new loader("./Program-File.txt", dsk);
 	long_term_scheduler* lts = new long_term_scheduler(ram, dsk, load);
 	load->load_file();
@@ -128,9 +130,9 @@ int main() {
 		load->move_terminate(0);
 		cout << endl;
 	}
-	
 	std::cout << "Printing RAM" << std::endl;
 	ram->dump();
+	std::cout << "I/O operations run " << dma->get_io_number() << std::endl;
 
 	delete dsk;
 	delete load;
