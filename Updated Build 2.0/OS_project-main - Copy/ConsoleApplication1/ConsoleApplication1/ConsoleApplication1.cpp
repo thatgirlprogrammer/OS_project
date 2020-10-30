@@ -128,7 +128,7 @@ int main() {
 	long_term_scheduler* lts = new long_term_scheduler(ram, dsk, load);
 	short_term_scheduler* sts = new short_term_scheduler(ram, load, cpu);
 
-	while (true) {
+	while (!sts->isDone()) {
 		lts->schedule();
 		sts->schedule();
 		cpu->setDone();
@@ -136,6 +136,7 @@ int main() {
 		while (!cpu->isDone()) {
 			cpu->step();
 		}
+		load->move_terminate(0);
 		cout << endl;
 	}
 
