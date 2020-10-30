@@ -134,6 +134,8 @@ int main() {
 	ram->dump();
 	std::cout << "I/O operations run " << dma->get_io_number() << std::endl;
 
+	std::cout << "Testing Luke's github thing." << std::endl;
+
 	delete dsk;
 	delete load;
 	delete ram;
