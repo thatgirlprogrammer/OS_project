@@ -130,17 +130,11 @@ int main() {
 	}
 	
 	std::cout << "Printing RAM" << std::endl;
-//	for (uint16_t i = 0; i < 1024 * 4; i = i + 4) {
-//		cout << lts->read(i) << endl;
-//	}
+	ram->dump();
 
 	delete dsk;
-	dsk = nullptr;
 	delete load;
-	load = nullptr;
-	//delete mem;
-	//mem = nullptr;
+	delete ram;
 	delete lts;
-	lts = nullptr;
 	return 0;
 }
