@@ -17,6 +17,7 @@ public:
 	void setMem(uint16_t addr, int32_t data);
 	bool hasHole(int size);
 	bool isOccupied(uint16_t addr);
+	void deallocate(uint16_t addr);
 	uint16_t holeStart(int size);
 	void dump();
 private:
