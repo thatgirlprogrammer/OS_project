@@ -30,22 +30,11 @@ void print(PCB_info* info) {
 }
 
 int main() {
-	//general_register* reg1 = new general_register(23657);
-	//std::cout << reg1->get_content() << std::endl;
-	//reg1->set_content(new std::string("65b810aa"));
-	//std::cout << reg1->get_content() << std::endl;
-	//delete reg1;
-	
-	//interrupt_register* ir = new interrupt_register();
-	//ir->proccess_interrupt(*print);
-
-	IRunnable* j = new job_number();
 	PCB_info info;
 	std::vector<Instruction> instructions;
 	
 	uint32_t val = 0x4bd63000;
 	instructions.push_back(*(new Instruction(val)));
-
 
 //	std::vector<Instruction> i;
 //	i.push_back(Instruction(0xC0500070));
@@ -183,11 +172,6 @@ int main() {
 
 	cout << "\n";
 
-	cpu.setDone();
-	cpu.setPC();
-	while (!cpu.isDone())
-		cpu.step();
-
 	for (int i = 139; i < 207; ++i) {
 		lts->write_to_ram(dsk->read(i), i - 139);
 	}
@@ -244,14 +228,7 @@ int main() {
 		sts->add_memory(i, chunk4[i]);
 	}
 
-	cout << "\n";
-
-	cpu.setDone();
-	cpu.setPC();
-	while (!cpu.isDone())
-		cpu.step();*/
-
-
+	cout << "\n";*/
 
 	delete dsk;
 	dsk = nullptr;
