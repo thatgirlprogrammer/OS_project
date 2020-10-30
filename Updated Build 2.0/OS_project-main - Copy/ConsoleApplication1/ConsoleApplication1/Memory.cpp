@@ -36,6 +36,15 @@ void Memory::setMem(uint16_t addr, int32_t data) {
 	this->free[addr + 3] = true;
 }
 
+void Memory::deallocate(uint16_t addr) {
+	assert(addr % 4 == 0);
+
+	this->free[addr] = false;
+	this->free[addr + 1] = false;
+	this->free[addr + 2] = false;
+	this->free[addr + 3] = false;
+}
+
 void Memory::dump() {
 	printf("      00       04       08       0c\n");
 	for (int i = 0; i < MEMORY; i += 16) {
@@ -84,15 +93,20 @@ uint16_t Memory::holeStart(int size) {
 	while (current < 1024) {
 		if (isOccupied(current * 4) != false) {
 			hole = 0;
+			++current;
 			start = current;
 		}
 		else {
 			++hole;
 		}
 		if (hole >= size) {
+			std::cout << "\n" << start;
+			++current;
 			return start;
 		}
 		++current;
 	}
+	std::cout << "\n" << start;
+	++current;
 	return start;
 }
