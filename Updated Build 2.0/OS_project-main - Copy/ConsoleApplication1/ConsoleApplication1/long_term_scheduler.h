@@ -19,6 +19,7 @@ namespace OSSim
 		}
 		~long_term_scheduler() { delete ram; ram = nullptr; }
 		void write_to_ram(uint16_t index, int32_t data) {
+			ram->allocate(index * 4);
 			ram->setMem(index * 4, data);
 		}
 		int32_t read(uint16_t index) {
