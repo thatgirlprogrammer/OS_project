@@ -29,6 +29,10 @@ void Memory::setMem(uint16_t addr, int32_t data) {
 	this->memory[addr + 1] = data >> 16;
 	this->memory[addr + 2] = data >> 8;
 	this->memory[addr + 3] = data;
+}
+
+void Memory::allocate(uint16_t addr) {
+	assert(addr % 4 == 0);
 
 	this->free[addr] = true;
 	this->free[addr + 1] = true;
