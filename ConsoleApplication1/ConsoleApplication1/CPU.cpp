@@ -3,10 +3,11 @@
 #include "CPU.h"
 #include "Disassemble.h"
 
-CPU::CPU(Memory* memory) {
+CPU::CPU(Memory* memory, DMA* dma) {
 	for (uint8_t i = 0; i < REGISTER_COUNT; i++)
 		this->registers[i] = 0;
 	this->memory = memory;
+	this->dma = dma;
 	this->pc = 0;
 	this->base = 0;
 
@@ -191,11 +192,13 @@ void CPU::step() {
 		// read from the address instead of the register
 		int32_t data;
 		if (rdaddr == 0) {
-			data = this->memory->getMem(r2 + (this->base * 4));
+			data = this->dma->read(r2 + (this->base * 4));
+			//data = this->memory->getMem(r2 + (this->base * 4));
 			std::cout << r2 + (this->base * 4) << std::endl;
 		}
 		else {
-			data = this->memory->getMem(rdaddr + (this->base * 4));
+			data = this->dma->read(rdaddr + (this->base * 4));
+			//data = this->memory->getMem(rdaddr + (this->base * 4));
 			std::cout << rdaddr + (this->base * 4) << std::endl;
 		}
 
@@ -208,11 +211,13 @@ void CPU::step() {
 		uint32_t wraddr = i.shortAddr();
 
 		if (wraddr == 0) {
-			this->memory->setMem(wrr2 + (this->base * 4), wrr1);
+			this->dma->write(wrr2 + (this->base * 4), wrr1);
+			//this->memory->setMem(wrr2 + (this->base * 4), wrr1);
 			std::cout << wrr2 + (this->base * 4) << std::endl;
 		}
 		else {
-			this->memory->setMem(wraddr + (this->base * 4), wrr1);
+			this->dma->write(wraddr + (this->base * 4), wrr1);
+			//this->memory->setMem(wraddr + (this->base * 4), wrr1);
 			std::cout << wraddr + (this->base * 4) << std::endl;
 		}
 	} break;
@@ -224,7 +229,8 @@ void CPU::step() {
 		// LW and ST are never used with a non-zero shortAddr, and it's unspecified
 		// what they would do with a non-zero shortAddr, so this is the best I've got
 
-		this->setReg(d, this->memory->getMem(addr + (this->base * 4)));
+		this->setReg(d, this->dma->read(addr + (this->base * 4)));
+	//	this->setReg(d, this->memory->getMem(addr + (this->base * 4)));
 		std::cout << addr + (this->base * 4) << std::endl;
 	} break;
 
@@ -232,7 +238,8 @@ void CPU::step() {
 		int32_t data = this->getReg(i.cimmB());
 		int32_t addr = this->getReg(i.cimmD());
 
-		this->memory->setMem(addr + (this->base * 4), data);
+		this->dma->write(addr + (this->base * 4), data);
+		//this->memory->setMem(addr + (this->base * 4), data);
 		std::cout << addr + (this->base * 4) << std::endl;
 	} break;
 

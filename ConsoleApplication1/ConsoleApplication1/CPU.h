@@ -2,11 +2,12 @@
 
 #include "instruction.h"
 #include "Memory.h"
+#include "DMA.h"
 
 class CPU
 {
 public:
-	CPU(Memory*);
+	CPU(Memory*, DMA*);
 
 	int32_t getReg(uint8_t reg);
 	void setReg(uint8_t reg, int32_t value);
@@ -24,4 +25,5 @@ private:
 	uint32_t base;
 	bool done = false;
 	Memory* memory;
+	DMA* dma;
 };
