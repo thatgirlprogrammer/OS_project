@@ -7,3 +7,7 @@ OS Group Project.vcxproj.user
 x64/
 ConsoleApplication1/Debug/
 ConsoleApplication1/ConsoleApplication1/Debug/
+**/*.obj
+**/*.exe
+**/*.idb
+**/*.pdb
