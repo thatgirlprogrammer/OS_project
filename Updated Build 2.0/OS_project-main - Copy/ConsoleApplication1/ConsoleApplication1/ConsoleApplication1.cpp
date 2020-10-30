@@ -30,104 +30,126 @@ void print(PCB_info* info) {
 }
 
 int main() {
+	//general_register* reg1 = new general_register(23657);
+	//std::cout << reg1->get_content() << std::endl;
+	//reg1->set_content(new std::string("65b810aa"));
+	//std::cout << reg1->get_content() << std::endl;
+	//delete reg1;
+	
+	//interrupt_register* ir = new interrupt_register();
+	//ir->proccess_interrupt(*print);
+
+	IRunnable* j = new job_number();
 	PCB_info info;
 	std::vector<Instruction> instructions;
-
+	
 	uint32_t val = 0x4bd63000;
 	instructions.push_back(*(new Instruction(val)));
 
 
-	//	std::vector<Instruction> i;
-	//	i.push_back(Instruction(0xC0500070));
-	//	i.push_back(Instruction(0x4B060000));
-	//	i.push_back(Instruction(0x4B010000));
-	//	i.push_back(Instruction(0x4B000000));
-	//	i.push_back(Instruction(0x4F0A0070));
-	//	i.push_back(Instruction(0x4F0D00F0));
-	//	i.push_back(Instruction(0x4C0A0004));
-	//	i.push_back(Instruction(0xC0BA0000));
-	//	i.push_back(Instruction(0x42BD0000));
-	//	i.push_back(Instruction(0x4C0D0004));
-	//	i.push_back(Instruction(0x4C060001));
-	//	i.push_back(Instruction(0x10658000));
-	//	i.push_back(Instruction(0x56810018));
-	//	i.push_back(Instruction(0x4B060000));
-	//	i.push_back(Instruction(0x4F0900F0));
-	//	i.push_back(Instruction(0x43900000));
-	//	i.push_back(Instruction(0x4C060001));
-	//	i.push_back(Instruction(0x4C090004));
-	//	i.push_back(Instruction(0x43920000));
-	//	i.push_back(Instruction(0x4C060001));
-	//	i.push_back(Instruction(0x4C090004));
-	//	i.push_back(Instruction(0x10028000));
-	//	i.push_back(Instruction(0x55810060));
-	//	i.push_back(Instruction(0x04020000));
-	//	i.push_back(Instruction(0x10658000));
-	//	i.push_back(Instruction(0x56810048));
-	//	i.push_back(Instruction(0xC10000C0));
-	//	i.push_back(Instruction(0x92000000));
-	//	disassemble(i);
+//	std::vector<Instruction> i;
+//	i.push_back(Instruction(0xC0500070));
+//	i.push_back(Instruction(0x4B060000));
+//	i.push_back(Instruction(0x4B010000));
+//	i.push_back(Instruction(0x4B000000));
+//	i.push_back(Instruction(0x4F0A0070));
+//	i.push_back(Instruction(0x4F0D00F0));
+//	i.push_back(Instruction(0x4C0A0004));
+//	i.push_back(Instruction(0xC0BA0000));
+//	i.push_back(Instruction(0x42BD0000));
+//	i.push_back(Instruction(0x4C0D0004));
+//	i.push_back(Instruction(0x4C060001));
+//	i.push_back(Instruction(0x10658000));
+//	i.push_back(Instruction(0x56810018));
+//	i.push_back(Instruction(0x4B060000));
+//	i.push_back(Instruction(0x4F0900F0));
+//	i.push_back(Instruction(0x43900000));
+//	i.push_back(Instruction(0x4C060001));
+//	i.push_back(Instruction(0x4C090004));
+//	i.push_back(Instruction(0x43920000));
+//	i.push_back(Instruction(0x4C060001));
+//	i.push_back(Instruction(0x4C090004));
+//	i.push_back(Instruction(0x10028000));
+//	i.push_back(Instruction(0x55810060));
+//	i.push_back(Instruction(0x04020000));
+//	i.push_back(Instruction(0x10658000));
+//	i.push_back(Instruction(0x56810048));
+//	i.push_back(Instruction(0xC10000C0));
+//	i.push_back(Instruction(0x92000000));
+//	disassemble(i);
 
 
 	SORT_METHOD method = NUMBER;
-	disk* dsk = new disk;
+	
 	//RAM* ram = new RAM;
-
-	loader* load = new loader("./Program-File.txt", dsk);
-	load->load_file();
+	
 	/*
 	PCB_info pcbs[30];
 	int priorities[30];
-
-	switch (method) {
-	case SORT_METHOD::PRIORITY: {
-		job_priority j;
-		for (int i = 0; i < 30; i++)
-			j.add_job(pcbs[i]);
-		j.sort();
-		for (int i = 0; i < 30; i++) {
-			pcbs[i] = j.get_pcb(i);
+	
+	switch (method)
+	{
+	case NUMBER:
+		for (int i = 0; i < 30; ++i) {
+			pcbs[i] = load->get_info(i);
 		}
-		for (int i = 0; i < 30; i++)
-			print(pcbs[i]);
-	} break;
-	case SORT_METHOD::LENGTH: {
-		job_len j;
-		for (int i = 0; i < 30; i++)
-			j.add_job(pcbs[i]);
-		j.sort();
-		for (int i = 0; i < 30; i++) {
-			pcbs[i] = j.get_pcb(i);
+		break;
+	case PRIORITY:
+		for (int i = 0; i < 30; ++i) {
+			priorities[i] = load->get_info(i).pc.job_priority;
+			pcbs[i] = load->get_info(priorities[i]);
 		}
-		for (int i = 0; i < 30; i++)
-			print(pcbs[i]);
-	} break;
+		break;
+	case LENGTH:
+		for (int i = 0; i < 30; ++i) {
+			priorities[i] = load->get_info(i).pc.job_instruction_count;
+			pcbs[i] = load->get_info(priorities[i]);
+		}
+		break;
 	default:
 		break;
 	}
-
+	
 	//std::sort(priorities);
 	for (int i = 0; i < 30; i++)
 		print(pcbs[i]);
+
 	for (int i = 0; i < 2048; ++i) {
 		std::cout << dsk->read(i) << "\n";
 	}
 	*/
+	disk* dsk = new disk;
 	Memory* ram = new Memory;
+	CPU* cpu = new CPU(ram);
+
+	loader* load = new loader("./Program-File.txt", dsk);
+	load->load_file();
 
 	long_term_scheduler* lts = new long_term_scheduler(ram, dsk, load);
-	//	short_term_scheduler* sts = new short_term_scheduler(ram);
-		/*
-		for (uint16_t i = 0; i < 1024 * 4; i = i + 4) {
-			cout << lts->read(i) << endl;
-		}*/
+	short_term_scheduler* sts = new short_term_scheduler(ram, load, cpu);
 
-	lts->schedule();
+	while (true) {
+		lts->schedule();
+		sts->schedule();
+		cpu->setDone();
+		cpu->setPC();
+		while (!cpu->isDone()) {
+			cpu->step();
+		}
+		cout << endl;
+	}
 
+//	short_term_scheduler* sts = new short_term_scheduler(ram);
+	/*
+	for (uint16_t i = 0; i < 1024 * 4; i = i + 4) {
+		cout << lts->read(i) << endl;
+	}*/
+
+	/*
 	std::cout << "Printing RAM" << std::endl;
 	for (uint16_t i = 0; i < 1024 * 4; i = i + 4) {
 		cout << lts->read(i) << endl;
-	}
+	}*/
 
 	//short_term_scheduler* sts = new short_term_scheduler(mem);
 	/*
@@ -135,69 +157,94 @@ int main() {
 	for (int i = 0; i < 67; ++i) {
 		chunks[i] = lts->read(i);
 	}
+
 	for (int i = 0; i < 67; ++i) {
 		sts->add_memory(i, chunks[i]);
 	}
+
 	CPU cpu(mem);
 	while (!cpu.isDone())
 		cpu.step();
+
 	for (int i = 67; i < 139; ++i) {
 		lts->write_to_ram(dsk->read(i), i - 67);
 	}
+
 	int32_t chunk[139 - 67];
+
 	for (int i = 67; i < 139; ++i) {
 		chunk[i - 67] = lts->read(i - 67);
 	}
+
 	for (int i = 0; i < (139 - 67); ++i) {
 		sts->add_memory(i, chunk[i]);
 	}
+
 	cout << "\n";
-	cpu.setDone();
-	cpu.setPC();
-	while (!cpu.isDone())
-		cpu.step();
-	for (int i = 139; i < 207; ++i) {
-		lts->write_to_ram(dsk->read(i), i - 139);
-	}
-	int32_t chunk2[207 - 139];
-	for (int i = 139; i < 207; ++i) {
-		chunk2[i - 139] = lts->read(i - 139);
-	}
-	for (int i = 0; i < (207 - 139); ++i) {
-		sts->add_memory(i, chunk2[i]);
-	}
-	cout << "\n";
+
 	cpu.setDone();
 	cpu.setPC();
 	while (!cpu.isDone())
 		cpu.step();
 
-	for (int i = 207; i < 270; ++i) {
-		lts->write_to_ram(dsk->read(i), i - 207);
+	for (int i = 139; i < 207; ++i) {
+		lts->write_to_ram(dsk->read(i), i - 139);
 	}
-	int32_t chunk3[270 - 207];
-	for (int i = 207; i < 270; ++i) {
-		chunk3[i - 207] = lts->read(i - 207);
+
+	int32_t chunk2[207 - 139];
+
+	for (int i = 139; i < 207; ++i) {
+		chunk2[i - 139] = lts->read(i - 139);
 	}
-	for (int i = 0; i < (270 - 207); ++i) {
-		sts->add_memory(i, chunk3[i]);
+
+	for (int i = 0; i < (207 - 139); ++i) {
+		sts->add_memory(i, chunk2[i]);
 	}
+
 	cout << "\n";
+
 	cpu.setDone();
 	cpu.setPC();
 	while (!cpu.isDone())
 		cpu.step();
+	
+	for (int i = 207; i < 270; ++i) {
+		lts->write_to_ram(dsk->read(i), i - 207);
+	}
+
+	int32_t chunk3[270 - 207];
+
+	for (int i = 207; i < 270; ++i) {
+		chunk3[i - 207] = lts->read(i - 207);
+	}
+
+	for (int i = 0; i < (270 - 207); ++i) {
+		sts->add_memory(i, chunk3[i]);
+	}
+
+	cout << "\n";
+
+	cpu.setDone();
+	cpu.setPC();
+	while (!cpu.isDone())
+		cpu.step();
+
 	for (int i = 270; i < 342; ++i) {
 		lts->write_to_ram(dsk->read(i), i - 270);
 	}
+
 	int32_t chunk4[342 - 270];
+
 	for (int i = 270; i < 342; ++i) {
 		chunk4[i - 270] = lts->read(i - 270);
 	}
+
 	for (int i = 0; i < (342 - 270); ++i) {
 		sts->add_memory(i, chunk4[i]);
 	}
+
 	cout << "\n";
+
 	cpu.setDone();
 	cpu.setPC();
 	while (!cpu.isDone())
