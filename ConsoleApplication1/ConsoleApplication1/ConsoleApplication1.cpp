@@ -65,44 +65,44 @@ int main() {
 //	i.push_back(Instruction(0x92000000));
 //	disassemble(i);
 
-	SORT_METHOD method = NUMBER;
+	SORT_METHOD method = PRIORITY;
 	disk* dsk = new disk;
 	Memory* ram = new Memory;
 	CPU* cpu = new CPU(ram);
 	loader* load = new loader("./Program-File.txt", dsk);
 	long_term_scheduler* lts = new long_term_scheduler(ram, dsk, load);
 	load->load_file();
-	lts->schedule();
+	
 	vector<PCB_info> v;
 
 	switch (method) {
 	case SORT_METHOD::PRIORITY: {
 		job_priority j;
-		for (int i = 0; i < load->get_ready()->size(); i++)
-			j.add_job(*load->get_ready()->at(i));
+		for (int i = 0; i < load->get_new_q()->size(); i++)
+			j.add_job(*load->get_new_q()->at(i));
 		j.sort();
 
-		for (int i = 0; i < load->get_ready()->size(); i++) {
+		for (int i = 0; i < load->get_new_q()->size(); i++) {
 			v.push_back(j.get_pcb(i));
 		}
-		load->get_ready()->clear();
+		load->get_new_q()->clear();
 		for (int i = 0; i < v.size(); i++) {
-			load->get_ready()->push_back(&v.at(i));
+			load->get_new_q()->push_back(&v.at(i));
 		}
 	} break;
 	case SORT_METHOD::LENGTH: {
 		job_len j;
-		for (int i = 0; i < load->get_ready()->size(); i++) {
-			j.add_job(*load->get_ready()->at(i));
+		for (int i = 0; i < load->get_new_q()->size(); i++) {
+			j.add_job(*load->get_new_q()->at(i));
 		}
 		j.sort();
 
-		for (int i = 0; i < load->get_ready()->size(); i++) {
+		for (int i = 0; i < load->get_new_q()->size(); i++) {
 			v.push_back(j.get_pcb(i));
 		}
-		load->get_ready()->clear();
+		load->get_new_q()->clear();
 		for (int i = 0; i < v.size(); i++) {
-			load->get_ready()->push_back(&v.at(i));
+			load->get_new_q()->push_back(&v.at(i));
 		}
 	} break;
 	default:
