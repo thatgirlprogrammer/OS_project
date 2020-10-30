@@ -31,42 +31,7 @@ void print(PCB_info* info) {
 }
 
 int main() {
-	std::vector<Instruction> instructions;	
-	uint32_t val = 0x4bd63000;
-	instructions.push_back(*(new Instruction(val)));
-
-//	std::vector<Instruction> i;
-//	i.push_back(Instruction(0xC0500070));
-//	i.push_back(Instruction(0x4B060000));
-//	i.push_back(Instruction(0x4B010000));
-//	i.push_back(Instruction(0x4B000000));
-//	i.push_back(Instruction(0x4F0A0070));
-//	i.push_back(Instruction(0x4F0D00F0));
-//	i.push_back(Instruction(0x4C0A0004));
-//	i.push_back(Instruction(0xC0BA0000));
-//	i.push_back(Instruction(0x42BD0000));
-//	i.push_back(Instruction(0x4C0D0004));
-//	i.push_back(Instruction(0x4C060001));
-//	i.push_back(Instruction(0x10658000));
-//	i.push_back(Instruction(0x56810018));
-//	i.push_back(Instruction(0x4B060000));
-//	i.push_back(Instruction(0x4F0900F0));
-//	i.push_back(Instruction(0x43900000));
-//	i.push_back(Instruction(0x4C060001));
-//	i.push_back(Instruction(0x4C090004));
-//	i.push_back(Instruction(0x43920000));
-//	i.push_back(Instruction(0x4C060001));
-//	i.push_back(Instruction(0x4C090004));
-//	i.push_back(Instruction(0x10028000));
-//	i.push_back(Instruction(0x55810060));
-//	i.push_back(Instruction(0x04020000));
-//	i.push_back(Instruction(0x10658000));
-//	i.push_back(Instruction(0x56810048));
-//	i.push_back(Instruction(0xC10000C0));
-//	i.push_back(Instruction(0x92000000));
-//	disassemble(i);
-
-	SORT_METHOD method = NUMBER;
+	SORT_METHOD method = PRIORITY;
 	disk* dsk = new disk;
 	Memory* ram = new Memory;
 	DMA* dma = new DMA(ram);
@@ -124,8 +89,10 @@ int main() {
 		sts->schedule();
 		cpu->setDone();
 		cpu->setPC();
+		int cycles = 0;
 		while (!cpu->isDone()) {
 			cpu->step();
+			cycles++;
 		}
 		load->move_terminate(0);
 		cout << endl;
