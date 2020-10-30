@@ -25,6 +25,7 @@ namespace OSSim {
 			delete mem; mem = NULL;
 		}
 		void schedule();
+		bool isDone() { return terminated->size() == 30; }
 		//void add_memory(uint16_t index, int32_t value) {
 		//	mem->setMem(index * 4, value);
 		//}
