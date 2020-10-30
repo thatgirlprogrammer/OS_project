@@ -6,32 +6,25 @@
 namespace OSSim {
 	class job_numbers {
 	public:
-		job_numbers(PCB_info pcb_info, std::vector<Instruction>* instructions1) {
+		job_numbers(PCB_info pcb_info) {
 			info = pcb_info;
-			instructions = instructions1;
 		}
 
 		bool operator< (const job_numbers other) const {
-			return info.pc.job_number < other.info.pc.job_number;
+			return info.pc.job_instruction_count < other.info.pc.job_instruction_count;
 		}
 
 		PCB_info get_pcb_info() {
 			return info;
 		}
 
-		void set_PCB_info(pcb pc, data d, page p, buffer b, process_details pd) {
+		void set_PCB_info(pcb pc, data d, buffer b, process_details pd) {
 			info.pc = pc;
 			info.d = d;
 			info.b = b;
-			info.p = p;
 			info.pd = pd;
 		}
-
-		const char* decode_istructions() { return ""; }
-		void execute_instrustions() {}
-
 	private:
 		PCB_info info;
-		std::vector<Instruction>* instructions;
 	};
 }

@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include <iostream>
-#include "general_register.h"
 
 namespace OSSim {
 	enum PROCESS_STATUS {NEW, READY, WAIT, RUN, TERMINATE};
@@ -9,12 +8,6 @@ namespace OSSim {
 	struct data {
 		int data_disk_address = 0x0;
 		int data_memory_address = 0x0;
-	};
-
-	struct page {
-		unsigned int page_starting_index = 0;
-		unsigned int pages_needed = 0;
-		std::vector<int> pages_allocated;
 	};
 
 	struct buffer {
@@ -38,14 +31,13 @@ namespace OSSim {
 		unsigned int job_instruction_count = 0;
 		unsigned int job_size = 0;
 		bool job_in_memory = false;
-		general_register registers[16];
+		uint8_t registers[16];
 		PROCESS_STATUS process_status = NEW;
 		int program_counter = 0;
 	};
 
 	struct PCB_info {
 		struct data d;
-		struct page p;
 		struct buffer b;
 		struct process_details pd;
 		struct pcb pc;

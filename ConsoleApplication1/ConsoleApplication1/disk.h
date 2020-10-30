@@ -33,5 +33,4 @@ public:
 	int get_space();
 	int32_t* get_chunk(int index, int length);
 	void delete_chunk(int index, int length);
-	int32_t* get_storage() { return storage; }
 };

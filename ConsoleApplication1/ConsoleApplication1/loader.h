@@ -25,7 +25,6 @@ public:
 	vector<PCB_info*>* get_running() { return running; }
 	vector<PCB_info*>* get_waiting() { return waiting; }
 	vector<PCB_info*>* get_terminated() { return terminated; }
-
 private: 
 	fstream file;
 	disk* dsk;
