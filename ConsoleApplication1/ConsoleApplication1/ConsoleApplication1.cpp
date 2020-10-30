@@ -18,15 +18,15 @@ using namespace OSSim;
 
 enum SORT_METHOD { NUMBER, PRIORITY, LENGTH };
 
-void print(PCB_info info) {
+void print(PCB_info* info) {
 	std::cout << "pcb info:" << std::endl;
-	std::cout << "\tnumber: " << info.pc.job_number << std::endl;
-	std::cout << "\tpriority: " << info.pc.job_priority << std::endl;
-	std::cout << "\tdisk address: " << info.pc.job_disk_address << std::endl;
-	std::cout << "\tinstruction count: " << info.pc.job_instruction_count << std::endl;
-	std::cout << "\tin memory: " << info.pc.job_in_memory << std::endl;
-	std::cout << "\tstatus: " << info.pc.process_status << std::endl;
-	std::cout << "\tsize: " << info.pc.job_size << std::endl;
+	std::cout << "\tnumber: " << info->pc.job_number << std::endl;
+	std::cout << "\tpriority: " << info->pc.job_priority << std::endl;
+	std::cout << "\tdisk address: " << info->pc.job_disk_address << std::endl;
+	std::cout << "\tinstruction count: " << info->pc.job_instruction_count << std::endl;
+	std::cout << "\tin memory: " << info->pc.job_in_memory << std::endl;
+	std::cout << "\tstatus: " << info->pc.process_status << std::endl;
+	std::cout << "\tsize: " << info->pc.job_size << std::endl;
 }
 
 int main() {
@@ -80,11 +80,10 @@ int main() {
 
 
 	SORT_METHOD method = NUMBER;
-	disk* dsk = new disk;
+	
 	//RAM* ram = new RAM;
 	
-	loader* load = new loader("./Program-File.txt", dsk);
-	load->load_file();
+	/*
 	PCB_info pcbs[30];
 	int priorities[30];
 	
@@ -118,20 +117,43 @@ int main() {
 	for (int i = 0; i < 2048; ++i) {
 		std::cout << dsk->read(i) << "\n";
 	}
+	*/
+	disk* dsk = new disk;
+	Memory* ram = new Memory;
+	CPU* cpu = new CPU(ram);
 
-	long_term_scheduler* lts = new long_term_scheduler();
-	for (int i = 0; i < 67; ++i) {
-		lts->write_to_ram(dsk->read(i), i);
+	loader* load = new loader("./Program-File.txt", dsk);
+	load->load_file();
+
+	long_term_scheduler* lts = new long_term_scheduler(ram, dsk, load);
+	short_term_scheduler* sts = new short_term_scheduler(ram, load, cpu);
+
+	while (!sts->isDone()) {
+		lts->schedule();
+		sts->schedule();
+		cpu->setDone();
+		cpu->setPC();
+		while (!cpu->isDone()) {
+			cpu->step();
+		}
+		load->move_terminate(0);
+		cout << endl;
 	}
 
-	std::cout << "Printing RAM" << std::endl;
-	for (int i = 0; i < 67; ++i) {
+//	short_term_scheduler* sts = new short_term_scheduler(ram);
+	/*
+	for (uint16_t i = 0; i < 1024 * 4; i = i + 4) {
 		cout << lts->read(i) << endl;
-	}
+	}*/
 
-	Memory* mem = new Memory;
-	short_term_scheduler* sts = new short_term_scheduler(mem);
+	/*
+	std::cout << "Printing RAM" << std::endl;
+	for (uint16_t i = 0; i < 1024 * 4; i = i + 4) {
+		cout << lts->read(i) << endl;
+	}*/
 
+	//short_term_scheduler* sts = new short_term_scheduler(mem);
+	/*
 	int32_t chunks[67];
 	for (int i = 0; i < 67; ++i) {
 		chunks[i] = lts->read(i);
@@ -166,12 +188,77 @@ int main() {
 	while (!cpu.isDone())
 		cpu.step();
 
+	for (int i = 139; i < 207; ++i) {
+		lts->write_to_ram(dsk->read(i), i - 139);
+	}
+
+	int32_t chunk2[207 - 139];
+
+	for (int i = 139; i < 207; ++i) {
+		chunk2[i - 139] = lts->read(i - 139);
+	}
+
+	for (int i = 0; i < (207 - 139); ++i) {
+		sts->add_memory(i, chunk2[i]);
+	}
+
+	cout << "\n";
+
+	cpu.setDone();
+	cpu.setPC();
+	while (!cpu.isDone())
+		cpu.step();
+	
+	for (int i = 207; i < 270; ++i) {
+		lts->write_to_ram(dsk->read(i), i - 207);
+	}
+
+	int32_t chunk3[270 - 207];
+
+	for (int i = 207; i < 270; ++i) {
+		chunk3[i - 207] = lts->read(i - 207);
+	}
+
+	for (int i = 0; i < (270 - 207); ++i) {
+		sts->add_memory(i, chunk3[i]);
+	}
+
+	cout << "\n";
+
+	cpu.setDone();
+	cpu.setPC();
+	while (!cpu.isDone())
+		cpu.step();
+
+	for (int i = 270; i < 342; ++i) {
+		lts->write_to_ram(dsk->read(i), i - 270);
+	}
+
+	int32_t chunk4[342 - 270];
+
+	for (int i = 270; i < 342; ++i) {
+		chunk4[i - 270] = lts->read(i - 270);
+	}
+
+	for (int i = 0; i < (342 - 270); ++i) {
+		sts->add_memory(i, chunk4[i]);
+	}
+
+	cout << "\n";
+
+	cpu.setDone();
+	cpu.setPC();
+	while (!cpu.isDone())
+		cpu.step();*/
+
+
+
 	delete dsk;
 	dsk = nullptr;
 	delete load;
 	load = nullptr;
-	delete mem;
-	mem = nullptr;
+	//delete mem;
+	//mem = nullptr;
 	delete lts;
 	lts = nullptr;
 	return 0;
