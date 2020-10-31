@@ -154,9 +154,3 @@ void loader::move_terminate(int index) {
 	process->pc.process_status = TERMINATE;
 	terminated->push_back(process);
 }
-
-void loader::add_terminate(PCB_info* process) {
-//	mtx.lock();
-	terminated->push_back(process);
-	//mtx.unlock();
-}

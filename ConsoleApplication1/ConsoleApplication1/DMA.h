@@ -14,4 +14,3 @@ private:
 	Memory* memory;
 	int io_number = 0;
 };
-

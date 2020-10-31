@@ -10,10 +10,10 @@ namespace OSSim
 	class long_term_scheduler
 	{
 	public:
-		long_term_scheduler(Memory* memory, disk* dk, loader* ld) { 
-			ram = memory; 
+		long_term_scheduler(Memory* memory, disk* dk, loader* ld) {
+			ram = memory;
 			dsk = dk;
-			load = ld; 
+			load = ld;
 			new_q = load->get_new_q();
 			ready = load->get_ready();
 		}
@@ -25,7 +25,7 @@ namespace OSSim
 			return ram->getMem(index);
 		}
 		void schedule();
-		//Memory get_RAM() { return *ram; }
+		Memory get_RAM() { return *ram; }
 	private:
 		Memory* ram;
 		disk* dsk;

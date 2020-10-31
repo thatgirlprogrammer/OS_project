@@ -3,12 +3,11 @@
 #include "CPU.h"
 #include "Disassemble.h"
 
-CPU::CPU(Memory* memory, DMA* dma, loader* l) {
+CPU::CPU(Memory* memory, DMA* dma) {
 	for (uint8_t i = 0; i < REGISTER_COUNT; i++)
 		this->registers[i] = 0;
 	this->memory = memory;
 	this->dma = dma;
-	this->load = l;
 	this->pc = 0;
 	this->base = 0;
 }
@@ -43,22 +42,12 @@ void CPU::step() {
 		// read from the address instead of the register
 		int32_t data;
 		if (rdaddr == 0) {
-			if (use_cache) {
-				data = readCache(r2);
-			}
-			else {
-				data = this->dma->read(r2 + (this->base * 4));
-			}
+			data = this->dma->read(r2 + (this->base * 4));
 			//data = this->memory->getMem(r2 + (this->base * 4));
 			std::cout << r2 + (this->base * 4) << std::endl;
 		}
 		else {
-			if (use_cache) {
-				data = readCache(rdaddr);
-			}
-			else {
-				data = this->dma->read(rdaddr + (this->base * 4));
-			}
+			data = this->dma->read(rdaddr + (this->base * 4));
 			//data = this->memory->getMem(rdaddr + (this->base * 4));
 			std::cout << rdaddr + (this->base * 4) << std::endl;
 		}
@@ -72,22 +61,12 @@ void CPU::step() {
 		uint32_t wraddr = i.shortAddr();
 
 		if (wraddr == 0) {
-			if (use_cache) {
-				writeCache(wrr2, wrr1);
-			}
-			else {
-				this->dma->write(wrr2 + (this->base * 4), wrr1);
-			}
+			this->dma->write(wrr2 + (this->base * 4), wrr1);
 			//this->memory->setMem(wrr2 + (this->base * 4), wrr1);
 			std::cout << wrr2 + (this->base * 4) << std::endl;
 		}
 		else {
-			if (use_cache) {
-				writeCache(wraddr, wrr1);
-			}
-			else {
-				this->dma->write(wraddr + (this->base * 4), wrr1);
-			}
+			this->dma->write(wraddr + (this->base * 4), wrr1);
 			//this->memory->setMem(wraddr + (this->base * 4), wrr1);
 			std::cout << wraddr + (this->base * 4) << std::endl;
 		}
@@ -99,13 +78,9 @@ void CPU::step() {
 
 		// LW and ST are never used with a non-zero shortAddr, and it's unspecified
 		// what they would do with a non-zero shortAddr, so this is the best I've got
-		if (use_cache) {
-			setReg(d, readCache(addr));
-		}
-		else {
-			this->setReg(d, this->dma->read(addr + (this->base * 4)));
-		}
-	//	this->setReg(d, this->memory->getMem(addr + (this->base * 4)));
+
+		this->setReg(d, this->dma->read(addr + (this->base * 4)));
+		//	this->setReg(d, this->memory->getMem(addr + (this->base * 4)));
 		std::cout << addr + (this->base * 4) << std::endl;
 	} break;
 
@@ -113,13 +88,7 @@ void CPU::step() {
 		int32_t data = this->getReg(i.cimmB());
 		int32_t addr = this->getReg(i.cimmD());
 
-		if (use_cache) {
-			writeCache(addr, data);
-		}
-		else {
-			this->dma->write(addr + (this->base * 4), data);
-		}
-		
+		this->dma->write(addr + (this->base * 4), data);
 		//this->memory->setMem(addr + (this->base * 4), data);
 		std::cout << addr + (this->base * 4) << std::endl;
 	} break;
@@ -218,23 +187,6 @@ void CPU::step() {
 		// set process state to finished
 		//PCB_info pcb_val = ram1->get_info();
 		//pcb_val.pc.process_status = TERMINATE;
-		terminated = load->get_terminated();
-		PCB_info* process = private_running->at(0);
-		if (use_cache) {
-			uint16_t b = process->pc.job_memory_address;
-			std::cout << "My b is " << b << std::endl;
-			std::cout << "This is job " << process->pc.job_number << endl;
-			auto size = process->pc.job_size;
-			for (int i = 0; i < size * 4; i += 4) {
-				dma->write((i + (b * 4)), readCache(i));
-			}
-		}
-		else {
-			private_running->erase(private_running->begin() + 0);
-			load->add_terminate(process);
-		}
-		dma->setIO();
-		process->total_memory_in_use = memory->in_use;
 		this->done = true;
 	} break;
 
@@ -300,29 +252,4 @@ void CPU::step() {
 		disassembleInstruction(i);
 	}
 	//ram1->get_info().pc.program_counter++;
-}
-
-uint32_t CPU::readCache(uint16_t addr) {
-	assert(addr % 4 == 0);
-
-	// TODO: get offset from PCB
-	int32_t result = cache[addr] << 24;
-	result |= cache[addr + 1] << 16;
-	result |= cache[addr + 2] << 8;
-	result |= cache[addr + 3];
-	return result;
-}
-
-void CPU::writeCache(uint16_t addr, int32_t data) {
-	assert(addr % 4 == 0);
-
-	// TODO: get offset from PCB
-	cache[addr] = data >> 24;
-	cache[addr + 1] = data >> 16;
-	cache[addr + 2] = data >> 8;
-	cache[addr + 3] = data;
-}
-
-void CPU::appendRunning(PCB_info* pcb) {
-	private_running->push_back(pcb);
 }
