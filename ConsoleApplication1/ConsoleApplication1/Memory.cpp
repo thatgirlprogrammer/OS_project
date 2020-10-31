@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <iostream>
+#include <iomanip>
 #include "Memory.h"
 
 int32_t Memory::getMem(uint16_t addr) {
@@ -38,6 +39,7 @@ void Memory::allocate(uint16_t addr) {
 	this->free[addr + 1] = true;
 	this->free[addr + 2] = true;
 	this->free[addr + 3] = true;
+	in_use += 4;
 }
 
 void Memory::deallocate(uint16_t addr) {
@@ -47,29 +49,36 @@ void Memory::deallocate(uint16_t addr) {
 	this->free[addr + 1] = false;
 	this->free[addr + 2] = false;
 	this->free[addr + 3] = false;
+	in_use -= 4;
 }
 
-void Memory::dump() {
-	printf("      00       04       08       0c\n");
+std::string Memory::dump() {
+	using namespace std;
+	std::stringstream output;
+	output << "      00       04       08       0c" << std::endl;
 	for (int i = 0; i < MEMORY; i += 16) {
-		printf("%03x | ", i);
+		output << setfill('0') << setw(3) << right << hex << i << " | ";
+		//printf("%03x | ", i);
 		for (int j = i; j < i + 4; j++) {
-			printf("%02x", this->memory[j]);
+			output << setfill('0') << setw(2) << right << hex << (int)this->memory[j];
+			//printf("%02x", this->memory[j]);
 		}
-		printf(" ");
+		output << " ";
+		//printf(" ");
 		for (int j = i + 4; j < i + 8; j++) {
-			printf("%02x", this->memory[j]);
+			output << setfill('0') << setw(2) << right << hex << (int)this->memory[j];
 		}
-		printf(" ");
+		output << " ";
 		for (int j = i + 8; j < i + 12; j++) {
-			printf("%02x", this->memory[j]);
+			output << setfill('0') << setw(2) << right << hex << (int)this->memory[j];
 		}
-		printf(" ");
+		output << " ";
 		for (int j = i + 12; j < i + 16; j++) {
-			printf("%02x", this->memory[j]);
+			output << setfill('0') << setw(2) << right << hex << (int)this->memory[j];
 		}
-		printf("\n");
+		output << endl;
 	}
+	return output.str();
 }
 
 bool Memory::hasHole(int size) {

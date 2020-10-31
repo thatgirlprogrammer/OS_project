@@ -19,6 +19,7 @@ loader::loader(string file_name, disk* d) {
 }
 void loader::load_file() {
 	PCB_info* info = new PCB_info;
+	info->ios = 0;
 	if (file.is_open()) {
 		string line;
 		int current = 0;
@@ -122,6 +123,7 @@ void loader::load_file() {
 
 void loader::move_new_ready(int index) {
 	PCB_info* process = new_q->at(index);
+	process->enter_new = std::chrono::high_resolution_clock::now();
 	new_q->erase(new_q->begin() + index);
 	process->pc.process_status = READY;
 	ready->push_back(process);
@@ -134,6 +136,7 @@ void loader::move_waiting_ready(int index) {
 }
 void loader::move_running(int index) {
 	PCB_info* process = ready->at(index);
+	process->start = std::chrono::high_resolution_clock::now();
 	ready->erase(ready->begin() + index);
 	process->pc.process_status = RUN;
 	running->push_back(process);
@@ -146,6 +149,7 @@ void loader::move_waiting(int index) {
 }
 void loader::move_terminate(int index) {
 	PCB_info* process = running->at(index);
+	process->end = std::chrono::high_resolution_clock::now();
 	running->erase(running->begin() + index);
 	process->pc.process_status = TERMINATE;
 	terminated->push_back(process);

@@ -1,6 +1,10 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <sstream>
+
 #include "pcb.h"
 #include "Instruction.h"
 #include "short_term_scheduler.h"
@@ -10,12 +14,24 @@
 #include "CPU.h"
 #include "Memory.h"
 #include "long_term_scheduler.h"
-#include <algorithm>
 #include "job_priority.h"
 #include "job_number.h"
 #include "DMA.h"
 
 using namespace OSSim;
+
+struct ProcessStats {
+	unsigned int job_number;
+	long long running_time;
+	long long waiting_time;
+	int io_operations;
+	unsigned long memory_in_use_at_completion;
+};
+
+struct MethodStats {
+	vector<struct ProcessStats> stats;
+	string memory;
+};
 
 enum SORT_METHOD { NUMBER, PRIORITY, LENGTH };
 
@@ -30,8 +46,36 @@ void print(PCB_info* info) {
 	std::cout << "\tsize: " << info->pc.job_size << std::endl;
 }
 
+struct MethodStats run(SORT_METHOD method);
+
 int main() {
-	SORT_METHOD method = PRIORITY;
+	auto priority = run(PRIORITY);
+	auto number = run(NUMBER);
+
+	std::ofstream priority_file;
+	priority_file.open("..\\..\\priority.csv");
+	priority_file << "job number,running time,waiting time,io operations,memory in use" << std::endl;
+	for (auto it = priority.stats.begin(); it != priority.stats.end(); it++) {
+		priority_file << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << std::endl;
+	}
+	priority_file.close();
+	std::ofstream priority_memory;
+	priority_memory.open("..\\..\\mem_priority.txt");
+	priority_memory << priority.memory;
+
+	std::ofstream number_file;
+	number_file.open("..\\..\\number.csv");
+	number_file << "job number,running time,waiting time,io operations,memory in use" << std::endl;
+	for (auto it = number.stats.begin(); it != number.stats.end(); it++) {
+		number_file << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << std::endl;
+	}
+	number_file.close();
+	std::ofstream number_memory;
+	number_memory.open("..\\..\\mem_number.txt");
+	number_memory << number.memory;
+}
+
+struct MethodStats run(SORT_METHOD method) {
 	disk* dsk = new disk;
 	Memory* ram = new Memory;
 	DMA* dma = new DMA(ram);
@@ -94,18 +138,39 @@ int main() {
 			cpu->step();
 			cycles++;
 		}
+		load->get_running()->at(0)->ios = dma->get_io_number();
+		load->get_running()->at(0)->total_memory_in_use = ram->in_use;
+		dma->setIO();
 		load->move_terminate(0);
 		cout << endl;
 	}
 	std::cout << "Printing RAM" << std::endl;
-	ram->dump();
+	std::stringstream builder;
 	std::cout << "I/O operations run " << dma->get_io_number() << std::endl;
 
-	std::cout << "Testing Luke's github thing." << std::endl;
+	vector<ProcessStats> process_stats;
+
+	auto terminated = load->get_terminated();
+	for (auto it = terminated->begin(); it != terminated->end(); it++) {
+		struct ProcessStats pstats {
+			(*it)->pc.job_number,
+			std::chrono::duration_cast<std::chrono::microseconds>((*it)->end - (*it)->start).count(),
+			std::chrono::duration_cast<std::chrono::microseconds>((*it)->start - (*it)->enter_new).count(),
+			(*it)->ios,
+			(*it)->total_memory_in_use,
+		};
+		process_stats.push_back(pstats);
+	}
+
+	struct MethodStats stats = {
+		process_stats,
+		ram->dump(),
+	};
 
 	delete dsk;
 	delete load;
 	delete ram;
 	delete lts;
-	return 0;
+
+	return stats;
 }

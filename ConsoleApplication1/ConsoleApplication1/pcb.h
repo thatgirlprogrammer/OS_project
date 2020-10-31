@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <iostream>
+#include <chrono>
 
 namespace OSSim {
 	enum PROCESS_STATUS {NEW, READY, WAIT, RUN, TERMINATE};
@@ -41,5 +42,10 @@ namespace OSSim {
 		struct buffer b;
 		struct process_details pd;
 		struct pcb pc;
+		std::chrono::steady_clock::time_point enter_new;
+		std::chrono::steady_clock::time_point start;
+		std::chrono::steady_clock::time_point end;
+		int ios;
+		unsigned long total_memory_in_use;
 	};
 }

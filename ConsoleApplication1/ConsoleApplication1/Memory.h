@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+#include <sstream>
 #include <cstdint>
 
 constexpr uint8_t REGISTER_COUNT = 16;
@@ -20,7 +22,8 @@ public:
 	void allocate(uint16_t addr);
 	void deallocate(uint16_t addr);
 	uint16_t holeStart(int size);
-	void dump();
+	std::string dump();
+	unsigned long in_use = 0;
 private:
 	uint8_t memory[MEMORY];
 	bool free[MEMORY] = { false };

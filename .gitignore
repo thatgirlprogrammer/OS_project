@@ -11,3 +11,6 @@ ConsoleApplication1/ConsoleApplication1/Debug/
 **/*.exe
 **/*.idb
 **/*.pdb
+**/*.csv
+mem_number.txt
+mem_priority.txt

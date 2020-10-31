@@ -27,10 +27,10 @@ void CPU::setReg(uint8_t reg, int32_t value) {
 
 void CPU::step() {
 	// TODO: get program counter from PCB
-	std::cout << std::hex << this->pc << std::dec << " ";
+	//std::cout << std::hex << this->pc << std::dec << " ";
 	Instruction i = Instruction(this->memory->getMem(this->pc));
 	this->pc += 4;
-	disassembleInstruction(i);
+	//disassembleInstruction(i);
 
 	switch (i.opcode()) {
 	case Opcode::RD: {
