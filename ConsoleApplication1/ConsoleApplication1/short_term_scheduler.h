@@ -11,11 +11,11 @@ namespace OSSim {
 
 	class short_term_scheduler {
 	public:
-		short_term_scheduler(Memory* memory, loader* ld, CPU* c)
+		short_term_scheduler(Memory* memory, loader* ld, vector<CPU*>* c)
 		{
 			mem = memory;
 			load = ld;
-			cpu = c;
+			cpus = c;
 			ready = ld->get_ready();
 			waiting = ld->get_waiting();
 			running = ld->get_running();
@@ -28,6 +28,7 @@ namespace OSSim {
 		bool isDone() { return terminated->size() == 30; }
 	private:
 		Memory* mem;
+		vector<CPU*>* cpus;
 		CPU* cpu;
 		loader* load;
 		vector<PCB_info*>* ready;

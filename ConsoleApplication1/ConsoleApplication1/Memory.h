@@ -24,7 +24,10 @@ public:
 	uint16_t holeStart(int size);
 	std::string dump();
 	unsigned long in_use = 0;
+	void getLock();
+	void releaseLock();
 private:
 	uint8_t memory[MEMORY];
 	bool free[MEMORY] = { false };
+	bool lock = true;
 };

@@ -123,3 +123,14 @@ uint16_t Memory::holeStart(int size) {
 	++current;
 	return start;
 }
+
+void Memory::getLock() {
+	while (lock == false) {
+
+	}
+	lock = false;
+}
+
+void Memory::releaseLock() {
+	lock = true;
+}
