@@ -3,11 +3,12 @@
 #include "CPU.h"
 #include "Disassemble.h"
 
-CPU::CPU(Memory* memory, DMA* dma) {
+CPU::CPU(Memory* memory, DMA* dma, loader* l) {
 	for (uint8_t i = 0; i < REGISTER_COUNT; i++)
 		this->registers[i] = 0;
 	this->memory = memory;
 	this->dma = dma;
+	this->load = l;
 	this->pc = 0;
 	this->base = 0;
 }
@@ -217,8 +218,9 @@ void CPU::step() {
 		// set process state to finished
 		//PCB_info pcb_val = ram1->get_info();
 		//pcb_val.pc.process_status = TERMINATE;
+		terminated = load->get_terminated();
+		PCB_info* process = private_running->at(0);
 		if (use_cache) {
-			PCB_info* process = private_running->at(0);
 			uint16_t b = process->pc.job_memory_address;
 			std::cout << "My b is " << b << std::endl;
 			std::cout << "This is job " << process->pc.job_number << endl;
@@ -226,8 +228,13 @@ void CPU::step() {
 			for (int i = 0; i < size * 4; i += 4) {
 				dma->write((i + (b * 4)), readCache(i));
 			}
-			private_running->erase(private_running->begin() + 0);
 		}
+		else {
+			private_running->erase(private_running->begin() + 0);
+			load->add_terminate(process);
+		}
+		dma->setIO();
+		process->total_memory_in_use = memory->in_use;
 		this->done = true;
 	} break;
 

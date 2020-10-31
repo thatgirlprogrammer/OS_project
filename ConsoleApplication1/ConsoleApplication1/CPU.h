@@ -8,7 +8,7 @@
 class CPU
 {
 public:
-	CPU(Memory*, DMA*);
+	CPU(Memory*, DMA*, loader*);
 
 	int32_t getReg(uint8_t reg);
 	void setReg(uint8_t reg, int32_t value);
@@ -25,6 +25,7 @@ public:
 	uint32_t readCache(uint16_t addr);
 	void writeCache(uint16_t addr, int32_t data);
 	void appendRunning(PCB_info* pcb);
+	void setTerminated(vector<PCB_info*>* term) { terminated = term; }
 private:
 	int32_t registers[REGISTER_COUNT];
 	uint32_t pc;
@@ -32,7 +33,9 @@ private:
 	bool done = false;
 	Memory* memory;
 	DMA* dma;
-	bool use_cache = true;
+	bool use_cache = false;
 	uint8_t cache[72 * 4];
 	vector<PCB_info*>* private_running = new vector<PCB_info*>;
+	vector<PCB_info*>* terminated;
+	loader* load;
 };

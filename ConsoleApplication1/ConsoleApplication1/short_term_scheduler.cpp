@@ -9,18 +9,19 @@ void short_term_scheduler::schedule() {
 		cpus->at(0)->setBase(b);
 		if (cpus->at(0)->isCache()) {
 			cpus->at(0)->appendRunning(process);
-			mem->getLock();
 			for (int i = 0; i < process->pc.job_size * 4; i += 4) {
 				cpus->at(0)->writeCache(i, mem->getMem(i + (b * 4)));
 			}
-			mem->releaseLock();
+			ready->erase(ready->begin() + 0);
+		}
+		else {
+			cpus->at(0)->appendRunning(process);
 		}
 		uint16_t j = 0;
 		for (int i = 0; i < process->pc.job_size; ++i) {
 			mem->deallocate(j + (b * 4));
 			j += 4;
 		}
-		load->move_running(0);
 		std::cout << "My job size is " << process->pc.job_size << std::endl;
 	}
 }

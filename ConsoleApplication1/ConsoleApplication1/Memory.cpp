@@ -4,6 +4,7 @@
 #include "Memory.h"
 
 int32_t Memory::getMem(uint16_t addr) {
+	//mtx.lock();
 	assert(addr % 4 == 0);
 
 	// TODO: get offset from PCB
@@ -12,17 +13,21 @@ int32_t Memory::getMem(uint16_t addr) {
 	result |= this->memory[addr + 2] << 8;
 	result |= this->memory[addr + 3];
 	return result;
+//	mtx.unlock();
 }
 
 bool Memory::isOccupied(uint16_t addr) {
+	//mtx.lock();
 	assert(addr % 4 == 0);
 
 	bool result = this->free[addr];
 
 	return result;
+//	mtx.unlock();
 }
 
 void Memory::setMem(uint16_t addr, int32_t data) {
+	//mtx.lock();
 	assert(addr % 4 == 0);
 
 	// TODO: get offset from PCB
@@ -30,9 +35,11 @@ void Memory::setMem(uint16_t addr, int32_t data) {
 	this->memory[addr + 1] = data >> 16;
 	this->memory[addr + 2] = data >> 8;
 	this->memory[addr + 3] = data;
+//	mtx.unlock();
 }
 
 void Memory::allocate(uint16_t addr) {
+	//mtx.lock();
 	assert(addr % 4 == 0);
 
 	this->free[addr] = true;
@@ -40,9 +47,11 @@ void Memory::allocate(uint16_t addr) {
 	this->free[addr + 2] = true;
 	this->free[addr + 3] = true;
 	in_use += 4;
+//	mtx.unlock();
 }
 
 void Memory::deallocate(uint16_t addr) {
+//	mtx.lock();
 	assert(addr % 4 == 0);
 
 	this->free[addr] = false;
@@ -50,6 +59,7 @@ void Memory::deallocate(uint16_t addr) {
 	this->free[addr + 2] = false;
 	this->free[addr + 3] = false;
 	in_use -= 4;
+	//mtx.unlock();
 }
 
 std::string Memory::dump() {
@@ -122,15 +132,4 @@ uint16_t Memory::holeStart(int size) {
 	std::cout << "\n" << start;
 	++current;
 	return start;
-}
-
-void Memory::getLock() {
-	while (lock == false) {
-
-	}
-	lock = false;
-}
-
-void Memory::releaseLock() {
-	lock = true;
 }

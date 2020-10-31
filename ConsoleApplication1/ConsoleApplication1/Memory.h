@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <cstdint>
+#include <mutex>
 
 constexpr uint8_t REGISTER_COUNT = 16;
 constexpr uint32_t MEMORY = 1024 * 4;
@@ -24,10 +25,8 @@ public:
 	uint16_t holeStart(int size);
 	std::string dump();
 	unsigned long in_use = 0;
-	void getLock();
-	void releaseLock();
 private:
 	uint8_t memory[MEMORY];
 	bool free[MEMORY] = { false };
-	bool lock = true;
+	std::mutex mtx;
 };

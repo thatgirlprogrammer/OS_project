@@ -77,18 +77,22 @@ int main() {
 
 struct MethodStats run(SORT_METHOD method) {
 	int number_CPU = 1;
-	vector<CPU*>* cpus = new vector<CPU*>;
+	
 	disk* dsk = new disk;
 	Memory* ram = new Memory;
-	DMA* dma = new DMA(ram);
+	vector<DMA*>* dmas = new vector<DMA*>;
+	//DMA* dma = new DMA(ram);
+	
+	//CPU* cpu = new CPU(ram, dma);
+	loader* load = new loader("./Program-File.txt", dsk);
+	vector<CPU*>* cpus = new vector<CPU*>;
 	for (int i = 0; i < number_CPU; ++i) {
-		cpus->push_back(new CPU(ram, dma));
+		dmas->push_back(new DMA(ram));
+		cpus->push_back(new CPU(ram, dmas->at(i), load));
 		if (number_CPU > 1) {
 			cpus->at(i)->useCache();
 		}
 	}
-	//CPU* cpu = new CPU(ram, dma);
-	loader* load = new loader("./Program-File.txt", dsk);
 	long_term_scheduler* lts = new long_term_scheduler(ram, dsk, load);
 	load->load_file();
 	
@@ -146,15 +150,15 @@ struct MethodStats run(SORT_METHOD method) {
 			cpus->at(0)->step();
 			cycles++;
 		}
-		load->get_running()->at(0)->ios = dma->get_io_number();
-		load->get_running()->at(0)->total_memory_in_use = ram->in_use;
-		dma->setIO();
-		load->move_terminate(0);
+		//load->get_running()->at(0)->ios = dma->get_io_number();
+		//load->get_running()->at(0)->total_memory_in_use = ram->in_use;
+		//dma->setIO();
+		//load->move_terminate(0);
 		cout << endl;
 	}
 	std::cout << "Printing RAM" << std::endl;
 	std::stringstream builder;
-	std::cout << "I/O operations run " << dma->get_io_number() << std::endl;
+//	std::cout << "I/O operations run " << dma->get_io_number() << std::endl;
 
 	vector<ProcessStats> process_stats;
 
