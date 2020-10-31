@@ -79,7 +79,13 @@ struct MethodStats run(SORT_METHOD method) {
 	disk* dsk = new disk;
 	Memory* ram = new Memory;
 	DMA* dma = new DMA(ram);
-	CPU* cpu = new CPU(ram, dma);
+	//CPU* cpu = new CPU(ram, dma);
+	vector<CPU*>* cpus = new vector<CPU*>;
+
+	for (int i = 0; i < 1; ++i) {
+		cpus->push_back(new CPU(ram, dma));
+	}
+	
 	loader* load = new loader("./Program-File.txt", dsk);
 	long_term_scheduler* lts = new long_term_scheduler(ram, dsk, load);
 	load->load_file();
@@ -122,7 +128,7 @@ struct MethodStats run(SORT_METHOD method) {
 
 	for (int i = 0; i < load->get_ready()->size(); i++)
 		print(load->get_ready()->at(i));
-	short_term_scheduler* sts = new short_term_scheduler(ram, load, cpu);
+	short_term_scheduler* sts = new short_term_scheduler(ram, load, cpus);
 
 	for (int i = 0; i < 2048; ++i) {
 		std::cout << dsk->read(i) << "\n";
@@ -131,11 +137,11 @@ struct MethodStats run(SORT_METHOD method) {
 	while (!sts->isDone()) {
 		lts->schedule();
 		sts->schedule();
-		cpu->setDone();
-		cpu->setPC();
+		cpus->at(0)->setDone();
+		cpus->at(0)->setPC();
 		int cycles = 0;
-		while (!cpu->isDone()) {
-			cpu->step();
+		while (!cpus->at(0)->isDone()) {
+			cpus->at(0)->step();
 			cycles++;
 		}
 		load->get_running()->at(0)->ios = dma->get_io_number();
