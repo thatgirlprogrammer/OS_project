@@ -17,7 +17,8 @@ Instruction::Instruction(uint32_t inst) {
 			|| op == Opcode::DIV
 			|| op == Opcode::AND
 			|| op == Opcode::OR
-			|| op == Opcode::SLT;
+			|| op == Opcode::SLT
+			|| op == Opcode::NOP;
 		break;
 	case OpcodeType::CONDIMM:
 		ok = op == Opcode::ST

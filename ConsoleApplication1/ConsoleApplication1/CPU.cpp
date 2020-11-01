@@ -3,13 +3,14 @@
 #include "CPU.h"
 #include "Disassemble.h"
 
-CPU::CPU(Memory* memory, DMA* dma) {
+CPU::CPU(Memory* memory, DMA* dma, int num) {
 	for (uint8_t i = 0; i < REGISTER_COUNT; i++)
 		this->registers[i] = 0;
 	this->memory = memory;
 	this->dma = dma;
 	this->pc = 0;
 	this->base = 0;
+	this->cpu_num = num;
 }
 
 int32_t CPU::getReg(uint8_t reg) {
@@ -27,10 +28,16 @@ void CPU::setReg(uint8_t reg, int32_t value) {
 
 void CPU::step() {
 	// TODO: get program counter from PCB
-	//std::cout << std::hex << this->pc << std::dec << " ";
-	Instruction i = Instruction(this->memory->getMem(this->pc));
+	std::cout << this->cpu_num << " " << std::hex << this->pc << std::dec << " ";
+	Instruction i = Instruction(0x13000000);
+	if (use_cache) {
+		i = Instruction(this->readCache(this->pc - this->base * 4));
+	}
+	else {
+		i = Instruction(this->memory->getMem(this->pc));
+	}
 	this->pc += 4;
-	//disassembleInstruction(i);
+	disassembleInstruction(i);
 
 	switch (i.opcode()) {
 	case Opcode::RD: {
@@ -218,15 +225,13 @@ void CPU::step() {
 		//PCB_info pcb_val = ram1->get_info();
 		//pcb_val.pc.process_status = TERMINATE;
 		if (use_cache) {
-			PCB_info* process = private_running->at(0);
-			uint16_t b = process->pc.job_memory_address;
-			std::cout << "My b is " << b << std::endl;
-			std::cout << "This is job " << process->pc.job_number << endl;
-			auto size = process->pc.job_size;
+			uint16_t b = this->running->pc.job_memory_address;
+			std::cout << "(hlt) My b is " << b << std::endl;
+			std::cout << "(hlt) This is job " << this->running->pc.job_number << endl;
+			auto size = this->running->pc.job_size;
 			for (int i = 0; i < size * 4; i += 4) {
-				dma->write((i + (b * 4)), readCache(i));
+				this->dma->write((i + (b * 4)), readCache(i));
 			}
-			private_running->erase(private_running->begin() + 0);
 		}
 		this->done = true;
 	} break;
@@ -314,8 +319,4 @@ void CPU::writeCache(uint16_t addr, int32_t data) {
 	cache[addr + 1] = data >> 16;
 	cache[addr + 2] = data >> 8;
 	cache[addr + 3] = data;
-}
-
-void CPU::appendRunning(PCB_info* pcb) {
-	private_running->push_back(pcb);
 }

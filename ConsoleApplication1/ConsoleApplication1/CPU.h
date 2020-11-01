@@ -8,7 +8,7 @@
 class CPU
 {
 public:
-	CPU(Memory*, DMA*);
+	CPU(Memory*, DMA*, int);
 
 	int32_t getReg(uint8_t reg);
 	void setReg(uint8_t reg, int32_t value);
@@ -24,15 +24,17 @@ public:
 	void useCache() { use_cache = true; }
 	uint32_t readCache(uint16_t addr);
 	void writeCache(uint16_t addr, int32_t data);
-	void appendRunning(PCB_info* pcb);
+	int cpu_num;
+	void set_running(PCB_info* running) { this->running = running; }
+	PCB_info* get_running() { return this->running; }
+	DMA* dma;
 private:
 	int32_t registers[REGISTER_COUNT];
 	uint32_t pc;
 	uint32_t base;
 	bool done = false;
 	Memory* memory;
-	DMA* dma;
 	bool use_cache = true;
 	uint8_t cache[72 * 4];
-	vector<PCB_info*>* private_running = new vector<PCB_info*>;
+	PCB_info* running = nullptr;
 };

@@ -49,8 +49,8 @@ void print(PCB_info* info) {
 struct MethodStats run(SORT_METHOD method);
 
 int main() {
-	auto priority = run(PRIORITY);
 	auto number = run(NUMBER);
+	auto priority = run(PRIORITY);
 
 	std::ofstream priority_file;
 	priority_file.open("..\\..\\priority.csv");
@@ -76,16 +76,18 @@ int main() {
 }
 
 struct MethodStats run(SORT_METHOD method) {
+	int num_cpus = 1;
+
 	disk* dsk = new disk;
 	Memory* ram = new Memory;
-	vector<DMA*>* dmas = new vector<DMA*>;
-	//DMA* dma = new DMA(ram);
+	//vector<DMA*>* dmas = new vector<DMA*>;
+	DMA* dma = new DMA(ram);
 	//CPU* cpu = new CPU(ram, dma);
 	vector<CPU*>* cpus = new vector<CPU*>;
 
-	for (int i = 0; i < 1; ++i) {
-		dmas->push_back(new DMA(ram));
-		cpus->push_back(new CPU(ram, dmas->at(i)));
+	for (int i = 0; i < num_cpus; ++i) {
+		//dmas->push_back(new DMA(ram));
+		cpus->push_back(new CPU(ram, dma, i));
 	}
 	
 	loader* load = new loader("./Program-File.txt", dsk);
@@ -136,25 +138,37 @@ struct MethodStats run(SORT_METHOD method) {
 		std::cout << dsk->read(i) << "\n";
 	}
 
-	while (!sts->isDone()) {
+	while (load->get_terminated()->size() != 30) {
 		lts->schedule();
-		sts->schedule();
+
+		// spawn 4 CPU threads
+		//     short term schedule
+		//     step until finished
+		//     terminate process
+
+		sts->schedule(0, load);
 		cpus->at(0)->setDone();
 		cpus->at(0)->setPC();
 		int cycles = 0;
+
 		while (!cpus->at(0)->isDone()) {
 			cpus->at(0)->step();
 			cycles++;
 		}
-		load->get_running()->at(0)->ios = dmas->at(0)->get_io_number();
+
+		for (int i = 0; i < (load->get_running()->at(0)->pc.job_size - 1) * 4; i += 4) {
+			ram->deallocate(i + (load->get_running()->at(0)->pc.job_memory_address * 4));
+		}
+
+		load->get_running()->at(0)->ios = dma->get_io_number();
 		load->get_running()->at(0)->total_memory_in_use = ram->in_use;
-		dmas->at(0)->setIO();
+		dma->setIO();
 		load->move_terminate(0);
 		cout << endl;
 	}
 	std::cout << "Printing RAM" << std::endl;
 	std::stringstream builder;
-	std::cout << "I/O operations run " << dmas->at(0)->get_io_number() << std::endl;
+	std::cout << "I/O operations run " << dma->get_io_number() << std::endl;
 
 	vector<ProcessStats> process_stats;
 

@@ -16,23 +16,15 @@ namespace OSSim {
 			mem = memory;
 			load = ld;
 			cpus = c;
-			ready = ld->get_ready();
-			waiting = ld->get_waiting();
-			running = ld->get_running();
-			terminated = ld->get_terminated();
 		}
 		~short_term_scheduler() {
-			delete mem; mem = NULL;
+			//delete mem; mem = NULL;
 		}
-		void schedule();
-		bool isDone() { return terminated->size() == 30; }
+		void schedule(int cpu_number, loader* ld);
+		//bool isDone() { return terminated->size() == 30; }
 	private:
 		Memory* mem;
 		vector<CPU*>* cpus;
 		loader* load;
-		vector<PCB_info*>* ready;
-		vector<PCB_info*>* waiting;
-		vector<PCB_info*>* running;
-		vector<PCB_info*>* terminated;
 	};
 }

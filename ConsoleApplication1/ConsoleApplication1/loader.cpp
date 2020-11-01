@@ -121,13 +121,21 @@ void loader::load_file() {
 	}
 }
 
+static bool move_new_ready_busy = false;
 void loader::move_new_ready(int index) {
+	while (move_new_ready_busy)
+		;
+	move_new_ready_busy = true;
+
 	PCB_info* process = new_q->at(index);
 	process->enter_new = std::chrono::high_resolution_clock::now();
 	new_q->erase(new_q->begin() + index);
 	process->pc.process_status = READY;
 	ready->push_back(process);
+
+	move_new_ready_busy = false;
 }
+
 void loader::move_waiting_ready(int index) {
 	PCB_info* process = waiting->at(index);
 	waiting->erase(waiting->begin() + index);
