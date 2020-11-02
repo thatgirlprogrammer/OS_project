@@ -48,11 +48,6 @@ void Memory::allocate(uint16_t addr) {
 	this->free[addr + 2] = true;
 	this->free[addr + 3] = true;
 	
-
-	this->memory[addr] = 0xaaaaaaaa;
-	this->memory[addr + 1] = 0xaaaaaaaa;
-	this->memory[addr + 2] = 0xaaaaaaaa;
-	this->memory[addr + 3] = 0xaaaaaaaa;
 	mtx.unlock();
 }
 
@@ -67,10 +62,6 @@ void Memory::deallocate(uint16_t addr) {
 	this->free[addr + 2] = false;
 	this->free[addr + 3] = false;
 
-	this->memory[addr] = 0xdddddddd;
-	this->memory[addr + 1] = 0xdddddddd;
-	this->memory[addr + 2] = 0xdddddddd;
-	this->memory[addr + 3] = 0xdddddddd;
 	mtx.unlock();
 }
 
