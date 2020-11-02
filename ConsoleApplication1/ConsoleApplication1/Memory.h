@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <cstdint>
+#include <mutex>
 
 constexpr uint8_t REGISTER_COUNT = 16;
 constexpr uint32_t MEMORY = 1024 * 4;
@@ -27,4 +28,5 @@ public:
 private:
 	uint8_t memory[MEMORY];
 	bool free[MEMORY] = { false };
+	std::mutex mtx;
 };

@@ -3,7 +3,7 @@
 #include "CPU.h"
 #include "Disassemble.h"
 
-CPU::CPU(Memory* memory, DMA* dma, int num) {
+CPU::CPU(Memory* memory, DMA* dma, int num, loader* l) {
 	for (uint8_t i = 0; i < REGISTER_COUNT; i++)
 		this->registers[i] = 0;
 	this->memory = memory;
@@ -11,6 +11,7 @@ CPU::CPU(Memory* memory, DMA* dma, int num) {
 	this->pc = 0;
 	this->base = 0;
 	this->cpu_num = num;
+	this->load = l;
 }
 
 int32_t CPU::getReg(uint8_t reg) {
@@ -234,8 +235,22 @@ void CPU::step() {
 			}
 		}
 
+		this->running->total_memory_in_use = memory->in_use;
+
 		for (int i = 0; i < (this->running->pc.job_size) * 4; i += 4) {
 			memory->deallocate(i + (running->pc.job_memory_address * 4));
+		}
+
+		this->running->pc.process_status = TERMINATE;
+		this->running->ios = dma->get_io_number();
+		++num_processes;
+		running->end = std::chrono::high_resolution_clock::now();
+		load->get_terminated()->push_back(running);
+
+		for (int i = 0; i < load->get_running()->size(); ++i) {
+			if (load->get_running()->at(i) == this->running) {
+				load->get_running()->erase(load->get_running()->begin() + i);
+			}
 		}
 
 		this->done = true;

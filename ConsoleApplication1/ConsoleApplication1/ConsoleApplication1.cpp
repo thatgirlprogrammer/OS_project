@@ -26,6 +26,7 @@ struct ProcessStats {
 	long long waiting_time;
 	int io_operations;
 	unsigned long memory_in_use_at_completion;
+	unsigned int my_cpu;
 };
 
 struct MethodStats {
@@ -46,17 +47,17 @@ void print(PCB_info* info) {
 	std::cout << "\tsize: " << info->pc.job_size << std::endl;
 }
 
-struct MethodStats run(SORT_METHOD method);
+struct MethodStats run(SORT_METHOD method, int num_cpus);
 
 int main() {
-	auto number = run(NUMBER);
-	auto priority = run(PRIORITY);
+	auto number = run(NUMBER, 1);
+	auto priority = run(PRIORITY, 1);
 
 	std::ofstream priority_file;
 	priority_file.open("..\\..\\priority.csv");
-	priority_file << "job number,running time,waiting time,io operations,memory in use" << std::endl;
+	priority_file << "job number,running time,waiting time,io operations,memory in use,cpu #" << std::endl;
 	for (auto it = priority.stats.begin(); it != priority.stats.end(); it++) {
-		priority_file << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << std::endl;
+		priority_file << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << "," << it->my_cpu << std::endl;
 	}
 	priority_file.close();
 	std::ofstream priority_memory;
@@ -65,19 +66,43 @@ int main() {
 
 	std::ofstream number_file;
 	number_file.open("..\\..\\number.csv");
-	number_file << "job number,running time,waiting time,io operations,memory in use" << std::endl;
+	number_file << "job number,running time,waiting time,io operations,memory in use,cpu #" << std::endl;
 	for (auto it = number.stats.begin(); it != number.stats.end(); it++) {
-		number_file << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << std::endl;
+		number_file << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << "," << it->my_cpu << std::endl;
 	}
 	number_file.close();
 	std::ofstream number_memory;
 	number_memory.open("..\\..\\mem_number.txt");
 	number_memory << number.memory;
+
+	auto number_m = run(NUMBER, 4);
+	auto priority_m = run(PRIORITY, 4);
+
+	std::ofstream priority_file_m;
+	priority_file_m.open("..\\..\\priority_m.csv");
+	priority_file_m << "job number,running time,waiting time,io operations,memory in use,cpu #" << std::endl;
+	for (auto it = priority_m.stats.begin(); it != priority_m.stats.end(); it++) {
+		priority_file_m << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << "," << it->my_cpu << std::endl;
+	}
+	priority_file_m.close();
+	std::ofstream priority_memory_m;
+	priority_memory_m.open("..\\..\\mem_priority_m.txt");
+	priority_memory_m << priority_m.memory;
+
+	std::ofstream number_file_m;
+	number_file_m.open("..\\..\\number_m.csv");
+	number_file_m << "job number,running time,waiting time,io operations,memory in use,cpu #" << std::endl;
+	for (auto it = number_m.stats.begin(); it != number_m.stats.end(); it++) {
+		number_file_m << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << "," << it->my_cpu << std::endl;
+	}
+	number_file_m.close();
+	std::ofstream number_memory_m;
+	number_memory_m.open("..\\..\\mem_number_m.txt");
+	number_memory_m << number_m.memory;
+
 }
 
-struct MethodStats run(SORT_METHOD method) {
-	int num_cpus = 4;
-
+struct MethodStats run(SORT_METHOD method, int num_cpus) {
 	disk* dsk = new disk;
 	Memory* ram = new Memory;
 	vector<DMA*>* dmas = new vector<DMA*>;
@@ -85,12 +110,14 @@ struct MethodStats run(SORT_METHOD method) {
 	//CPU* cpu = new CPU(ram, dma);
 	vector<CPU*>* cpus = new vector<CPU*>;
 
+	loader* load = new loader("./Program-File.txt", dsk);
+
 	for (int i = 0; i < num_cpus; ++i) {
 		dmas->push_back(new DMA(ram));
-		cpus->push_back(new CPU(ram, dmas->at(i), i));
+		cpus->push_back(new CPU(ram, dmas->at(i), i, load));
 	}
 
-	loader* load = new loader("./Program-File.txt", dsk);
+	
 	long_term_scheduler* lts = new long_term_scheduler(ram, dsk, load);
 	load->load_file();
 
@@ -168,15 +195,13 @@ struct MethodStats run(SORT_METHOD method) {
 		while (load->get_terminated()->size() != 30) {
 			lts->schedule();
 			for (int i = 0; i < num_cpus; ++i) {
-				cpus->at(i)->step();
 				if (cpus->at(i)->isDone()) {
-					
 					sts->schedule(i, load);
 					cpus->at(i)->setDone();
 					cpus->at(i)->setPC();
-					load->move_terminate(0);
 					dmas->at(i)->setIO();
 				}
+				cpus->at(i)->step();
 			}
 		}
 
@@ -191,6 +216,10 @@ struct MethodStats run(SORT_METHOD method) {
 	std::stringstream builder;
 	std::cout << "I/O operations run " << dma->get_io_number() << std::endl;
 
+	for (int i = 0; i < num_cpus; ++i) {
+		std::cout << cpus->at(i)->get_num_processes() << endl;
+	}
+
 	vector<ProcessStats> process_stats;
 
 	auto terminated = load->get_terminated();
@@ -201,6 +230,7 @@ struct MethodStats run(SORT_METHOD method) {
 				std::chrono::duration_cast<std::chrono::microseconds>((*it)->start - (*it)->enter_new).count(),
 				(*it)->ios,
 				(*it)->total_memory_in_use,
+				(*it)->pc.my_cpu,
 		};
 		process_stats.push_back(pstats);
 	}

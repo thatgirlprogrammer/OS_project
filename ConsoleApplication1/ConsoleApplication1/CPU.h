@@ -8,7 +8,7 @@
 class CPU
 {
 public:
-	CPU(Memory*, DMA*, int);
+	CPU(Memory*, DMA*, int, loader*);
 
 	int32_t getReg(uint8_t reg);
 	void setReg(uint8_t reg, int32_t value);
@@ -28,6 +28,7 @@ public:
 	void set_running(PCB_info* running) { this->running = running; }
 	PCB_info* get_running() { return this->running; }
 	DMA* dma;
+	int get_num_processes() { return num_processes; }
 private:
 	int32_t registers[REGISTER_COUNT];
 	uint32_t pc;
@@ -36,5 +37,7 @@ private:
 	Memory* memory;
 	bool use_cache = true;
 	uint8_t cache[72 * 4];
+	int num_processes = 0;
 	PCB_info* running = nullptr;
+	loader* load;
 };

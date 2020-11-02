@@ -31,6 +31,7 @@ namespace OSSim {
 		unsigned int job_memory_address = 0x0;
 		unsigned int job_instruction_count = 0;
 		unsigned int job_size = 0;
+		unsigned int my_cpu = 0;
 		bool job_in_memory = false;
 		uint8_t registers[16];
 		PROCESS_STATUS process_status = NEW;

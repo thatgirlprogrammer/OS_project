@@ -4,6 +4,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 	if (ld->get_ready()->size() > 0) {
 		PCB_info* process = ld->get_ready()->at(0);
 		uint16_t b = process->pc.job_memory_address;
+		process->pc.my_cpu = cpu_number;
 		std::cout << "My b is " << b << std::endl;
 		std::cout << "This is job " << process->pc.job_number << endl;
 		cpus->at(cpu_number)->setBase(b);
