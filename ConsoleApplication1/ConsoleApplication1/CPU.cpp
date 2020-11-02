@@ -233,6 +233,11 @@ void CPU::step() {
 				this->dma->write((i + (b * 4)), readCache(i));
 			}
 		}
+
+		for (int i = 0; i < (this->running->pc.job_size) * 4; i += 4) {
+			memory->deallocate(i + (running->pc.job_memory_address * 4));
+		}
+
 		this->done = true;
 	} break;
 

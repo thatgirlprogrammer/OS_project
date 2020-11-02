@@ -76,20 +76,20 @@ int main() {
 }
 
 struct MethodStats run(SORT_METHOD method) {
-	int num_cpus = 1;
+	int num_cpus = 4;
 
 	disk* dsk = new disk;
 	Memory* ram = new Memory;
-	//vector<DMA*>* dmas = new vector<DMA*>;
+	vector<DMA*>* dmas = new vector<DMA*>;
 	DMA* dma = new DMA(ram);
 	//CPU* cpu = new CPU(ram, dma);
 	vector<CPU*>* cpus = new vector<CPU*>;
 
 	for (int i = 0; i < num_cpus; ++i) {
-		//dmas->push_back(new DMA(ram));
-		cpus->push_back(new CPU(ram, dma, i));
+		dmas->push_back(new DMA(ram));
+		cpus->push_back(new CPU(ram, dmas->at(i), i));
 	}
-	
+
 	loader* load = new loader("./Program-File.txt", dsk);
 	long_term_scheduler* lts = new long_term_scheduler(ram, dsk, load);
 	load->load_file();
@@ -146,9 +146,16 @@ struct MethodStats run(SORT_METHOD method) {
 		//     step until finished
 		//     terminate process
 
-		sts->schedule(0, load);
-		cpus->at(0)->setDone();
-		cpus->at(0)->setPC();
+		for (int i = 0; i < num_cpus; ++i) {
+			sts->schedule(i, load);
+		}
+
+		for (int i = 0; i < num_cpus; ++i) {
+			cpus->at(i)->setDone();
+			cpus->at(i)->setPC();
+		}
+		/*
+
 		int cycles = 0;
 
 		while (!cpus->at(0)->isDone()) {
@@ -156,14 +163,28 @@ struct MethodStats run(SORT_METHOD method) {
 			cycles++;
 		}
 
-		for (int i = 0; i < (load->get_running()->at(0)->pc.job_size - 1) * 4; i += 4) {
-			ram->deallocate(i + (load->get_running()->at(0)->pc.job_memory_address * 4));
+		*/
+
+		while (load->get_terminated()->size() != 30) {
+			lts->schedule();
+			for (int i = 0; i < num_cpus; ++i) {
+				cpus->at(i)->step();
+				if (cpus->at(i)->isDone()) {
+					
+					sts->schedule(i, load);
+					cpus->at(i)->setDone();
+					cpus->at(i)->setPC();
+					load->move_terminate(0);
+					dmas->at(i)->setIO();
+				}
+			}
 		}
 
-		load->get_running()->at(0)->ios = dma->get_io_number();
-		load->get_running()->at(0)->total_memory_in_use = ram->in_use;
-		dma->setIO();
-		load->move_terminate(0);
+
+		//load->get_running()->at(0)->ios = dma->get_io_number();
+		//load->get_running()->at(0)->total_memory_in_use = ram->in_use;
+		//dma->setIO();
+		//load->move_terminate(0);
 		cout << endl;
 	}
 	std::cout << "Printing RAM" << std::endl;

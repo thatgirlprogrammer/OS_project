@@ -11,7 +11,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 			cpus->at(cpu_number)->set_running(process);
 			//cpus->at(cpu_number)->appendRunning(process);
 			for (int i = 0; i < process->pc.job_size * 4; i += 4) {
-				cpus->at(0)->writeCache(i, mem->getMem(i + (b * 4)));
+				cpus->at(cpu_number)->writeCache(i, mem->getMem(i + (b * 4)));
 			}
 		}
 		//for (int i = 0; i < process->pc.job_size * 4; i += 4) {
