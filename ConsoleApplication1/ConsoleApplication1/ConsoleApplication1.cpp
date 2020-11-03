@@ -27,6 +27,7 @@ struct ProcessStats {
 	int io_operations;
 	unsigned long memory_in_use_at_completion;
 	unsigned int my_cpu;
+	unsigned int job_size;
 };
 
 struct MethodStats {
@@ -55,9 +56,9 @@ int main() {
 
 	std::ofstream priority_file;
 	priority_file.open("..\\..\\priority.csv");
-	priority_file << "job number,running time,waiting time,io operations,memory in use,cpu #" << std::endl;
+	priority_file << "job number,running time,waiting time,io operations,memory in use,cpu #,job size" << std::endl;
 	for (auto it = priority.stats.begin(); it != priority.stats.end(); it++) {
-		priority_file << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << "," << it->my_cpu << std::endl;
+		priority_file << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << "," << it->my_cpu << "," << it->job_size << std::endl;
 	}
 	priority_file.close();
 	std::ofstream priority_memory;
@@ -66,9 +67,9 @@ int main() {
 
 	std::ofstream number_file;
 	number_file.open("..\\..\\number.csv");
-	number_file << "job number,running time,waiting time,io operations,memory in use,cpu #" << std::endl;
+	number_file << "job number,running time,waiting time,io operations,memory in use,cpu #,job size" << std::endl;
 	for (auto it = number.stats.begin(); it != number.stats.end(); it++) {
-		number_file << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << "," << it->my_cpu << std::endl;
+		number_file << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << "," << it->my_cpu << "," << it->job_size << std::endl;
 	}
 	number_file.close();
 	std::ofstream number_memory;
@@ -80,9 +81,9 @@ int main() {
 
 	std::ofstream priority_file_m;
 	priority_file_m.open("..\\..\\priority_m.csv");
-	priority_file_m << "job number,running time,waiting time,io operations,memory in use,cpu #" << std::endl;
+	priority_file_m << "job number,running time,waiting time,io operations,memory in use,cpu #,job size" << std::endl;
 	for (auto it = priority_m.stats.begin(); it != priority_m.stats.end(); it++) {
-		priority_file_m << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << "," << it->my_cpu << std::endl;
+		priority_file_m << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << "," << it->my_cpu << "," << it->job_size << std::endl;
 	}
 	priority_file_m.close();
 	std::ofstream priority_memory_m;
@@ -91,9 +92,9 @@ int main() {
 
 	std::ofstream number_file_m;
 	number_file_m.open("..\\..\\number_m.csv");
-	number_file_m << "job number,running time,waiting time,io operations,memory in use,cpu #" << std::endl;
+	number_file_m << "job number,running time,waiting time,io operations,memory in use,cpu #,job size" << std::endl;
 	for (auto it = number_m.stats.begin(); it != number_m.stats.end(); it++) {
-		number_file_m << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << "," << it->my_cpu << std::endl;
+		number_file_m << it->job_number << "," << it->running_time << "," << it->waiting_time << "," << it->io_operations << "," << it->memory_in_use_at_completion << "," << it->my_cpu << "," << it->job_size << std::endl;
 	}
 	number_file_m.close();
 	std::ofstream number_memory_m;
@@ -191,6 +192,7 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 				(*it)->ios,
 				(*it)->total_memory_in_use,
 				(*it)->pc.my_cpu,
+				(*it)->pc.job_size,
 		};
 		process_stats.push_back(pstats);
 	}
