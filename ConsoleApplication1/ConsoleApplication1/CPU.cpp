@@ -28,8 +28,6 @@ void CPU::setReg(uint8_t reg, int32_t value) {
 }
 
 void CPU::step() {
-	// TODO: get program counter from PCB
-	std::cout << this->cpu_num << " " << std::hex << this->pc << std::dec << " ";
 	Instruction i = Instruction(0x13000000);
 	if (use_cache) {
 		i = Instruction(this->readCache(this->pc - this->base * 4));
@@ -56,8 +54,6 @@ void CPU::step() {
 			else {
 				data = this->dma->read(r2 + (this->base * 4));
 			}
-			//data = this->memory->getMem(r2 + (this->base * 4));
-			std::cout << r2 + (this->base * 4) << std::endl;
 		}
 		else {
 			if (use_cache) {
@@ -66,8 +62,6 @@ void CPU::step() {
 			else {
 				data = this->dma->read(rdaddr + (this->base * 4));
 			}
-			//data = this->memory->getMem(rdaddr + (this->base * 4));
-			std::cout << rdaddr + (this->base * 4) << std::endl;
 		}
 
 		this->setReg(r1, data);
@@ -85,8 +79,6 @@ void CPU::step() {
 			else {
 				this->dma->write(wrr2 + (this->base * 4), wrr1);
 			}
-			//this->memory->setMem(wrr2 + (this->base * 4), wrr1);
-			std::cout << wrr2 + (this->base * 4) << std::endl;
 		}
 		else {
 			if (use_cache) {
@@ -95,8 +87,6 @@ void CPU::step() {
 			else {
 				this->dma->write(wraddr + (this->base * 4), wrr1);
 			}
-			//this->memory->setMem(wraddr + (this->base * 4), wrr1);
-			std::cout << wraddr + (this->base * 4) << std::endl;
 		}
 	} break;
 
@@ -112,8 +102,6 @@ void CPU::step() {
 		else {
 			this->setReg(d, this->dma->read(addr + (this->base * 4)));
 		}
-		//	this->setReg(d, this->memory->getMem(addr + (this->base * 4)));
-		std::cout << addr + (this->base * 4) << std::endl;
 	} break;
 
 	case Opcode::ST: {
@@ -126,9 +114,6 @@ void CPU::step() {
 		else {
 			this->dma->write(addr + (this->base * 4), data);
 		}
-
-		//this->memory->setMem(addr + (this->base * 4), data);
-		std::cout << addr + (this->base * 4) << std::endl;
 	} break;
 
 	case Opcode::MOV: {
@@ -208,7 +193,6 @@ void CPU::step() {
 		}
 	} break;
 
-		// ? hmmmmmm
 	case Opcode::SLTI: {
 		int32_t s1 = this->getReg(i.cimmB());
 		int32_t s2 = this->getReg(i.cimmD());
@@ -222,13 +206,8 @@ void CPU::step() {
 	} break;
 
 	case Opcode::HLT: {
-		// set process state to finished
-		//PCB_info pcb_val = ram1->get_info();
-		//pcb_val.pc.process_status = TERMINATE;
 		if (use_cache) {
 			uint16_t b = this->running->pc.job_memory_address;
-			std::cout << "(hlt) My b is " << b << std::endl;
-			std::cout << "(hlt) This is job " << this->running->pc.job_number << endl;
 			auto size = this->running->pc.job_size;
 			for (int i = 0; i < size * 4; i += 4) {
 				this->dma->write((i + (b * 4)), readCache(i));
@@ -314,16 +293,12 @@ void CPU::step() {
 	} break;
 
 	default:
-		std::cout << "unknown instruction" << std::endl;
 		disassembleInstruction(i);
 	}
-	//ram1->get_info().pc.program_counter++;
 }
 
 uint32_t CPU::readCache(uint16_t addr) {
 	assert(addr % 4 == 0);
-
-	// TODO: get offset from PCB
 	int32_t result = cache[addr] << 24;
 	result |= cache[addr + 1] << 16;
 	result |= cache[addr + 2] << 8;
@@ -333,8 +308,6 @@ uint32_t CPU::readCache(uint16_t addr) {
 
 void CPU::writeCache(uint16_t addr, int32_t data) {
 	assert(addr % 4 == 0);
-
-	// TODO: get offset from PCB
 	cache[addr] = data >> 24;
 	cache[addr + 1] = data >> 16;
 	cache[addr + 2] = data >> 8;
