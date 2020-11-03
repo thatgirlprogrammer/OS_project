@@ -9,10 +9,8 @@ class CPU
 {
 public:
 	CPU(Memory*, DMA*, int, loader*);
-
 	int32_t getReg(uint8_t reg);
 	void setReg(uint8_t reg, int32_t value);
-
 	void step();
 
 	uint32_t getPC() { return this->pc; }
