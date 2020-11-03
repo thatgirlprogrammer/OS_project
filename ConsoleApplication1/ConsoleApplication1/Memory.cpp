@@ -117,13 +117,11 @@ uint16_t Memory::holeStart(int size) {
 			++hole;
 		}
 		if (hole >= size) {
-			std::cout << "\n" << start;
 			++current;
 			return start + 1;
 		}
 		++current;
 	}
-	std::cout << "\n" << start;
 	++current;
 	return start + 1;
 }

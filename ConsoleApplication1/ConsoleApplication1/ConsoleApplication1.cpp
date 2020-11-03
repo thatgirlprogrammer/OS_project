@@ -100,6 +100,7 @@ int main() {
 	number_memory_m.open("..\\..\\mem_number_m.txt");
 	number_memory_m << number_m.memory;
 
+	std::cout << "All jobs completed." << std::endl;
 }
 
 struct MethodStats run(SORT_METHOD method, int num_cpus) {

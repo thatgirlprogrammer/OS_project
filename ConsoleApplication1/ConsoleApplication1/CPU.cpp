@@ -36,7 +36,7 @@ void CPU::step() {
 		i = Instruction(this->memory->getMem(this->pc));
 	}
 	this->pc += 4;
-	disassembleInstruction(i);
+//	disassembleInstruction(i);
 
 	switch (i.opcode()) {
 	case Opcode::RD: {

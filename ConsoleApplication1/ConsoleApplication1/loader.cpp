@@ -97,7 +97,6 @@ void loader::load_file() {
 			}
 			else if (line.find("END") != std::string::npos) {
 				info->pc.job_size = current - start;
-				cout << current - start << endl;
 				new_q->push_back(info);
 			}
 			else {
