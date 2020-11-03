@@ -107,9 +107,7 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 	Memory* ram = new Memory;
 	vector<DMA*>* dmas = new vector<DMA*>;
 	DMA* dma = new DMA(ram);
-	//CPU* cpu = new CPU(ram, dma);
 	vector<CPU*>* cpus = new vector<CPU*>;
-
 	loader* load = new loader("./Program-File.txt", dsk);
 
 	for (int i = 0; i < num_cpus; ++i) {
@@ -117,10 +115,8 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 		cpus->push_back(new CPU(ram, dmas->at(i), i, load));
 	}
 
-	
 	long_term_scheduler* lts = new long_term_scheduler(ram, dsk, load);
 	load->load_file();
-
 	vector<PCB_info> v;
 
 	switch (method) {
@@ -157,40 +153,18 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 		break;
 	}
 
-	for (int i = 0; i < load->get_ready()->size(); i++)
-		print(load->get_ready()->at(i));
 	short_term_scheduler* sts = new short_term_scheduler(ram, load, cpus);
-
-	for (int i = 0; i < 2048; ++i) {
-		std::cout << dsk->read(i) << "\n";
-	}
 
 	while (load->get_terminated()->size() != 30) {
 		lts->schedule();
-
-		// spawn 4 CPU threads
-		//     short term schedule
-		//     step until finished
-		//     terminate process
-
-		for (int i = 0; i < num_cpus; ++i) {
+                for (int i = 0; i < num_cpus; ++i) {
 			sts->schedule(i, load);
 		}
-
+ 
 		for (int i = 0; i < num_cpus; ++i) {
 			cpus->at(i)->setDone();
 			cpus->at(i)->setPC();
 		}
-		/*
-
-		int cycles = 0;
-
-		while (!cpus->at(0)->isDone()) {
-			cpus->at(0)->step();
-			cycles++;
-		}
-
-		*/
 
 		while (load->get_terminated()->size() != 30) {
 			lts->schedule();
@@ -204,24 +178,9 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 				cpus->at(i)->step();
 			}
 		}
-
-
-		//load->get_running()->at(0)->ios = dma->get_io_number();
-		//load->get_running()->at(0)->total_memory_in_use = ram->in_use;
-		//dma->setIO();
-		//load->move_terminate(0);
-		cout << endl;
-	}
-	std::cout << "Printing RAM" << std::endl;
-	std::stringstream builder;
-	std::cout << "I/O operations run " << dma->get_io_number() << std::endl;
-
-	for (int i = 0; i < num_cpus; ++i) {
-		std::cout << cpus->at(i)->get_num_processes() << endl;
 	}
 
 	vector<ProcessStats> process_stats;
-
 	auto terminated = load->get_terminated();
 	for (auto it = terminated->begin(); it != terminated->end(); it++) {
 		struct ProcessStats pstats {
