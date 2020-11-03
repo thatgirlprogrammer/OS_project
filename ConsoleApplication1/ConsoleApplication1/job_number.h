@@ -10,7 +10,6 @@ namespace OSSim {
 		~job_len() {}
 		void add_job(PCB_info job);
 		void sort();
-		void print_compare();
 		PCB_info get_pcb(int index) {
 			return compare.at(index).get_pcb_info();
 		}
