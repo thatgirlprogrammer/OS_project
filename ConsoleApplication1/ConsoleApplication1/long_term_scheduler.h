@@ -25,7 +25,6 @@ namespace OSSim
 			return ram->getMem(index);
 		}
 		void schedule();
-		//Memory get_RAM() { return *ram; }
 	private:
 		Memory* ram;
 		disk* dsk;
