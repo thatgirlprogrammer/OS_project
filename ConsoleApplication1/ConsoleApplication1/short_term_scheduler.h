@@ -17,11 +17,8 @@ namespace OSSim {
 			load = ld;
 			cpus = c;
 		}
-		~short_term_scheduler() {
-			//delete mem; mem = NULL;
-		}
+		~short_term_scheduler() {}
 		void schedule(int cpu_number, loader* ld);
-		//bool isDone() { return terminated->size() == 30; }
 	private:
 		Memory* mem;
 		vector<CPU*>* cpus;
