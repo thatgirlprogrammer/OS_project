@@ -61,10 +61,8 @@ void loader::load_file() {
 				info->pc.job_priority = job_priority;
 				info->pc.job_instruction_count = job_count;
 				info->pc.job_disk_address = current;
-				//cout << num1 << " " << num2 << " " << num3 << "\n";
 			}
 			else if (line.find("Data") != std::string::npos) {
-				//cout << "Data encountered." << "\n";
 				int i = 8;
 				string num1 = "0x";
 				string num2 = "0x";
@@ -96,24 +94,20 @@ void loader::load_file() {
 				info->b.input_buffer = iBuffer;
 				info->b.output_buffer = oBuffer;
 				info->b.temp_buffer = sBuffer;
-				//cout << num1 << " " << num2 << " " << num3 << "\n";
 			}
 			else if (line.find("END") != std::string::npos) {
 				info->pc.job_size = current - start;
 				cout << current - start << endl;
 				new_q->push_back(info);
-				//cout << "End of file." << "\n";
 			}
 			else {
 				if (current >= 2048) {
 					cout << "Too much in disk!";
 				}
 				else {
-					//cout << "Writing to disk" << "\n";
 					int32_t number = strtoul(line.c_str(), nullptr, 16);
 					dsk->write(number, current);
 					++current;
-					//cout << current << "\n";
 				}
 			}
 		}
