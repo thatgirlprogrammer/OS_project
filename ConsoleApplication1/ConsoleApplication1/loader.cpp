@@ -18,6 +18,8 @@ loader::loader(string file_name, disk* d) {
 	terminated = new vector<PCB_info*>;
 }
 void loader::load_file() {
+	int32_t array[4];
+	int index = 0;
 	PCB_info* info = new PCB_info;
 	info->ios = 0;
 	if (file.is_open()) {
@@ -98,14 +100,38 @@ void loader::load_file() {
 			else if (line.find("END") != std::string::npos) {
 				info->pc.job_size = current - start;
 				new_q->push_back(info);
+				if (index == 4) {
+					dsk->write(array[0], array[1], array[2], array[3], current - 4);
+					index = 0;
+				}
+				else if (index == 1){
+					dsk->write(array[0], 0, 0, 0, current - 1);
+					index = 0;
+					current += 3;
+				}
+				else if (index == 2) {
+					dsk->write(array[0], array[1], 0, 0, current - 2);
+					index = 0;
+					current += 2;
+				}
+				else {
+					dsk->write(array[0], array[1], array[2], 0, current - 3);
+					index = 0;
+					current += 1;
+				}
 			}
 			else {
 				if (current >= 2048) {
 					cout << "Too much in disk!";
 				}
 				else {
+					if (index == 4) {
+						dsk->write(array[0], array[1], array[2], array[3], current - 4);
+						index = 0;
+					}
 					int32_t number = strtoul(line.c_str(), nullptr, 16);
-					dsk->write(number, current);
+					array[index] = number;
+					++index;
 					++current;
 				}
 			}

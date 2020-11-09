@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
+#include <cassert>
 
 /*
  * disk implementation file.
@@ -46,11 +47,16 @@ int32_t disk::read(int index) {
  * and decrements free_space if that space was
  * already empty.
  * */
-void disk::write(int32_t value, int index) {
+void disk::write(int32_t value1, int32_t value2, int32_t value3, int32_t value4, int index) {
+	assert(index % 4 == 0);
 	if (storage[index] == 0) {
-		free_space--;
+		free_space-= 4;
+		--free_blocks;
 	}
-	storage[index] = value;
+	storage[index] = value1;
+	storage[index + 1] = value2;
+	storage[index + 2] = value3;
+	storage[index + 3] = value4;
 }
 /*
  * get_space returns the value of

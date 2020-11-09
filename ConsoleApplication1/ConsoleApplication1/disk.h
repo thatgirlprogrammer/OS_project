@@ -21,6 +21,9 @@ private:
 	const int size = 2048;
 	int free_space;
 	int32_t storage[2048];
+	int page_size = 4;
+	int free_blocks = 512;
+	int used_blocks = 0;
 public:
 	/*
 	 * Method declaration.
@@ -29,7 +32,7 @@ public:
 	void deallocate(int index);
 	void reformat();
 	int32_t read(int index);
-	void write(int32_t value, int index);
+	void write(int32_t value1, int32_t value2, int32_t value3, int32_t value4, int index);
 	int get_space();
 	int32_t* get_chunk(int index, int length);
 	void delete_chunk(int index, int length);
