@@ -16,12 +16,12 @@ public:
 			this->memory[i] = 0;
 	}
 
-	int32_t getMem(uint16_t);
-	void setMem(uint16_t addr, int32_t data);
+	int32_t getMem(uint16_t frame, uint16_t offset);
+	void setMem(uint16_t frame, int32_t data1, int32_t data2, int32_t data3, int32_t data4);
 	bool hasHole(int size);
-	bool isOccupied(uint16_t addr);
-	void allocate(uint16_t addr);
-	void deallocate(uint16_t addr);
+	bool isOccupied(uint16_t frame);
+	void allocate(uint16_t frame);
+	void deallocate(uint16_t frame);
 	uint16_t holeStart(int size);
 	std::string dump();
 	unsigned long in_use = 0;

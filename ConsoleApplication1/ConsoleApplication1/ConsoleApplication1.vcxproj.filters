@@ -51,6 +51,12 @@
     <ClCompile Include="DMA.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="page_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="page_table_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Process.h">
@@ -99,6 +105,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DMA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="page_table.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="page_table_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

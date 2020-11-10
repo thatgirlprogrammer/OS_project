@@ -9,7 +9,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 		if (cpus->at(cpu_number)->isCache()) {
 			cpus->at(cpu_number)->set_running(process);
 			for (int i = 0; i < process->pc.job_size * 4; i += 4) {
-				cpus->at(cpu_number)->writeCache(i, mem->getMem(i + (b * 4)));
+				cpus->at(cpu_number)->writeCache(i, mem->getMem(b, i));
 			}
 		}
 		load->move_running(0);

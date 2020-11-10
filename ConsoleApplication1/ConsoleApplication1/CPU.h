@@ -14,7 +14,7 @@ public:
 	void step();
 
 	uint32_t getPC() { return this->pc; }
-	void setPC() { pc = 0 + (this->base * 4); }
+	void setPC() { pc = 0 + (this->base * 4 * 4); }
 	void setBase(int b) { base = b; }
 	bool isDone() { return this->done; }
 	void setDone() { this->done = false; }

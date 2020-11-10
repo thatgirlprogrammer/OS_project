@@ -161,6 +161,8 @@
     <ClCompile Include="loader.cpp" />
     <ClCompile Include="long_term_scheduler.cpp" />
     <ClCompile Include="Memory.cpp" />
+    <ClCompile Include="page_table.cpp" />
+    <ClCompile Include="page_table_manager.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="short_term_scheduler.cpp" />
   </ItemGroup>
@@ -177,6 +179,8 @@
     <ClInclude Include="loader.h" />
     <ClInclude Include="long_term_scheduler.h" />
     <ClInclude Include="Memory.h" />
+    <ClInclude Include="page_table.h" />
+    <ClInclude Include="page_table_manager.h" />
     <ClInclude Include="pcb.h" />
     <ClInclude Include="Process.h" />
     <ClInclude Include="runnable.h" />

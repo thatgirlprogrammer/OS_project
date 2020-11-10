@@ -98,7 +98,7 @@ void loader::load_file() {
 				info->b.temp_buffer = sBuffer;
 			}
 			else if (line.find("END") != std::string::npos) {
-				info->pc.job_size = current - start;
+				
 				new_q->push_back(info);
 				if (index == 4) {
 					dsk->write(array[0], array[1], array[2], array[3], current - 4);
@@ -119,6 +119,7 @@ void loader::load_file() {
 					index = 0;
 					current += 1;
 				}
+				info->pc.job_size = (current - start) / 4;
 			}
 			else {
 				if (current >= 2048) {

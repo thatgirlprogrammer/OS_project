@@ -30,10 +30,10 @@ void CPU::setReg(uint8_t reg, int32_t value) {
 void CPU::step() {
 	Instruction i = Instruction(0x13000000);
 	if (use_cache) {
-		i = Instruction(this->readCache(this->pc - this->base * 4));
+		i = Instruction(this->readCache(this->pc - this->base * 4 * 4));
 	}
 	else {
-		i = Instruction(this->memory->getMem(this->pc));
+//		i = Instruction(this->memory->getMem(this->pc));
 	}
 	this->pc += 4;
 //	disassembleInstruction(i);
@@ -52,7 +52,7 @@ void CPU::step() {
 				data = readCache(r2);
 			}
 			else {
-				data = this->dma->read(r2 + (this->base * 4));
+		//		data = this->dma->read(r2 + (this->base * 4));
 			}
 		}
 		else {
@@ -60,7 +60,7 @@ void CPU::step() {
 				data = readCache(rdaddr);
 			}
 			else {
-				data = this->dma->read(rdaddr + (this->base * 4));
+		//		data = this->dma->read(rdaddr + (this->base * 4));
 			}
 		}
 
@@ -77,7 +77,7 @@ void CPU::step() {
 				writeCache(wrr2, wrr1);
 			}
 			else {
-				this->dma->write(wrr2 + (this->base * 4), wrr1);
+			//	this->dma->write(wrr2 + (this->base * 4), wrr1);
 			}
 		}
 		else {
@@ -85,7 +85,7 @@ void CPU::step() {
 				writeCache(wraddr, wrr1);
 			}
 			else {
-				this->dma->write(wraddr + (this->base * 4), wrr1);
+				//this->dma->write(wraddr + (this->base * 4), wrr1);
 			}
 		}
 	} break;
@@ -100,7 +100,7 @@ void CPU::step() {
 			setReg(d, readCache(addr));
 		}
 		else {
-			this->setReg(d, this->dma->read(addr + (this->base * 4)));
+		//	this->setReg(d, this->dma->read(addr + (this->base * 4)));
 		}
 	} break;
 
@@ -112,7 +112,7 @@ void CPU::step() {
 			writeCache(addr, data);
 		}
 		else {
-			this->dma->write(addr + (this->base * 4), data);
+		//	this->dma->write(addr + (this->base * 4), data);
 		}
 	} break;
 
@@ -210,7 +210,7 @@ void CPU::step() {
 			uint16_t b = this->running->pc.job_memory_address;
 			auto size = this->running->pc.job_size;
 			for (int i = 0; i < size * 4; i += 4) {
-				this->dma->write((i + (b * 4)), readCache(i));
+			//	this->dma->write((i + (b * 4)), readCache(i));
 			}
 		}
 

@@ -2,8 +2,10 @@
 #include <vector>
 #include <iostream>
 #include <chrono>
+#include "page_table.h"
 
 namespace OSSim {
+	
 	enum PROCESS_STATUS {NEW, READY, WAIT, RUN, TERMINATE};
 
 	struct data {
@@ -36,6 +38,7 @@ namespace OSSim {
 		uint8_t registers[16];
 		PROCESS_STATUS process_status = NEW;
 		int program_counter = 0;
+		page_table* page_t;
 	};
 
 	struct PCB_info {

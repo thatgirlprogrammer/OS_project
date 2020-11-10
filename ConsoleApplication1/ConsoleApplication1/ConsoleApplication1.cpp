@@ -17,6 +17,7 @@
 #include "job_priority.h"
 #include "job_number.h"
 #include "DMA.h"
+#include "page_table_manager.h"
 
 using namespace OSSim;
 
@@ -105,6 +106,7 @@ int main() {
 }
 
 struct MethodStats run(SORT_METHOD method, int num_cpus) {
+	page_table_manager* page_t = new page_table_manager();
 	disk* dsk = new disk;
 	Memory* ram = new Memory;
 	vector<DMA*>* dmas = new vector<DMA*>;
@@ -117,7 +119,7 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 		cpus->push_back(new CPU(ram, dmas->at(i), i, load));
 	}
 
-	long_term_scheduler* lts = new long_term_scheduler(ram, dsk, load);
+	long_term_scheduler* lts = new long_term_scheduler(ram, dsk, load, page_t);
 	load->load_file();
 	vector<PCB_info> v;
 
