@@ -1,14 +1,14 @@
 #pragma once
-#include "page_table.h"
+#include "page.h"
 class page_table_manager
 {
 public:
 	page_table_manager();
-	void addPage(int frame, int processID, int pageNumber);
-	page_table* getPageTable() { return page_t; }
-	bool hasPage(int size);
-	int pageStart(int size);
+	void addPage(int frame, int p_id, int pg_num);
+	int getPage(int p_id, int pg_num);
 private:
-	page_table* page_t = new page_table();
+	int process_id[256];
+	int page_num[256];
+
 };
 

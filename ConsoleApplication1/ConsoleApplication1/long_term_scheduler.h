@@ -19,11 +19,10 @@ namespace OSSim
 			new_q = load->get_new_q();
 			ready = load->get_ready();
 		}
-		void write_to_ram(uint16_t index, int32_t data1, int32_t data2, int32_t data3, int32_t data4) {
-			ram->allocate(index * 4);
-			ram->setMem(index * 4, data1, data2, data3, data4);
+		void write_to_ram(int index, int32_t data1, int32_t data2, int32_t data3, int32_t data4) {
+			ram->setMem(index, data1, data2, data3, data4);
 		}
-		int32_t read(uint16_t index, uint16_t offset) {
+		int32_t read(int index, int offset) {
 			return ram->getMem(index, offset);
 		}
 		void schedule();

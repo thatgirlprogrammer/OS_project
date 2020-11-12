@@ -62,7 +62,7 @@ void loader::load_file() {
 				info->pc.job_number = job_number;
 				info->pc.job_priority = job_priority;
 				info->pc.job_instruction_count = job_count;
-				info->pc.job_disk_address = current;
+				info->pc.job_disk_address = current / 4;
 			}
 			else if (line.find("Data") != std::string::npos) {
 				int i = 8;

@@ -2,7 +2,6 @@
 #include <vector>
 #include <iostream>
 #include <chrono>
-#include "page_table.h"
 
 namespace OSSim {
 	

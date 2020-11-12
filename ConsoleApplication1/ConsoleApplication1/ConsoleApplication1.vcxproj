@@ -156,12 +156,13 @@
     <ClCompile Include="Disassemble.cpp" />
     <ClCompile Include="disk.cpp" />
     <ClCompile Include="DMA.cpp" />
+    <ClCompile Include="frame.cpp" />
     <ClCompile Include="instruction.cpp" />
     <ClCompile Include="job_number.cpp" />
     <ClCompile Include="loader.cpp" />
     <ClCompile Include="long_term_scheduler.cpp" />
     <ClCompile Include="Memory.cpp" />
-    <ClCompile Include="page_table.cpp" />
+    <ClCompile Include="page.cpp" />
     <ClCompile Include="page_table_manager.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="short_term_scheduler.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Disassemble.h" />
     <ClInclude Include="disk.h" />
     <ClInclude Include="DMA.h" />
+    <ClInclude Include="frame.h" />
     <ClInclude Include="instruction.h" />
     <ClInclude Include="job_number.h" />
     <ClInclude Include="job_numbers.h" />
@@ -179,7 +181,7 @@
     <ClInclude Include="loader.h" />
     <ClInclude Include="long_term_scheduler.h" />
     <ClInclude Include="Memory.h" />
-    <ClInclude Include="page_table.h" />
+    <ClInclude Include="page.h" />
     <ClInclude Include="page_table_manager.h" />
     <ClInclude Include="pcb.h" />
     <ClInclude Include="Process.h" />

@@ -30,7 +30,7 @@ void CPU::setReg(uint8_t reg, int32_t value) {
 void CPU::step() {
 	Instruction i = Instruction(0x13000000);
 	if (use_cache) {
-		i = Instruction(this->readCache(this->pc - this->base * 4 * 4));
+		i = Instruction(this->readCache(this->pc - this->base));
 	}
 	else {
 //		i = Instruction(this->memory->getMem(this->pc));
@@ -239,7 +239,7 @@ void CPU::step() {
 		break;
 
 	case Opcode::JMP: {
-		this->pc = i.longAddr() + (this->base * 4);
+		this->pc = i.longAddr() + (this->base);
 	} break;
 
 	case Opcode::BEQ: {
@@ -247,7 +247,7 @@ void CPU::step() {
 		int32_t d = this->getReg(i.cimmD());
 
 		if (b == d) {
-			this->pc = i.shortAddr() + (this->base * 4);
+			this->pc = i.shortAddr() + (this->base);
 		}
 	} break;
 
@@ -256,7 +256,7 @@ void CPU::step() {
 		int32_t d = this->getReg(i.cimmD());
 
 		if (b != d) {
-			this->pc = i.shortAddr() + (this->base * 4);
+			this->pc = i.shortAddr() + (this->base);
 		}
 	} break;
 
@@ -264,7 +264,7 @@ void CPU::step() {
 		int32_t b = this->getReg(i.cimmB());
 
 		if (b == 0) {
-			this->pc = i.shortAddr() + (this->base * 4);
+			this->pc = i.shortAddr() + (this->base);
 		}
 	} break;
 
@@ -272,7 +272,7 @@ void CPU::step() {
 		int32_t b = this->getReg(i.cimmB());
 
 		if (b != 0) {
-			this->pc = i.shortAddr() + (this->base * 4);
+			this->pc = i.shortAddr() + (this->base);
 		}
 	} break;
 
@@ -280,7 +280,7 @@ void CPU::step() {
 		int32_t b = this->getReg(i.cimmB());
 
 		if (b > 0) {
-			this->pc = i.shortAddr() + (this->base * 4);
+			this->pc = i.shortAddr() + (this->base);
 		}
 	} break;
 
@@ -288,7 +288,7 @@ void CPU::step() {
 		int32_t b = this->getReg(i.cimmB());
 
 		if (b < 0) {
-			this->pc = i.shortAddr() + (this->base * 4);
+			this->pc = i.shortAddr() + (this->base);
 		}
 	} break;
 

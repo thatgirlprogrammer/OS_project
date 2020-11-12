@@ -1,6 +1,7 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
+#include "page.h"
 /*
  * Class disk simulates a physical disk
  * running on a machine. Its job is to allocate
@@ -20,7 +21,7 @@ private:
 	 * */
 	const int size = 2048;
 	int free_space;
-	int32_t storage[2048];
+	page pages[512];
 	int page_size = 4;
 	int free_blocks = 512;
 	int used_blocks = 0;
@@ -29,11 +30,8 @@ public:
 	 * Method declaration.
 	 * */
 	disk();
-	void deallocate(int index);
-	void reformat();
-	int32_t read(int index);
+	
+	int32_t read(int pg, int offset);
 	void write(int32_t value1, int32_t value2, int32_t value3, int32_t value4, int index);
-	int get_space();
-	int32_t* get_chunk(int index, int length);
-	void delete_chunk(int index, int length);
+
 };
