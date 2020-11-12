@@ -14,8 +14,6 @@ int page_table_manager::getPage(int p_id, int pg_num) {
 		if (process_id[i] == p_id && page_num[i] == pg_num) {
 			return i;
 		}
-		else {
-			return -1;
-		}
 	}
+	return -1;
 }
