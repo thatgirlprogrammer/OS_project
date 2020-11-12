@@ -62,7 +62,7 @@ void loader::load_file() {
 				info->pc.job_number = job_number;
 				info->pc.job_priority = job_priority;
 				info->pc.job_instruction_count = job_count;
-				info->pc.job_disk_address = current / 4;
+				info->pc.job_disk_address = current;
 			}
 			else if (line.find("Data") != std::string::npos) {
 				int i = 8;
@@ -101,25 +101,24 @@ void loader::load_file() {
 				
 				new_q->push_back(info);
 				if (index == 4) {
-					dsk->write(array[0], array[1], array[2], array[3], current - 4);
+					dsk->write(current, array[0], array[1], array[2], array[3]);
 					index = 0;
 				}
 				else if (index == 1){
-					dsk->write(array[0], 0, 0, 0, current - 1);
+					dsk->write(current, array[0], 0, 0, 0);
 					index = 0;
-					current += 3;
 				}
 				else if (index == 2) {
-					dsk->write(array[0], array[1], 0, 0, current - 2);
+					dsk->write(current, array[0], array[1], 0, 0);
 					index = 0;
-					current += 2;
 				}
 				else {
-					dsk->write(array[0], array[1], array[2], 0, current - 3);
+					dsk->write(current, array[0], array[1], array[2], 0);
 					index = 0;
-					current += 1;
 				}
-				info->pc.job_size = (current - start) / 4;
+				info->pc.pages.push_back(current);
+				++current;
+				info->pc.job_size = (current - start);
 			}
 			else {
 				if (current >= 2048) {
@@ -127,13 +126,14 @@ void loader::load_file() {
 				}
 				else {
 					if (index == 4) {
-						dsk->write(array[0], array[1], array[2], array[3], current - 4);
+						dsk->write(current, array[0], array[1], array[2], array[3]);
 						index = 0;
+						info->pc.pages.push_back(current);
+						++current;
 					}
 					int32_t number = strtoul(line.c_str(), nullptr, 16);
 					array[index] = number;
 					++index;
-					++current;
 				}
 			}
 		}

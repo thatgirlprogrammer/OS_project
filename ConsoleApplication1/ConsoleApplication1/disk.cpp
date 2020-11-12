@@ -15,6 +15,9 @@ using namespace std;
  * */
 disk::disk() {
 	free_space = size;
+	for (int i = 0; i < 512; ++i) {
+		pages[i] = new page();
+	}
 }
 
 
@@ -23,7 +26,7 @@ disk::disk() {
  * index.
  * */
 int32_t disk::read(int pg, int offset) {
-	return pages[pg].getData(offset);
+	return pages[pg]->getData(offset);
 }
 /*
  * write adds a specified value to a memory block
@@ -31,5 +34,5 @@ int32_t disk::read(int pg, int offset) {
  * already empty.
  * */
 void disk::write(int pg, int32_t value1, int32_t value2, int32_t value3, int32_t value4) {
-	pages[pg].writeData(value1, value2, value3, value4);
+	pages[pg]->writeData(value1, value2, value3, value4);
 }

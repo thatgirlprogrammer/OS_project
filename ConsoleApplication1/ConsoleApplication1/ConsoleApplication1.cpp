@@ -157,7 +157,7 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 		break;
 	}
 
-	short_term_scheduler* sts = new short_term_scheduler(ram, load, cpus);
+	short_term_scheduler* sts = new short_term_scheduler(ram, load, cpus, page_t);
 
 	while (load->get_terminated()->size() != 30) {
 		lts->schedule();
@@ -201,7 +201,7 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 
 	struct MethodStats stats = {
 		process_stats,
-		ram->dump(),
+	//	ram->dump(),
 	};
 
 	delete dsk;

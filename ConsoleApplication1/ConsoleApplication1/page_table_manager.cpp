@@ -10,5 +10,12 @@ void page_table_manager::addPage(int frame, int p_id, int pg_num) {
 }
 
 int page_table_manager::getPage(int p_id, int pg_num) {
-
+	for (int i = 0; i < 256; ++i) {
+		if (process_id[i] == p_id && page_num[i] == pg_num) {
+			return i;
+		}
+		else {
+			return -1;
+		}
+	}
 }

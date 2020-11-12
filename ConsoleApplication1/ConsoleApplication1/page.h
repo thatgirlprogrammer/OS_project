@@ -5,14 +5,14 @@ class page
 {
 public:
 	page();
-	uint32_t getData(int index);
-	void writeData(uint32_t d1, uint32_t d2, uint32_t d3, uint32_t d4);
+	int32_t getData(int index);
+	void writeData(int32_t d1, int32_t d2, int32_t d3, int32_t d4);
 	bool inUse();
 private:
-	uint32_t data1;
-	uint32_t data2;
-	uint32_t data3;
-	uint32_t data4;
+	int32_t data1 = 0;
+	int32_t data2 = 0;
+	int32_t data3 = 0;
+	int32_t data4 = 0;
 	bool in_use = false;
 };
 

@@ -21,7 +21,7 @@ private:
 	 * */
 	const int size = 2048;
 	int free_space;
-	page pages[512];
+	page* pages[512];
 	int page_size = 4;
 	int free_blocks = 512;
 	int used_blocks = 0;
@@ -32,6 +32,6 @@ public:
 	disk();
 	
 	int32_t read(int pg, int offset);
-	void write(int32_t value1, int32_t value2, int32_t value3, int32_t value4, int index);
+	void write(int pg, int32_t value1, int32_t value2, int32_t value3, int32_t value4);
 
 };

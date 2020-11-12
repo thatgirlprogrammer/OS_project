@@ -31,12 +31,12 @@ uint32_t frame::getData(int index) {
 			data[i] = data4[i];
 		}
 	}
-	mtx.lock();
+	//mtx.lock();
 	int32_t result = data[0] << 24;
 	result |= data[1] << 16;
 	result |= data[2] << 8;
 	result |= data[3];
-	mtx.unlock();
+	//mtx.unlock();
 	return result;
 }
 

@@ -30,7 +30,7 @@ void CPU::setReg(uint8_t reg, int32_t value) {
 void CPU::step() {
 	Instruction i = Instruction(0x13000000);
 	if (use_cache) {
-		i = Instruction(this->readCache(this->pc - this->base));
+		i = Instruction(this->readCache(this->pc));
 	}
 	else {
 //		i = Instruction(this->memory->getMem(this->pc));
