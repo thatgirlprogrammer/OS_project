@@ -5,7 +5,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 		PCB_info* process = ld->get_ready()->at(0);
 		//uint16_t b = process->pc.job_memory_address;
 		vector<int> vec = process->pc.pages;
-		int j = 0;
+		int16_t j = 0;
 		for (int i = 0; i < vec.size(); ++i) {
 			int frame = page_t->getPage(process->pc.job_number, vec.at(i));
 			cpus->at(cpu_number)->writeCache(j, mem->getMem(frame, 0));

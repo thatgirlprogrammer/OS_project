@@ -4,7 +4,7 @@
 #include "Memory.h"
 
 int32_t Memory::getMem(int num, int offset) {
-	uint32_t result = fr[num].getData(offset);
+	int32_t result = fr[num].getData(offset);
 	return result;
 }
 
@@ -15,10 +15,11 @@ bool Memory::isOccupied(int num) {
 void Memory::setMem(int num, int32_t data1, int32_t data2, int32_t data3, int32_t data4) {
 	std::cout << "Doing memory " << std::endl;
 	fr[num].writeData(data1, data2, data2, data4);
-	std::cout << fr[num].getData(0);
-	std::cout << fr[num].getData(1);
-	std::cout << fr[num].getData(2);
-	std::cout << fr[num].getData(3);
+	std::cout << "Memory in frame now: ";
+	std::cout << fr[num].getData(0) << " ";
+	std::cout << fr[num].getData(1) << " ";
+	std::cout << fr[num].getData(2) << " ";
+	std::cout << fr[num].getData(3) << " ";
 	std::cout << std::endl;
 }
 
