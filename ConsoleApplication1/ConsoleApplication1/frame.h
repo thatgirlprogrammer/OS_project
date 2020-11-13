@@ -11,10 +11,10 @@ public:
 	bool inUse();
 	void setUse();
 private:
-	int8_t data1[4] = {0, 0, 0, 0};
-	int8_t data2[4]= {0, 0, 0, 0};
-	int8_t data3[4] = { 0, 0, 0, 0 };
-	int8_t data4[4] = { 0, 0, 0, 0 };
+	uint8_t data1[4] = {0, 0, 0, 0};
+	uint8_t data2[4]= {0, 0, 0, 0};
+	uint8_t data3[4] = { 0, 0, 0, 0 };
+	uint8_t data4[4] = { 0, 0, 0, 0 };
 	bool in_use = false;
 	std::mutex mtx;
 };
