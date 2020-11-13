@@ -6,8 +6,9 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 		//uint16_t b = process->pc.job_memory_address;
 		vector<int> vec = process->pc.pages;
 		int16_t j = 0;
-		for (int i = 0; i < vec.size(); ++i) {
-			int frame = page_t->getPage(process->pc.job_number, vec.at(i));
+		for (int i = 0; i < process->pc.pages.size(); ++i) {
+			int frame = page_t->getPage(process->pc.job_number, process->pc.pages.at(i));
+			std::cout << "My frame is from " << frame << std::endl;
 			cpus->at(cpu_number)->writeCache(j, mem->getMem(frame, 0));
 			std::cout << "At " << j << " in CPU we wrote " <<  mem->getMem(frame, 0) << std::endl;
 			cpus->at(cpu_number)->writeCache(j + 4, mem->getMem(frame, 1));

@@ -117,6 +117,7 @@ void loader::load_file() {
 					index = 0;
 				}
 				info->pc.pages.push_back(current);
+				std::cout << "Current page " << current << std::endl;
 				++current;
 				info->pc.job_size = (current - start);
 			}
@@ -129,6 +130,7 @@ void loader::load_file() {
 						dsk->write(current, array[0], array[1], array[2], array[3]);
 						index = 0;
 						info->pc.pages.push_back(current);
+						std::cout << "Current page " << current << std::endl;
 						++current;
 					}
 					int32_t number = strtoul(line.c_str(), nullptr, 16);

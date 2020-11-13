@@ -9,30 +9,31 @@ int32_t frame::getData(int index) {
 	uint8_t data[4] = {0, 0, 0, 0 };
 	if (index == 0) {
 		for (int i = 0; i < 4; ++i) {
+			std::cout << "My i is " << i << std::endl;
 			data[i] = data1[i];
-			std::cout << "Data is " << (int)data1[i] << " ";
-			std::cout << "Data is " << (int)data[i] << std::endl;
+			//std::cout << "Data is " << (int)data1[i] << " ";
+			//std::cout << "Data is " << (int)data[i] << std::endl;
 		}
 	}
 	else if (index == 1) {
 		for (int i = 0; i < 4; ++i) {
 			data[i] = data2[i];
-			std::cout << "Data is " << (int)data2[i] << " ";
-			std::cout << "Data is " << (int)data[i] << std::endl;
+			//std::cout << "Data is " << (int)data2[i] << " ";
+			//std::cout << "Data is " << (int)data[i] << std::endl;
 		}
 	}
 	else if (index == 2) {
 		for (int i = 0; i < 4; ++i) {
 			data[i] = data3[i];
-			std::cout << "Data is " << (int)data3[i] << " ";
-			std::cout << "Data is " << (int)data[i] << std::endl;
+			//std::cout << "Data is " << (int)data3[i] << " ";
+			//std::cout << "Data is " << (int)data[i] << std::endl;
 		}
 	}
 	else {
 		for (int i = 0; i < 4; ++i) {
 			data[i] = data4[i];
-			std::cout << "Data is " << (int)data4[i] << " ";
-			std::cout << "Data is " << (int)data[i] << std::endl;
+	//		std::cout << "Data is " << (int)data4[i] << " ";
+		//	std::cout << "Data is " << (int)data[i] << std::endl;
 		}
 	}
 	//mtx.lock();
@@ -41,7 +42,7 @@ int32_t frame::getData(int index) {
 	result |= (int)data[2] << 8;
 	result |= (int)data[3];
 	//mtx.unlock();
-	std::cout << "The result is " << result << std::endl;
+	//std::cout << "The result is " << result << std::endl;
 	return result;
 }
 
