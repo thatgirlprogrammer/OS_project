@@ -216,8 +216,10 @@ void CPU::step() {
 
 		this->running->total_memory_in_use = memory->in_use;
 
-		for (int i = 0; i < (this->running->pc.job_size) * 4; i += 4) {
-			memory->deallocate(i + (running->pc.job_memory_address * 4));
+		
+
+		for (int i = 0; i < this->running->pc.pages.size(); ++i) {
+			memory->deallocate(this->running->pc.frames.at(i));
 		}
 
 		this->running->pc.process_status = TERMINATE;

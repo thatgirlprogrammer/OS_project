@@ -4,7 +4,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 	if (ld->get_ready()->size() > 0) {
 		PCB_info* process = ld->get_ready()->at(0);
 		//uint16_t b = process->pc.job_memory_address;
-		vector<int> vec = process->pc.pages;
+		vector<unsigned int> vec = process->pc.pages;
 		int16_t j = 0;
 		for (int i = 0; i < process->pc.pages.size(); ++i) {
 			int frame = page_t->getPage(process->pc.job_number, process->pc.pages.at(i));

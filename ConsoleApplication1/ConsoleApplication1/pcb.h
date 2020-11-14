@@ -37,7 +37,8 @@ namespace OSSim {
 		uint8_t registers[16];
 		PROCESS_STATUS process_status = NEW;
 		int program_counter = 0;
-		std::vector<int> pages;
+		std::vector<unsigned int> pages;
+		std::vector<unsigned int> frames;
 	};
 
 	struct PCB_info {

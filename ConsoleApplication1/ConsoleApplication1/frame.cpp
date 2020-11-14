@@ -9,7 +9,7 @@ int32_t frame::getData(int index) {
 	uint8_t data[4] = {0, 0, 0, 0 };
 	if (index == 0) {
 		for (int i = 0; i < 4; ++i) {
-			std::cout << "My i is " << i << std::endl;
+		//	std::cout << "My i is " << i << std::endl;
 			data[i] = data1[i];
 			//std::cout << "Data is " << (int)data1[i] << " ";
 			//std::cout << "Data is " << (int)data[i] << std::endl;
@@ -48,33 +48,33 @@ int32_t frame::getData(int index) {
 
 void frame::writeData(int32_t d1, int32_t d2, int32_t d3, int32_t d4) {
 	mtx.lock();
-	std::cout << "Writing data: ";
+//	std::cout << "Writing data: ";
 	data1[0] = d1 >> 24;
 	data1[1] = d1 >> 16;
 	data1[2] = d1 >> 8;
 	data1[3] = d1;
-	std::cout << d1 << " ";
+//	std::cout << d1 << " ";
 
 	data2[0] = d2 >> 24;
 	data2[1] = d2 >> 16;
 	data2[2] = d2 >> 8;
 	data2[3] = d2;
 
-	std::cout << d2 << " ";
+//	std::cout << d2 << " ";
 
 	data3[0] = d3 >> 24;
 	data3[1] = d3 >> 16;
 	data3[2] = d3 >> 8;
 	data3[3] = d3;
 
-	std::cout << d3 << " ";
+//	std::cout << d3 << " ";
 
 	data4[0] = d4 >> 24;
 	data4[1] = d4 >> 16;
 	data4[2] = d4 >> 8;
 	data4[3] = d4;
 
-	std::cout << d4 << " " << std::endl;
+//	std::cout << d4 << " " << std::endl;
 
 	in_use = true;
 	mtx.unlock();
