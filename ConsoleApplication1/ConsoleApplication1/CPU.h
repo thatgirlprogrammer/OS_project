@@ -8,7 +8,7 @@
 class CPU
 {
 public:
-	CPU(Memory*, DMA*, int, loader*);
+	CPU(Memory*, DMA*, int, loader*, bool);
 
 	int32_t getReg(uint8_t reg);
 	void setReg(uint8_t reg, int32_t value);
@@ -40,4 +40,5 @@ private:
 	int num_processes = 0;
 	PCB_info* running = nullptr;
 	loader* load;
+	bool print_process_memory;
 };

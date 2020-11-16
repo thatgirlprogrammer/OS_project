@@ -3,7 +3,7 @@
 #include "CPU.h"
 #include "Disassemble.h"
 
-CPU::CPU(Memory* memory, DMA* dma, int num, loader* l) {
+CPU::CPU(Memory* memory, DMA* dma, int num, loader* l, bool print_process_memory) {
 	for (uint8_t i = 0; i < REGISTER_COUNT; i++)
 		this->registers[i] = 0;
 	this->memory = memory;
@@ -12,6 +12,7 @@ CPU::CPU(Memory* memory, DMA* dma, int num, loader* l) {
 	this->base = 0;
 	this->cpu_num = num;
 	this->load = l;
+	this->print_process_memory = print_process_memory;
 }
 
 int32_t CPU::getReg(uint8_t reg) {
@@ -246,6 +247,34 @@ void CPU::step() {
 		++num_processes;
 		running->end = std::chrono::high_resolution_clock::now();
 		load->get_terminated()->push_back(running);
+
+		if (this->print_process_memory) {
+			auto pc = running->pc;
+			auto b = running->b;
+
+			auto job_size = 4 * pc.job_size;
+			auto addr = 4 * (pc.job_memory_address - 1);
+
+			auto text_start = addr;
+			auto text_end = addr + job_size - 4 * (b.input_buffer + b.output_buffer + b.temp_buffer);
+			auto data_end = addr + job_size;
+
+			// comment this line and uncomment the other lines to
+			// print separate data/text sections
+			auto text = this->memory->dump_subset(text_start, data_end + 4);
+
+			//auto text = this->memory->dump_subset(text_start, text_end + 4);
+			//auto data = this->memory->dump_subset(4 + text_end, data_end);
+
+			std::ofstream file;
+			file.open("..\\..\\job_memory.txt", std::ofstream::app);
+			file << "Job #";
+			file << (int)running->pc.job_number << endl;
+			file << text << endl;
+			//file << "Data" << endl;
+			//file << data << endl;
+			file.close();
+		}
 
 		for (int i = 0; i < load->get_running()->size(); ++i) {
 			if (load->get_running()->at(i) == this->running) {

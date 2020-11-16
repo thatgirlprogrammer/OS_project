@@ -65,33 +65,37 @@ void Memory::deallocate(uint16_t addr) {
 	mtx.unlock();
 }
 
-std::string Memory::dump() {
+std::string Memory::dump_subset(uint32_t start, uint32_t end) {
 	using namespace std;
 	std::stringstream output;
 	output << "      00       04       08       0c" << std::endl;
-	for (int i = 0; i < MEMORY; i += 16) {
+	for (int i = start; i < end; i += 16) {
 		output << setfill('0') << setw(3) << right << hex << i << " | ";
 		//printf("%03x | ", i);
-		for (int j = i; j < i + 4; j++) {
+		for (int j = i; j < i + 4 && j < end; j++) {
 			output << setfill('0') << setw(2) << right << hex << (int)this->memory[j];
 			//printf("%02x", this->memory[j]);
 		}
 		output << " ";
 		//printf(" ");
-		for (int j = i + 4; j < i + 8; j++) {
+		for (int j = i + 4; j < i + 8 && j < end; j++) {
 			output << setfill('0') << setw(2) << right << hex << (int)this->memory[j];
 		}
 		output << " ";
-		for (int j = i + 8; j < i + 12; j++) {
+		for (int j = i + 8; j < i + 12 && j < end; j++) {
 			output << setfill('0') << setw(2) << right << hex << (int)this->memory[j];
 		}
 		output << " ";
-		for (int j = i + 12; j < i + 16; j++) {
+		for (int j = i + 12; j < i + 16 && j < end; j++) {
 			output << setfill('0') << setw(2) << right << hex << (int)this->memory[j];
 		}
 		output << dec << endl;
 	}
 	return output.str();
+}
+
+std::string Memory::dump() {
+	return dump_subset(0, MEMORY);
 }
 
 bool Memory::hasHole(int size) {

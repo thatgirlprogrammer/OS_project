@@ -24,6 +24,7 @@ public:
 	void deallocate(uint16_t addr);
 	uint16_t holeStart(int size);
 	std::string dump();
+	std::string dump_subset(uint32_t start, uint32_t end);
 	unsigned long in_use = 0;
 private:
 	uint8_t memory[MEMORY];

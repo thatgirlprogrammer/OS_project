@@ -47,11 +47,11 @@ void print(PCB_info* info) {
 	std::cout << "\tsize: " << info->pc.job_size << std::endl;
 }
 
-struct MethodStats run(SORT_METHOD method, int num_cpus);
+struct MethodStats run(SORT_METHOD method, int num_cpus, bool print_process_memory);
 
 int main() {
-	auto number = run(NUMBER, 1);
-	auto priority = run(PRIORITY, 1);
+	auto number = run(NUMBER, 1, false);
+	auto priority = run(PRIORITY, 1, false);
 
 	std::ofstream priority_file;
 	priority_file.open("..\\..\\priority.csv");
@@ -75,8 +75,8 @@ int main() {
 	number_memory.open("..\\..\\mem_number.txt");
 	number_memory << number.memory;
 
-	auto number_m = run(NUMBER, 4);
-	auto priority_m = run(PRIORITY, 4);
+	auto number_m = run(NUMBER, 4, true);
+	auto priority_m = run(PRIORITY, 4, false);
 
 	std::ofstream priority_file_m;
 	priority_file_m.open("..\\..\\priority_m.csv");
@@ -102,7 +102,7 @@ int main() {
 
 }
 
-struct MethodStats run(SORT_METHOD method, int num_cpus) {
+struct MethodStats run(SORT_METHOD method, int num_cpus, bool print_process_memory) {
 	disk* dsk = new disk;
 	Memory* ram = new Memory;
 	vector<DMA*>* dmas = new vector<DMA*>;
@@ -114,7 +114,7 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 
 	for (int i = 0; i < num_cpus; ++i) {
 		dmas->push_back(new DMA(ram));
-		cpus->push_back(new CPU(ram, dmas->at(i), i, load));
+		cpus->push_back(new CPU(ram, dmas->at(i), i, load, print_process_memory));
 	}
 
 	

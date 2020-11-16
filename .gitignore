@@ -14,3 +14,7 @@ ConsoleApplication1/ConsoleApplication1/Debug/
 **/*.csv
 mem_number.txt
 mem_priority.txt
+mem_number_m.txt
+mem_priority_m.txt
+job_memory.txt
+job_memory_separate.txt
