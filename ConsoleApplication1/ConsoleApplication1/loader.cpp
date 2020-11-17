@@ -171,8 +171,14 @@ void loader::move_running(int index) {
 	process->pc.process_status = RUN;
 	running->push_back(process);
 }
-void loader::move_waiting(int index) {
-	PCB_info* process = running->at(index);
+void loader::move_waiting(PCB_info* process) {
+	int index;
+	for (int i = 0; i < running->size(); ++i) {
+		if (process == running->at(i)) {
+			index = i;
+		}
+	}
+//	PCB_info* process = running->at(index);
 	running->erase(running->begin() + index);
 	process->pc.process_status = WAIT;
 	waiting->push_back(process);

@@ -174,9 +174,10 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 			lts->schedule();
 			for (int i = 0; i < num_cpus; ++i) {
 				if (cpus->at(i)->isDone()) {
-					sts->schedule(i, load);
+					
 					cpus->at(i)->setDone();
 					cpus->at(i)->setPC();
+					sts->schedule(i, load);
 					dmas->at(i)->setIO();
 				}
 				cpus->at(i)->step();

@@ -163,6 +163,7 @@
     <ClCompile Include="long_term_scheduler.cpp" />
     <ClCompile Include="Memory.cpp" />
     <ClCompile Include="page.cpp" />
+    <ClCompile Include="page_fault.cpp" />
     <ClCompile Include="page_table_manager.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="short_term_scheduler.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="long_term_scheduler.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="page.h" />
+    <ClInclude Include="page_fault.h" />
     <ClInclude Include="page_table_manager.h" />
     <ClInclude Include="pcb.h" />
     <ClInclude Include="Process.h" />

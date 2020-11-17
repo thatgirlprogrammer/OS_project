@@ -15,6 +15,8 @@ public:
 
 	uint32_t getPC() { return this->pc; }
 	void setPC() { pc = 0; }
+	void setValuePC(int value) { pc = value; }
+	void writeRegisters(int index, int32_t value) { registers[index] = value; }
 	void setBase(int b) { base = b; }
 	bool isDone() { return this->done; }
 	void setDone() { this->done = false; }
@@ -22,6 +24,8 @@ public:
 	void useCache() { use_cache = true; }
 	uint32_t readCache(uint16_t addr);
 	void writeCache(uint16_t addr, int32_t data);
+	void writePCBCache();
+	void writeOneCache(uint16_t addr, uint8_t data);
 	int cpu_num;
 	void set_running(PCB_info* running) { this->running = running; }
 	PCB_info* get_running() { return this->running; }

@@ -1,5 +1,6 @@
 #pragma once
 #include "page.h"
+#include "page_fault.h"
 class page_table_manager
 {
 public:
@@ -9,6 +10,7 @@ public:
 private:
 	int process_id[256];
 	int page_num[256];
-
+	bool valid[256] = { false };
+	page_fault* pg_f = new page_fault();
 };
 
