@@ -174,14 +174,27 @@ void loader::move_running(int index) {
 void loader::move_waiting(PCB_info* process) {
 	int index;
 	for (int i = 0; i < running->size(); ++i) {
-		if (process == running->at(i)) {
+		if (process->pc.job_number == running->at(i)->pc.job_number) {
 			index = i;
 		}
+//		if (index == running->size() && index != i){
+
+//		}
 	}
 //	PCB_info* process = running->at(index);
 	running->erase(running->begin() + index);
 	process->pc.process_status = WAIT;
 	waiting->push_back(process);
+}
+void loader::move_waiting_running(PCB_info* process) {
+	int index;
+	for (int i = 0; i < waiting->size(); ++i) {
+		if (process->pc.job_number == waiting->at(i)->pc.job_number) {
+			index = i;
+		}
+	}
+	waiting->erase(waiting->begin() + index);
+	running->push_back(process);
 }
 void loader::move_terminate(int index) {
 	PCB_info* process = running->at(index);

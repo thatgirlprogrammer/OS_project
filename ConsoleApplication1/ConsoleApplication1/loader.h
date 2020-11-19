@@ -18,6 +18,7 @@ public:
 	void move_running(int index);
 	void move_waiting_ready(int index);
 	void move_waiting(PCB_info*);
+	void move_waiting_running(PCB_info*);
 	void move_terminate(int index);
 
 	vector<PCB_info*>* get_new_q() { return new_q; }

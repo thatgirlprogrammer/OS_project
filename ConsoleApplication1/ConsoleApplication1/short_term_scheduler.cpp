@@ -3,8 +3,10 @@
 void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 	if (load->get_waiting()->size() > 0) {
 		PCB_info* process = load->get_waiting()->at(0);
-		load->move_waiting_ready(0);
-		load->move_running(load->get_ready()->size() - 1);
+		//load->move_waiting_ready(0);
+		//load->move_running(load->get_ready()->size() - 1);
+		load->move_waiting_running(process);
+		process->pc.process_status = WAIT;
 		int j;
 		int i = 0;
 		int p;
@@ -15,7 +17,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 			cpus->at(cpu_number)->writeOneCache(j + 3, process->pc.itCache[j + 3]);
 		}
 		p = j;
-		for (j = j; j < (process->b.input_buffer + p) * 4; j += 4) {
+		for (j = j; j < (process->b.input_buffer * 4) + p; j += 4) {
 			cpus->at(cpu_number)->writeOneCache(j, process->pc.ipCache[i]);
 			cpus->at(cpu_number)->writeOneCache(j + 1, process->pc.ipCache[i + 1]);
 			cpus->at(cpu_number)->writeOneCache(j + 2, process->pc.ipCache[i + 2]);
@@ -24,7 +26,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 		}
 		i = 0;
 		p = j;
-		for (j = j; j < (process->b.output_buffer + p) * 4; j += 4) {
+		for (j = j; j < (process->b.output_buffer * 4) + p; j += 4) {
 			cpus->at(cpu_number)->writeOneCache(j, process->pc.oCache[i]);
 			cpus->at(cpu_number)->writeOneCache(j + 1, process->pc.oCache[i + 1]);
 			cpus->at(cpu_number)->writeOneCache(j + 2, process->pc.oCache[i + 2]);
@@ -33,7 +35,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 		}
 		i = 0;
 		p = j;
-		for (j = j; j < (process->b.temp_buffer * 4 + p); j += 4) {
+		for (j = j; j < (process->b.temp_buffer * 4) + p; j += 4) {
 			cpus->at(cpu_number)->writeOneCache(j, process->pc.tempCache[i]);
 			cpus->at(cpu_number)->writeOneCache(j + 1, process->pc.tempCache[i + 1]);
 			cpus->at(cpu_number)->writeOneCache(j + 2, process->pc.tempCache[i + 2]);
@@ -43,7 +45,8 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 		for (j = 0; j < 16; ++j) {
 			cpus->at(cpu_number)->writeRegisters(j, process->pc.registers[j]);
 		}
-		cpus->at(cpu_number)->setValuePC(process->pc.program_counter);
+		cpus->at(cpu_number)->setValuePC(process->pc.program_counter - 4);
+		cpus->at(cpu_number)->set_running(process);
 		return;
 	}
 	if (ld->get_ready()->size() > 0) {

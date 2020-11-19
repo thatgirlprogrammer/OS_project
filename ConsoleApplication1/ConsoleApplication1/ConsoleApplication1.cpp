@@ -53,7 +53,9 @@ struct MethodStats run(SORT_METHOD method, int num_cpus);
 
 int main() {
 	auto number = run(NUMBER, 1);
+	std::cout << "First finsihed." << std::endl;
 	auto priority = run(PRIORITY, 1);
+	std::cout << "Second finsihed." << std::endl;
 
 	std::ofstream priority_file;
 	priority_file.open("..\\..\\priority.csv");
@@ -78,7 +80,9 @@ int main() {
 	number_memory << number.memory;
 
 	auto number_m = run(NUMBER, 4);
+	std::cout << "Third finsihed." << std::endl;
 	auto priority_m = run(PRIORITY, 4);
+	std::cout << "Fourth finsihed." << std::endl;
 
 	std::ofstream priority_file_m;
 	priority_file_m.open("..\\..\\priority_m.csv");
@@ -173,13 +177,18 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 		while (load->get_terminated()->size() != 30) {
 			lts->schedule();
 			for (int i = 0; i < num_cpus; ++i) {
-				if (cpus->at(i)->isDone()) {
-					
-					cpus->at(i)->setDone();
-					cpus->at(i)->setPC();
+				if (!cpus->at(i)->isDone() && load->get_waiting()->size() > 0) {
 					sts->schedule(i, load);
-					dmas->at(i)->setIO();
 				}
+				else {
+					if (cpus->at(i)->isDone()) {
+						cpus->at(i)->setDone();
+						cpus->at(i)->setPC();
+						sts->schedule(i, load);
+						dmas->at(i)->setIO();
+					}
+				}
+				std::cout << i << " ";
 				cpus->at(i)->step();
 			}
 		}

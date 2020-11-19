@@ -41,13 +41,13 @@ void CPU::step() {
 	switch (i.opcode()) {
 	case Opcode::RD: {
 		if (running->pc.process_status == WAIT) {
-			running->pc.process_status == RUN;
+			running->pc.process_status = RUN;
 		}
 		else {
 			// trigger interrupt
 			writePCBCache();
-			load->move_waiting(running);
 			done = true;
+			load->move_waiting(running);
 			return;
 		}
 		uint8_t r1 = i.ioR1();
@@ -78,6 +78,17 @@ void CPU::step() {
 	} break;
 
 	case Opcode::WR: {
+		if (running->pc.process_status == WAIT) {
+			running->pc.process_status = RUN;
+		}
+		else {
+			// trigger interrupt
+			writePCBCache();
+			done = true;
+			load->move_waiting(running);
+			
+			return;
+		}
 		uint32_t wrr1 = this->getReg(i.ioR1());
 		uint32_t wrr2 = this->getReg(i.ioR2());
 		uint32_t wraddr = i.shortAddr();
@@ -335,35 +346,35 @@ void CPU::writePCBCache() {
 	uint16_t j = 0;
 	uint16_t p;
 	for (i = 0; i < running->pc.job_instruction_count * 4; i += 4) {
-		running->pc.itCache[i] = cache[i] >> 24;
-		running->pc.itCache[i + 1] = cache[i] >> 16;
-		running->pc.itCache[i + 2] = cache[i] >> 8;
-		running->pc.itCache[i + 3] = cache[i];
+		running->pc.itCache[i] = cache[i];
+		running->pc.itCache[i + 1] = cache[i + 1];
+		running->pc.itCache[i + 2] = cache[i + 2];
+		running->pc.itCache[i + 3] = cache[i + 3];
 	}
 	p = i;
-	for (i = i; i < (running->b.input_buffer + p) * 4; i += 4) {
-		running->pc.ipCache[j] = cache[i] >> 24;
-		running->pc.ipCache[j + 1] = cache[i] >> 16;
-		running->pc.ipCache[j + 2] = cache[i] >> 8;
-		running->pc.ipCache[j + 3] = cache[i];
+	for (i = i; i < (running->b.input_buffer * 4) + p; i += 4) {
+		running->pc.ipCache[j] = cache[i];
+		running->pc.ipCache[j + 1] = cache[i + 1];
+		running->pc.ipCache[j + 2] = cache[i + 2];
+		running->pc.ipCache[j + 3] = cache[i + 3];
 		j += 4;
 	}
 	p = i;
 	j = 0;
-	for (i = i; i < (running->b.output_buffer + p) * 4; i += 4) {
-		running->pc.oCache[j] = cache[i] >> 24;
-		running->pc.oCache[j + 1] = cache[i] >> 16;
-		running->pc.oCache[j + 2] = cache[i] >> 8;
-		running->pc.oCache[j + 3] = cache[i];
+	for (i = i; i < (running->b.output_buffer* 4) + p; i += 4) {
+		running->pc.oCache[j] = cache[i];
+		running->pc.oCache[j + 1] = cache[i + 1];
+		running->pc.oCache[j + 2] = cache[i + 2];
+		running->pc.oCache[j + 3] = cache[i + 3];
 		j += 4;
 	}
 	p = i;
 	j = 0;
-	for (i = i; i < (running->b.temp_buffer + p) * 4; i += 4) {
-		running->pc.tempCache[j] = cache[i] >> 24;
-		running->pc.tempCache[j + 1] = cache[i] >> 16;
-		running->pc.tempCache[j + 2] = cache[i] >> 8;
-		running->pc.tempCache[j + 3] = cache[i];
+	for (i = i; i < (running->b.temp_buffer * 4) + p; i += 4) {
+		running->pc.tempCache[j] = cache[i];
+		running->pc.tempCache[j + 1] = cache[i + 1];
+		running->pc.tempCache[j + 2] = cache[i + 2];
+		running->pc.tempCache[j + 3] = cache[i + 3];
 	}
 	for (i = 0; i < 16; ++i) {
 		running->pc.registers[i] = registers[i];

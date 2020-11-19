@@ -34,7 +34,7 @@ namespace OSSim {
 		unsigned int job_size = 0;
 		unsigned int my_cpu = 0;
 		bool job_in_memory = false;
-		uint8_t registers[16];
+		int32_t registers[16];
 		uint8_t ipCache[72 * 4];
 		uint8_t oCache[72 * 4];
 		uint8_t itCache[72 * 4];
