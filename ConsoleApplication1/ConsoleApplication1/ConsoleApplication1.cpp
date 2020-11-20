@@ -177,7 +177,7 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 		while (load->get_terminated()->size() != 30) {
 			lts->schedule();
 			for (int i = 0; i < num_cpus; ++i) {
-				if (!cpus->at(i)->isDone() && load->get_waiting()->size() > 0) {
+				if (cpus->at(i)->isDone() && load->get_waiting()->size() > 0) {
 					sts->schedule(i, load);
 				}
 				else {

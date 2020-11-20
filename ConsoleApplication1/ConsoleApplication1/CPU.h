@@ -31,6 +31,7 @@ public:
 	PCB_info* get_running() { return this->running; }
 	DMA* dma;
 	int get_num_processes() { return num_processes; }
+	bool flag = false;
 private:
 	int32_t registers[REGISTER_COUNT];
 	uint32_t pc;
@@ -42,4 +43,5 @@ private:
 	int num_processes = 0;
 	PCB_info* running = nullptr;
 	loader* load;
+	
 };

@@ -15,7 +15,7 @@ public:
 	loader(string file_name, disk* d);
 	void load_file();
 	void move_new_ready(int index);
-	void move_running(int index);
+	void move_running(PCB_info*);
 	void move_waiting_ready(int index);
 	void move_waiting(PCB_info*);
 	void move_waiting_running(PCB_info*);

@@ -164,15 +164,20 @@ void loader::move_waiting_ready(int index) {
 	process->pc.process_status = RUN;
 	ready->push_back(process);
 }
-void loader::move_running(int index) {
-	PCB_info* process = ready->at(index);
+void loader::move_running(PCB_info* process) {
+	int index;
 	process->start = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i < ready->size(); ++i) {
+		if (process->pc.job_number == ready->at(i)->pc.job_number) {
+			index = i;
+		}
+	}
 	ready->erase(ready->begin() + index);
 	process->pc.process_status = RUN;
 	running->push_back(process);
 }
 void loader::move_waiting(PCB_info* process) {
-	int index;
+	int index = 0;
 	for (int i = 0; i < running->size(); ++i) {
 		if (process->pc.job_number == running->at(i)->pc.job_number) {
 			index = i;

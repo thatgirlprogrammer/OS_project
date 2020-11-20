@@ -47,6 +47,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 		}
 		cpus->at(cpu_number)->setValuePC(process->pc.program_counter - 4);
 		cpus->at(cpu_number)->set_running(process);
+		cpus->at(cpu_number)->setDone();
 		return;
 	}
 	if (ld->get_ready()->size() > 0) {
@@ -69,7 +70,9 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 		}
 		process->pc.my_cpu = cpu_number;
 		cpus->at(cpu_number)->set_running(process);
+		cpus->at(cpu_number)->setDone();
+		cpus->at(cpu_number)->setPC();
 		//cpus->at(cpu_number)->setBase(b);
-		load->move_running(0);
+		load->move_running(process);
 	}
 }
