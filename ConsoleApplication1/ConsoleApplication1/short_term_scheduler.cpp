@@ -10,6 +10,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 		int j;
 		int i = 0;
 		int p;
+		
 		for (j = 0; j < process->pc.job_instruction_count * 4; j += 4) {
 			cpus->at(cpu_number)->writeOneCache(j, process->pc.itCache[j]);
 			cpus->at(cpu_number)->writeOneCache(j + 1, process->pc.itCache[j + 1]);
@@ -44,7 +45,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 		}
 		uint8_t l;
 		for (l = 0; l < 16; ++l) {
-			cpus->at(cpu_number)->writeRegisters(j, process->pc.registers[j]);
+			cpus->at(cpu_number)->writeRegisters(l, process->pc.registers[l]);
 		}
 		cpus->at(cpu_number)->setValuePC(process->pc.program_counter - 4);
 		cpus->at(cpu_number)->set_running(process);

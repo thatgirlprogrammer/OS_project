@@ -34,25 +34,53 @@ std::string Memory::dump() {
 	output << "      00       04       08       0c" << std::endl;
 	int k = 0;
 	for (int i = 0; i < MEMORY; i += 16) {
+		int32_t value = fr[k].getData(0);
 		output << setfill('0') << setw(3) << right << hex << i << " | ";
-		for (int j = i; j < i + 4; j++) {
-			output << setfill('0') << setw(2) << right << hex << (int)fr[k].getData(j);
-		}
+		uint8_t small_value = value >> 24;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+		small_value = value >> 16;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+		small_value = value >> 8;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+		small_value = value;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+
 		output << " ";
-		++k;
-		for (int j = i + 4; j < i + 8; j++) {
-			output << setfill('0') << setw(2) << right << hex << (int)fr[k].getData(j);
-		}
-		++k;
+		value = fr[k].getData(1);
+		output << setfill('0') << setw(3) << right << hex << i << " | ";
+		small_value = value >> 24;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+		small_value = value >> 16;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+		small_value = value >> 8;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+		small_value = value;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+
 		output << " ";
-		for (int j = i + 8; j < i + 12; j++) {
-			output << setfill('0') << setw(2) << right << hex << (int)fr[k].getData(j);
-		}
-		++k;
+		value = fr[k].getData(2);
+		output << setfill('0') << setw(3) << right << hex << i << " | ";
+		small_value = value >> 24;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+		small_value = value >> 16;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+		small_value = value >> 8;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+		small_value = value;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+
 		output << " ";
-		for (int j = i + 12; j < i + 16; j++) {
-			output << setfill('0') << setw(2) << right << hex << (int)fr[k].getData(j);
-		}
+		
+		value = fr[k].getData(3);
+		output << setfill('0') << setw(3) << right << hex << i << " | ";
+		small_value = value >> 24;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+		small_value = value >> 16;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+		small_value = value >> 8;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
+		small_value = value;
+		output << setfill('0') << setw(2) << right << hex << (int)small_value;
 		output << dec << endl;
 		++k;
 	}

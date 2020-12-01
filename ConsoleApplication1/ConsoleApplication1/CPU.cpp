@@ -28,6 +28,7 @@ void CPU::setReg(uint8_t reg, int32_t value) {
 }
 
 void CPU::step() {
+	cout << endl << running->pc.job_number << " running ";
 	Instruction i = Instruction(0x13000000);
 	if (use_cache) {
 		i = Instruction(this->readCache(this->pc));
@@ -78,7 +79,7 @@ void CPU::step() {
 	} break;
 
 	case Opcode::WR: {
-		/*
+		
 		if (running->pc.process_status == WAIT) {
 			running->pc.process_status = RUN;
 		}
@@ -89,7 +90,7 @@ void CPU::step() {
 			load->move_waiting(running);
 			
 			return;
-		}*/
+		}
 		uint32_t wrr1 = this->getReg(i.ioR1());
 		uint32_t wrr2 = this->getReg(i.ioR2());
 		uint32_t wraddr = i.shortAddr();
@@ -239,8 +240,8 @@ void CPU::step() {
 		std::cout << "This is process " << running->pc.job_number;
 
 		int16_t j = 0;
-		for (int i = 0; i < running->pc.job_size; ++i) {
-			dma->write(running->pc.pages[i], running->pc.job_number, readCache(j), readCache(j + 4), readCache(j + 8), readCache(j + 12));
+		for (int i = 0; i < running->pc.frames.size(); ++i) {
+			dma->write(running->pc.frames[i], readCache(j), readCache(j + 4), readCache(j + 8), readCache(j + 12));
 			j += 16;
 		}
 
@@ -257,6 +258,7 @@ void CPU::step() {
 		++num_processes;
 		running->end = std::chrono::high_resolution_clock::now();
 		load->get_terminated()->push_back(running);
+		cout << " Size of terminated is " << load->get_terminated()->size() << endl;
 
 		for (int i = 0; i < load->get_running()->size(); ++i) {
 			if (load->get_running()->at(i) == this->running) {
@@ -356,12 +358,14 @@ void CPU::writePCBCache() {
 	uint16_t i;
 	uint16_t j = 0;
 	uint16_t p;
+	cout << endl << "Instruction count " << running->pc.job_instruction_count << endl;
 	for (i = 0; i < running->pc.job_instruction_count * 4; i += 4) {
 		running->pc.itCache[i] = cache[i];
 		running->pc.itCache[i + 1] = cache[i + 1];
 		running->pc.itCache[i + 2] = cache[i + 2];
 		running->pc.itCache[i + 3] = cache[i + 3];
 	}
+	cout << endl << " Finished this " << endl;
 	p = i;
 	for (i = i; i < (running->b.input_buffer * 4) + p; i += 4) {
 		running->pc.ipCache[j] = cache[i];
@@ -381,15 +385,19 @@ void CPU::writePCBCache() {
 	}
 	p = i;
 	j = 0;
+	cout << endl << "P is " << p << endl;
+	cout << endl << "The temp buff is " << running->b.temp_buffer << endl;
 	for (i = i; i < (running->b.temp_buffer * 4) + p; i += 4) {
 		running->pc.tempCache[j] = cache[i];
 		running->pc.tempCache[j + 1] = cache[i + 1];
 		running->pc.tempCache[j + 2] = cache[i + 2];
 		running->pc.tempCache[j + 3] = cache[i + 3];
+		j += 4;
 	}
 	uint8_t l;
 	for (l = 0; l < 16; ++l) {
-		running->pc.registers[l] = registers[l];
+		running->pc.registers[l] = getReg(l);
+		std::cout << (int)registers[l];
 	}
 	running->pc.program_counter = this->pc;
 }

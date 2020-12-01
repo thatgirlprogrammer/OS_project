@@ -177,6 +177,11 @@ void loader::move_running(PCB_info* process) {
 	running->push_back(process);
 }
 void loader::move_waiting(PCB_info* process) {
+	cout << endl << "The process is " << process->pc.job_number << endl;
+	cout << endl << "The size of running is " << running->size() << endl;
+	if (running->size() == 0) {
+		return;
+	}
 	int index = 0;
 	for (int i = 0; i < running->size(); ++i) {
 		if (process->pc.job_number == running->at(i)->pc.job_number) {
@@ -200,6 +205,7 @@ void loader::move_waiting_running(PCB_info* process) {
 	}
 	waiting->erase(waiting->begin() + index);
 	running->push_back(process);
+	cout << endl << process->pc.job_number << " added back to the running queue " << endl;
 }
 void loader::move_terminate(int index) {
 	PCB_info* process = running->at(index);

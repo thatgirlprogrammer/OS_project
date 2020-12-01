@@ -39,7 +39,7 @@ private:
 	bool done = false;
 	Memory* memory;
 	bool use_cache = true;
-	uint8_t cache[72 * 4];
+	uint8_t cache[100 * 4];
 	int num_processes = 0;
 	PCB_info* running = nullptr;
 	loader* load;
