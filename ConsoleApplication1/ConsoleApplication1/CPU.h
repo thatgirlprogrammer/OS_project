@@ -16,7 +16,7 @@ public:
 	uint32_t getPC() { return this->pc; }
 	void setPC() { pc = 0; }
 	void setValuePC(int value) { pc = value; }
-	void writeRegisters(int index, int32_t value) { registers[index] = value; }
+	void writeRegisters(uint8_t index, int32_t value) { registers[index] = value; }
 	void setBase(int b) { base = b; }
 	bool isDone() { return this->done; }
 	void setDone() { this->done = false; }

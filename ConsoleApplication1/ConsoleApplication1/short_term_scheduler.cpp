@@ -42,7 +42,8 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 			cpus->at(cpu_number)->writeOneCache(j + 3, process->pc.tempCache[i + 3]);
 			i += 4;
 		}
-		for (j = 0; j < 16; ++j) {
+		uint8_t l;
+		for (l = 0; l < 16; ++l) {
 			cpus->at(cpu_number)->writeRegisters(j, process->pc.registers[j]);
 		}
 		cpus->at(cpu_number)->setValuePC(process->pc.program_counter - 4);

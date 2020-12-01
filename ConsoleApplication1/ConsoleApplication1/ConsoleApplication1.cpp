@@ -114,12 +114,12 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 	disk* dsk = new disk;
 	Memory* ram = new Memory;
 	vector<DMA*>* dmas = new vector<DMA*>;
-	DMA* dma = new DMA(ram);
+	DMA* dma = new DMA(ram, page_t);
 	vector<CPU*>* cpus = new vector<CPU*>;
 	loader* load = new loader("./Program-File.txt", dsk);
 
 	for (int i = 0; i < num_cpus; ++i) {
-		dmas->push_back(new DMA(ram));
+		dmas->push_back(new DMA(ram, page_t));
 		cpus->push_back(new CPU(ram, dmas->at(i), i, load));
 	}
 
@@ -211,7 +211,7 @@ struct MethodStats run(SORT_METHOD method, int num_cpus) {
 
 	struct MethodStats stats = {
 		process_stats,
-	//	ram->dump(),
+		ram->dump(),
 	};
 
 	delete dsk;

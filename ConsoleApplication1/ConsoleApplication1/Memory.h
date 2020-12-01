@@ -24,7 +24,7 @@ public:
 	bool isOccupied(int num);
 	void deallocate(int num);
 	int freeFrame();
-	//std::string dump();
+	std::string dump();
 	unsigned long in_use = 0;
 private:
 	uint8_t memory[MEMORY];

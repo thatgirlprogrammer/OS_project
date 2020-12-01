@@ -27,32 +27,37 @@ void Memory::deallocate(int num) {
 	fr[num].setUse();
 }
 
-/*
+
 std::string Memory::dump() {
 	using namespace std;
 	std::stringstream output;
 	output << "      00       04       08       0c" << std::endl;
+	int k = 0;
 	for (int i = 0; i < MEMORY; i += 16) {
 		output << setfill('0') << setw(3) << right << hex << i << " | ";
 		for (int j = i; j < i + 4; j++) {
-			output << setfill('0') << setw(2) << right << hex << (int)this->memory[j];
+			output << setfill('0') << setw(2) << right << hex << (int)fr[k].getData(j);
 		}
 		output << " ";
+		++k;
 		for (int j = i + 4; j < i + 8; j++) {
-			output << setfill('0') << setw(2) << right << hex << (int)this->memory[j];
+			output << setfill('0') << setw(2) << right << hex << (int)fr[k].getData(j);
 		}
+		++k;
 		output << " ";
 		for (int j = i + 8; j < i + 12; j++) {
-			output << setfill('0') << setw(2) << right << hex << (int)this->memory[j];
+			output << setfill('0') << setw(2) << right << hex << (int)fr[k].getData(j);
 		}
+		++k;
 		output << " ";
 		for (int j = i + 12; j < i + 16; j++) {
-			output << setfill('0') << setw(2) << right << hex << (int)this->memory[j];
+			output << setfill('0') << setw(2) << right << hex << (int)fr[k].getData(j);
 		}
 		output << dec << endl;
+		++k;
 	}
 	return output.str();
-}*/
+}
 
 bool Memory::hasHole(int pages) {
 	int current = 0;
