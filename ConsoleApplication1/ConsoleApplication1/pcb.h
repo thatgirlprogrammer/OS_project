@@ -35,13 +35,15 @@ namespace OSSim {
 		unsigned int my_cpu = 0;
 		bool job_in_memory = false;
 		int32_t registers[16];
-		uint8_t ipCache[72 * 4];
-		uint8_t oCache[72 * 4];
-		uint8_t itCache[72 * 4];
-		uint8_t tempCache[72 * 4];
+		uint8_t ipCache[72 * 4] = { 0 };
+		uint8_t oCache[72 * 4] = { 0 };
+		uint8_t itCache[72 * 4] = { 0 };
+		uint8_t tempCache[72 * 4] = { 0 };
 		PROCESS_STATUS process_status = NEW;
 		int program_counter = 0;
 		std::vector<unsigned int> pages;
+		std::vector<bool> valid;
+		std::vector<bool> in_mem;
 		std::vector<unsigned int> frames;
 	};
 

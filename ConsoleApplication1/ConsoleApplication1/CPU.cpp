@@ -2,6 +2,8 @@
 
 #include "CPU.h"
 #include "Disassemble.h"
+#include <iostream>
+#include <iomanip>
 
 CPU::CPU(Memory* memory, DMA* dma, int num, loader* l) {
 	for (uint8_t i = 0; i < REGISTER_COUNT; i++)
@@ -28,9 +30,16 @@ void CPU::setReg(uint8_t reg, int32_t value) {
 }
 
 void CPU::step() {
-	cout << endl << running->pc.job_number << " running ";
+	std::cout << endl << running->pc.job_number << " running ";
+	if (load->on_terminate(running)) {
+		done = true;
+		return;
+	}
 	Instruction i = Instruction(0x13000000);
 	if (use_cache) {
+		if (readCache(this->pc) == -1) {
+			return;
+		}
 		i = Instruction(this->readCache(this->pc));
 	}
 	else {
@@ -60,7 +69,13 @@ void CPU::step() {
 		int32_t data;
 		if (rdaddr == 0) {
 			if (use_cache) {
+				if (readCache(r2) == -1) {
+					return;
+				}
 				data = readCache(r2);
+				if (data == -1) {
+					return;
+				}
 			}
 			else {
 		//		data = this->dma->read(r2 + (this->base * 4));
@@ -69,6 +84,9 @@ void CPU::step() {
 		else {
 			if (use_cache) {
 				data = readCache(rdaddr);
+				if (data == -1) {
+					return;
+				}
 			}
 			else {
 		//		data = this->dma->read(rdaddr + (this->base * 4));
@@ -120,6 +138,9 @@ void CPU::step() {
 		// LW and ST are never used with a non-zero shortAddr, and it's unspecified
 		// what they would do with a non-zero shortAddr, so this is the best I've got
 		if (use_cache) {
+			if (readCache(addr) == -1) {
+				return;
+			}
 			setReg(d, readCache(addr));
 		}
 		else {
@@ -241,12 +262,133 @@ void CPU::step() {
 
 		int16_t j = 0;
 		for (int i = 0; i < running->pc.frames.size(); ++i) {
+			while (valid[j] == false) {
+				j += 4;
+			}
 			dma->write(running->pc.frames[i], readCache(j), readCache(j + 4), readCache(j + 8), readCache(j + 12));
 			j += 16;
 		}
 
 		this->running->total_memory_in_use = memory->in_use;
+		reset_valid();
 
+		writePCBCache();
+
+		std::stringstream output; 
+		output << "Job Number " << running->pc.job_number;
+		output << std::endl << "Instruction Cache ";
+		output << std::endl;
+		int end = running->pc.job_instruction_count * 4;
+		output << "      00       04       08       0c" << std::endl;
+		for (int i = 0; i < end; i += 16) {
+			output << setfill('0') << setw(3) << right << hex << i << " | ";
+			//printf("%03x | ", i);
+			for (int j = i; j < i + 4 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.itCache[j];
+				//printf("%02x", this->memory[j]);
+			}
+			output << " ";
+			//printf(" ");
+			for (int j = i + 4; j < i + 8 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.itCache[j];
+			}
+			output << " ";
+			for (int j = i + 8; j < i + 12 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.itCache[j];
+			}
+			output << " ";
+			for (int j = i + 12; j < i + 16 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.itCache[j];
+			}
+			output << dec << endl;
+		}
+
+		output << std::endl << "Input Cache" << std::endl;
+		end = running->b.input_buffer * 4;
+		output << "      00       04       08       0c" << std::endl;
+		for (int i = 0; i < end; i += 16) {
+			output << setfill('0') << setw(3) << right << hex << i << " | ";
+			//printf("%03x | ", i);
+			for (int j = i; j < i + 4 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.ipCache[j];
+				//printf("%02x", this->memory[j]);
+			}
+			output << " ";
+			//printf(" ");
+			for (int j = i + 4; j < i + 8 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.ipCache[j];
+			}
+			output << " ";
+			for (int j = i + 8; j < i + 12 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.ipCache[j];
+			}
+			output << " ";
+			for (int j = i + 12; j < i + 16 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.ipCache[j];
+			}
+			output << dec << endl;
+		}
+
+		output << std::endl << "Output Cache" << std::endl;
+		end = running->b.output_buffer * 4;
+		output << "      00       04       08       0c" << std::endl;
+		for (int i = 0; i < end; i += 16) {
+			output << setfill('0') << setw(3) << right << hex << i << " | ";
+			//printf("%03x | ", i);
+			for (int j = i; j < i + 4 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.oCache[j];
+				//printf("%02x", this->memory[j]);
+			}
+			output << " ";
+			//printf(" ");
+			for (int j = i + 4; j < i + 8 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.oCache[j];
+			}
+			output << " ";
+			for (int j = i + 8; j < i + 12 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.oCache[j];
+			}
+			output << " ";
+			for (int j = i + 12; j < i + 16 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.oCache[j];
+			}
+			output << dec << endl;
+		}
+
+		output << std::endl << "Temp Cache" << std::endl;
+		end = running->b.temp_buffer * 4;
+		output << "      00       04       08       0c" << std::endl;
+		for (int i = 0; i < end; i += 16) {
+			output << setfill('0') << setw(3) << right << hex << i << " | ";
+			//printf("%03x | ", i);
+			for (int j = i; j < i + 4 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.tempCache[j];
+				//printf("%02x", this->memory[j]);
+			}
+			output << " ";
+			//printf(" ");
+			for (int j = i + 4; j < i + 8 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.tempCache[j];
+			}
+			output << " ";
+			for (int j = i + 8; j < i + 12 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.tempCache[j];
+			}
+			output << " ";
+			for (int j = i + 12; j < i + 16 && j < end; j++) {
+				output << setfill('0') << setw(2) << right << hex << (int)running->pc.tempCache[j];
+			}
+			output << dec << endl;
+		}
+
+		std::ofstream file;
+		file.open("..\\..\\job_memory.txt", std::ofstream::app);
+		file << "Job #";
+		file << (int)running->pc.job_number << endl;
+		file << output.str() << endl;
+		//file << "Data" << endl;
+		//file << data << endl;
+		file.close();
 		
 
 		for (int i = 0; i < this->running->pc.pages.size(); ++i) {
@@ -335,6 +477,16 @@ void CPU::step() {
 
 uint32_t CPU::readCache(uint16_t addr) {
 	assert(addr % 4 == 0);
+	if (valid[addr] == false) {
+		while (addr % 16 != 0) {
+			--addr;
+		}
+		running->pc.valid.at(addr/ 16) = false;
+		writePCBCache();
+		done = true;
+		load->move_waiting(running);
+		return -1;
+	}
 	int32_t result = cache[addr] << 24;
 	result |= cache[addr + 1] << 16;
 	result |= cache[addr + 2] << 8;
@@ -344,6 +496,16 @@ uint32_t CPU::readCache(uint16_t addr) {
 
 void CPU::writeCache(uint16_t addr, int32_t data) {
 	assert(addr % 4 == 0);
+	if (valid[addr] == false) {
+		while (addr % 16 != 0) {
+			--addr;
+		}
+		running->pc.valid.at(addr / 16) = false;
+		writePCBCache();
+		done = true;
+		load->move_waiting(running);
+		return;
+	}
 	cache[addr] = data >> 24;
 	cache[addr + 1] = data >> 16;
 	cache[addr + 2] = data >> 8;
@@ -360,27 +522,33 @@ void CPU::writePCBCache() {
 	uint16_t p;
 	cout << endl << "Instruction count " << running->pc.job_instruction_count << endl;
 	for (i = 0; i < running->pc.job_instruction_count * 4; i += 4) {
-		running->pc.itCache[i] = cache[i];
-		running->pc.itCache[i + 1] = cache[i + 1];
-		running->pc.itCache[i + 2] = cache[i + 2];
-		running->pc.itCache[i + 3] = cache[i + 3];
+		if (valid[i] == true) {
+			running->pc.itCache[i] = cache[i];
+			running->pc.itCache[i + 1] = cache[i + 1];
+			running->pc.itCache[i + 2] = cache[i + 2];
+			running->pc.itCache[i + 3] = cache[i + 3];
+		}
 	}
 	cout << endl << " Finished this " << endl;
 	p = i;
 	for (i = i; i < (running->b.input_buffer * 4) + p; i += 4) {
-		running->pc.ipCache[j] = cache[i];
-		running->pc.ipCache[j + 1] = cache[i + 1];
-		running->pc.ipCache[j + 2] = cache[i + 2];
-		running->pc.ipCache[j + 3] = cache[i + 3];
+		if (valid[i] == true) {
+			running->pc.ipCache[j] = cache[i];
+			running->pc.ipCache[j + 1] = cache[i + 1];
+			running->pc.ipCache[j + 2] = cache[i + 2];
+			running->pc.ipCache[j + 3] = cache[i + 3];
+		}
 		j += 4;
 	}
 	p = i;
 	j = 0;
 	for (i = i; i < (running->b.output_buffer* 4) + p; i += 4) {
-		running->pc.oCache[j] = cache[i];
-		running->pc.oCache[j + 1] = cache[i + 1];
-		running->pc.oCache[j + 2] = cache[i + 2];
-		running->pc.oCache[j + 3] = cache[i + 3];
+		if (valid[i] == true || i == p) {
+			running->pc.oCache[j] = cache[i];
+			running->pc.oCache[j + 1] = cache[i + 1];
+			running->pc.oCache[j + 2] = cache[i + 2];
+			running->pc.oCache[j + 3] = cache[i + 3];
+		}
 		j += 4;
 	}
 	p = i;
@@ -388,10 +556,12 @@ void CPU::writePCBCache() {
 	cout << endl << "P is " << p << endl;
 	cout << endl << "The temp buff is " << running->b.temp_buffer << endl;
 	for (i = i; i < (running->b.temp_buffer * 4) + p; i += 4) {
-		running->pc.tempCache[j] = cache[i];
-		running->pc.tempCache[j + 1] = cache[i + 1];
-		running->pc.tempCache[j + 2] = cache[i + 2];
-		running->pc.tempCache[j + 3] = cache[i + 3];
+		if (valid[i] == true) {
+			running->pc.tempCache[j] = cache[i];
+			running->pc.tempCache[j + 1] = cache[i + 1];
+			running->pc.tempCache[j + 2] = cache[i + 2];
+			running->pc.tempCache[j + 3] = cache[i + 3];
+		}
 		j += 4;
 	}
 	uint8_t l;

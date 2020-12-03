@@ -20,6 +20,7 @@ public:
 	void move_waiting(PCB_info*);
 	void move_waiting_running(PCB_info*);
 	void move_terminate(int index);
+	bool on_terminate(PCB_info* process);
 
 	vector<PCB_info*>* get_new_q() { return new_q; }
 	vector<PCB_info*>* get_ready() { return ready; }

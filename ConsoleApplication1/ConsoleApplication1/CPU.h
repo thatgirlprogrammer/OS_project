@@ -4,6 +4,7 @@
 #include "Memory.h"
 #include "DMA.h"
 #include "loader.h"
+#include <string>
 
 class CPU
 {
@@ -31,6 +32,12 @@ public:
 	PCB_info* get_running() { return this->running; }
 	DMA* dma;
 	int get_num_processes() { return num_processes; }
+	void set_valid(int index, bool flag) { valid[index] = flag; }
+	void reset_valid() {
+		for (int i = 0; i < 400; ++i) {
+			valid[i] = false;
+		}
+	}
 	bool flag = false;
 private:
 	int32_t registers[REGISTER_COUNT];
@@ -40,6 +47,7 @@ private:
 	Memory* memory;
 	bool use_cache = true;
 	uint8_t cache[100 * 4];
+	bool valid[100 * 4] = { false };
 	int num_processes = 0;
 	PCB_info* running = nullptr;
 	loader* load;

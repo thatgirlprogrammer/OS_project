@@ -117,6 +117,15 @@ void loader::load_file() {
 					index = 0;
 				}
 				info->pc.pages.push_back(current);
+				std::cout << "Value added to pages vector " << info->pc.pages.at(0) <<" " << current << std::endl;
+				if (info->pc.pages.size() <= 4) {
+					info->pc.valid.push_back(true);
+					info->pc.in_mem.push_back(true);
+				}
+				else {
+					info->pc.valid.push_back(false);
+					info->pc.in_mem.push_back(false);
+				}
 				std::cout << "Current page " << current << std::endl;
 				++current;
 				info->pc.job_size = (current - start);
@@ -130,6 +139,15 @@ void loader::load_file() {
 						dsk->write(current, array[0], array[1], array[2], array[3]);
 						index = 0;
 						info->pc.pages.push_back(current);
+						if (info->pc.pages.size() <= 4) {
+							info->pc.valid.push_back(true);
+							info->pc.in_mem.push_back(true);
+						}
+						else {
+							info->pc.valid.push_back(false);
+							info->pc.in_mem.push_back(false);
+						}
+						std::cout << "Value added to pages vector " << info->pc.pages.at(0) << " " << current << std::endl;
 						std::cout << "Current page " << current << std::endl;
 						++current;
 					}
@@ -213,4 +231,13 @@ void loader::move_terminate(int index) {
 	running->erase(running->begin() + index);
 	process->pc.process_status = TERMINATE;
 	terminated->push_back(process);
+}
+
+bool loader::on_terminate(PCB_info* process) {
+	for (int i = 0; i < terminated->size(); ++i) {
+		if (process->pc.job_number == terminated->at(i)->pc.job_number) {
+			return true;
+		}
+	}
+	return false;
 }

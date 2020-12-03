@@ -4,17 +4,17 @@
 #include "Memory.h"
 
 int32_t Memory::getMem(int num, int offset) {
-	int32_t result = fr[num].getData(offset);
+	int32_t result = fr[num]->getData(offset);
 	return result;
 }
 
 bool Memory::isOccupied(int num) {
-	return fr[num].inUse();
+	return fr[num]->inUse();
 }
 
 void Memory::setMem(int num, int32_t data1, int32_t data2, int32_t data3, int32_t data4) {
 //	std::cout << "Doing memory " << std::endl;
-	fr[num].writeData(data1, data2, data3, data4);
+	fr[num]->writeData(data1, data2, data3, data4);
 //	std::cout << "Memory in frame now: ";
 //	std::cout << fr[num].getData(0) << " ";
 //	std::cout << fr[num].getData(1) << " ";
@@ -24,7 +24,7 @@ void Memory::setMem(int num, int32_t data1, int32_t data2, int32_t data3, int32_
 }
 
 void Memory::deallocate(int num) {
-	fr[num].setUse();
+	fr[num]->setUse();
 }
 
 
@@ -34,7 +34,7 @@ std::string Memory::dump() {
 	output << "      00       04       08       0c" << std::endl;
 	int k = 0;
 	for (int i = 0; i < MEMORY; i += 16) {
-		int32_t value = fr[k].getData(0);
+		int32_t value = fr[k]->getData(0);
 		output << setfill('0') << setw(3) << right << hex << i << " | ";
 		uint8_t small_value = value >> 24;
 		output << setfill('0') << setw(2) << right << hex << (int)small_value;
@@ -46,7 +46,7 @@ std::string Memory::dump() {
 		output << setfill('0') << setw(2) << right << hex << (int)small_value;
 
 		output << " ";
-		value = fr[k].getData(1);
+		value = fr[k]->getData(1);
 		output << setfill('0') << setw(3) << right << hex << i << " | ";
 		small_value = value >> 24;
 		output << setfill('0') << setw(2) << right << hex << (int)small_value;
@@ -58,7 +58,7 @@ std::string Memory::dump() {
 		output << setfill('0') << setw(2) << right << hex << (int)small_value;
 
 		output << " ";
-		value = fr[k].getData(2);
+		value = fr[k]->getData(2);
 		output << setfill('0') << setw(3) << right << hex << i << " | ";
 		small_value = value >> 24;
 		output << setfill('0') << setw(2) << right << hex << (int)small_value;
@@ -71,7 +71,7 @@ std::string Memory::dump() {
 
 		output << " ";
 		
-		value = fr[k].getData(3);
+		value = fr[k]->getData(3);
 		output << setfill('0') << setw(3) << right << hex << i << " | ";
 		small_value = value >> 24;
 		output << setfill('0') << setw(2) << right << hex << (int)small_value;
@@ -90,7 +90,7 @@ std::string Memory::dump() {
 bool Memory::hasHole(int pages) {
 	int current = 0;
 	for (int i = 0; i < 256; ++i) {
-		if (!fr[i].inUse()) {
+		if (!fr[i]->inUse()) {
 			current++;
 		}
 		if (current >= pages) {
@@ -102,7 +102,7 @@ bool Memory::hasHole(int pages) {
 
 int Memory::freeFrame() {
 	for (int i = 0; i < 256; ++i) {
-		if (!fr[i].inUse()) {
+		if (!fr[i]->inUse()) {
 			return i;
 		}
 	}
