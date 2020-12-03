@@ -50,6 +50,7 @@ void CPU::step() {
 
 	switch (i.opcode()) {
 	case Opcode::RD: {
+		running->pc.io_requests += 1;
 		if (running->pc.process_status == WAIT) {
 			running->pc.process_status = RUN;
 		}
@@ -97,7 +98,7 @@ void CPU::step() {
 	} break;
 
 	case Opcode::WR: {
-		
+		running->pc.io_requests += 1;
 		if (running->pc.process_status == WAIT) {
 			running->pc.process_status = RUN;
 		}
@@ -257,7 +258,7 @@ void CPU::step() {
 			//	this->dma->write((i + (b * 4)), readCache(i));
 			}
 		}
-
+		running->total_memory_in_use = running->pc.frames.size();
 		std::cout << "This is process " << running->pc.job_number;
 
 		int16_t j = 0;
@@ -269,7 +270,7 @@ void CPU::step() {
 			j += 16;
 		}
 
-		this->running->total_memory_in_use = memory->in_use;
+		//this->running->total_memory_in_use = memory->in_use;
 		reset_valid();
 
 		writePCBCache();
@@ -391,7 +392,7 @@ void CPU::step() {
 		file.close();
 		
 
-		for (int i = 0; i < this->running->pc.pages.size(); ++i) {
+		for (int i = 0; i < this->running->pc.frames.size(); ++i) {
 			memory->deallocate(this->running->pc.frames.at(i));
 		}
 
@@ -478,10 +479,11 @@ void CPU::step() {
 uint32_t CPU::readCache(uint16_t addr) {
 	assert(addr % 4 == 0);
 	if (valid[addr] == false) {
+		running->pc.page_faults += 1;
 		while (addr % 16 != 0) {
 			--addr;
 		}
-		running->pc.valid.at(addr/ 16) = false;
+		running->pc.valid.at(addr/ 16) = true;
 		writePCBCache();
 		done = true;
 		load->move_waiting(running);
@@ -497,10 +499,11 @@ uint32_t CPU::readCache(uint16_t addr) {
 void CPU::writeCache(uint16_t addr, int32_t data) {
 	assert(addr % 4 == 0);
 	if (valid[addr] == false) {
+		running->pc.page_faults += 1;
 		while (addr % 16 != 0) {
 			--addr;
 		}
-		running->pc.valid.at(addr / 16) = false;
+		running->pc.valid.at(addr / 16) = true;
 		writePCBCache();
 		done = true;
 		load->move_waiting(running);

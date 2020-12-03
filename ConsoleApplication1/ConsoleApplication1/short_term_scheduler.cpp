@@ -8,7 +8,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 		//load->move_running(load->get_ready()->size() - 1);
 		bool found = true;
 		for (int i = 0; i < process->pc.valid.size(); ++i) {
-			if (process->pc.valid.at(i) = true && process->pc.in_mem.at(i) == false) {
+			if (process->pc.valid.at(i) == true && process->pc.in_mem.at(i) == false) {
 				if (mem->hasHole(1)) {
 					int32_t data1;
 					int32_t data2;
@@ -119,9 +119,14 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 			int p;
 
 			int index = 0;
-			bool val = !process->pc.valid.at(index);
+			bool val = process->pc.valid.at(index);
 
 			for (j = 0; j < process->pc.job_instruction_count * 4; j += 4) {
+				if (j % 16 == 0 && j != 0) {
+					++index;
+					val = process->pc.valid.at(index);
+					std::cout << val;
+				}
 				if (val) {
 					cpus->at(cpu_number)->writeOneCache(j, process->pc.itCache[j]);
 					cpus->at(cpu_number)->writeOneCache(j + 1, process->pc.itCache[j + 1]);
@@ -132,14 +137,15 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 					cpus->at(cpu_number)->set_valid(j + 2, true);
 					cpus->at(cpu_number)->set_valid(j + 3, true);
 				}
-				if (j % 16 == 0) {
-					++index;
-					val = !process->pc.valid.at(index);
-					std::cout << val;
-				}
+				
 			}
 			p = j;
 			for (j = j; j < (process->b.input_buffer * 4) + p; j += 4) {
+				if (j % 16 == 0) {
+					++index;
+					val = process->pc.valid.at(index);
+					std::cout << val;
+				}
 				if (val) {
 					cpus->at(cpu_number)->writeOneCache(j, process->pc.ipCache[i]);
 					cpus->at(cpu_number)->writeOneCache(j + 1, process->pc.ipCache[i + 1]);
@@ -151,14 +157,14 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 					cpus->at(cpu_number)->set_valid(j + 3, true);
 				}
 				i += 4;
-				if (j % 16 == 0) {
-					++index;
-					val = !process->pc.valid.at(index);
-				}
 			}
 			i = 0;
 			p = j;
 			for (j = j; j < (process->b.output_buffer * 4) + p; j += 4) {
+				if (j % 16 == 0) {
+					++index;
+					val = process->pc.valid.at(index);
+				}
 				if (val) {
 					cpus->at(cpu_number)->writeOneCache(j, process->pc.oCache[i]);
 					cpus->at(cpu_number)->writeOneCache(j + 1, process->pc.oCache[i + 1]);
@@ -170,14 +176,16 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 					cpus->at(cpu_number)->set_valid(j + 3, true);
 				}
 				i += 4;
-				if (j % 16 == 0) {
-					++index;
-					val = !process->pc.valid.at(index);
-				}
 			}
 			i = 0;
 			p = j;
 			for (j = j; j < (process->b.temp_buffer * 4) + p; j += 4) {
+				if (j % 16 == 0) {
+					++index;
+					if (index < process->pc.pages.size()) {
+						val = process->pc.valid.at(index);
+					}
+				}
 				if (val) {
 					cpus->at(cpu_number)->writeOneCache(j, process->pc.tempCache[i]);
 					cpus->at(cpu_number)->writeOneCache(j + 1, process->pc.tempCache[i + 1]);
@@ -189,12 +197,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 					cpus->at(cpu_number)->set_valid(j + 3, true);
 				}
 				i += 4;
-				if (j % 16 == 0) {
-					++index;
-					if (index < process->pc.pages.size()) {
-						val = !process->pc.valid.at(index);
-					}
-				}
+				
 			}
 			uint8_t l;
 			for (l = 0; l < 16; ++l) {

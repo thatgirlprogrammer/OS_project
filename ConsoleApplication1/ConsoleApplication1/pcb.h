@@ -33,6 +33,8 @@ namespace OSSim {
 		unsigned int job_instruction_count = 0;
 		unsigned int job_size = 0;
 		unsigned int my_cpu = 0;
+		unsigned int page_faults = 0;
+		unsigned int io_requests = 0;
 		bool job_in_memory = false;
 		int32_t registers[16];
 		uint8_t ipCache[72 * 4] = { 0 };
@@ -56,6 +58,6 @@ namespace OSSim {
 		std::chrono::steady_clock::time_point start;
 		std::chrono::steady_clock::time_point end;
 		int ios;
-		unsigned long total_memory_in_use;
+		unsigned int total_memory_in_use;
 	};
 }
