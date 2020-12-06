@@ -24,7 +24,6 @@ int32_t page::getData(int index) {
 }
 
 void page::writeData(int32_t d1, int32_t d2, int32_t d3, int32_t d4) {
-	std::cout << d1 << " " << d2 << " " << d3 << " " << d4 << "\n";
 	data1 = d1;
 	data2 = d2;
 	data3 = d3;

@@ -13,20 +13,12 @@ bool Memory::isOccupied(int num) {
 }
 
 void Memory::setMem(int num, int32_t data1, int32_t data2, int32_t data3, int32_t data4) {
-//	std::cout << "Doing memory " << std::endl;
 	fr[num]->writeData(data1, data2, data3, data4);
-//	std::cout << "Memory in frame now: ";
-//	std::cout << fr[num].getData(0) << " ";
-//	std::cout << fr[num].getData(1) << " ";
-//	std::cout << fr[num].getData(2) << " ";
-//	std::cout << fr[num].getData(3) << " ";
-//	std::cout << std::endl;
 }
 
 void Memory::deallocate(int num) {
 	fr[num]->setUse();
 }
-
 
 std::string Memory::dump() {
 	using namespace std;

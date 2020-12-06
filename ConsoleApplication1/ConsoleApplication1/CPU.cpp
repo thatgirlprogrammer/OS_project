@@ -30,7 +30,6 @@ void CPU::setReg(uint8_t reg, int32_t value) {
 }
 
 void CPU::step() {
-	std::cout << endl << running->pc.job_number << " running ";
 	if (load->on_terminate(running)) {
 		done = true;
 		return;
@@ -46,7 +45,7 @@ void CPU::step() {
 //		i = Instruction(this->memory->getMem(this->pc));
 	}
 	this->pc += 4;
-	disassembleInstruction(i);
+	//disassembleInstruction(i);
 
 	switch (i.opcode()) {
 	case Opcode::RD: {
@@ -254,12 +253,8 @@ void CPU::step() {
 		if (use_cache) {
 			uint16_t b = this->running->pc.job_memory_address;
 			auto size = this->running->pc.job_size;
-			for (int i = 0; i < size * 4; i += 4) {
-			//	this->dma->write((i + (b * 4)), readCache(i));
-			}
 		}
 		running->total_memory_in_use = running->pc.frames.size();
-		std::cout << "This is process " << running->pc.job_number;
 
 		int16_t j = 0;
 		for (int i = 0; i < running->pc.frames.size(); ++i) {
@@ -269,11 +264,55 @@ void CPU::step() {
 			dma->write(running->pc.frames[i], readCache(j), readCache(j + 4), readCache(j + 8), readCache(j + 12));
 			j += 16;
 		}
-
-		//this->running->total_memory_in_use = memory->in_use;
+		auto time = std::chrono::duration_cast<std::chrono::microseconds>(running->waiting.at(1) - running->waiting.at(0)).count();
+		for (int i = 0; i < running->waiting.size() / 2; ++i) {
+			time += std::chrono::duration_cast<std::chrono::microseconds>(running->waiting.at(i + 1) - running->waiting.at(i)).count();
+		}
+		stringstream l; 
+		l << time;
+		running->wait = l.str();
 		reset_valid();
 
 		writePCBCache();
+
+		bool zero = false; bool one = false; bool two = false; bool three = false;
+
+		for (int i = 0; i < running->pc.num_cpus.size(); ++i) {
+			switch (running->pc.num_cpus.at(i)) {
+			case 0: {
+				zero = true;
+			} break;
+			case 1: {
+				one = true;
+			} break;
+			case 2: {
+				two = true;
+			} break;
+			case 3: {
+				three = true;
+			} break;
+			}
+		}
+
+		int num = 0;
+		if (zero) {
+			running->pc.on_zero = true;
+			++num;
+		}
+		if (one) {
+			running->pc.on_one = true;
+			++num;
+		}
+		if (two) {
+			running->pc.on_two = true;
+			++num;
+		}
+		if (three) {
+			running->pc.on_three = true;
+			++num;
+		}
+
+		running->pc.my_cpu = num;
 
 		std::stringstream output; 
 		output << "Job Number " << running->pc.job_number;
@@ -401,7 +440,6 @@ void CPU::step() {
 		++num_processes;
 		running->end = std::chrono::high_resolution_clock::now();
 		load->get_terminated()->push_back(running);
-		cout << " Size of terminated is " << load->get_terminated()->size() << endl;
 
 		for (int i = 0; i < load->get_running()->size(); ++i) {
 			if (load->get_running()->at(i) == this->running) {
@@ -523,7 +561,6 @@ void CPU::writePCBCache() {
 	uint16_t i;
 	uint16_t j = 0;
 	uint16_t p;
-	cout << endl << "Instruction count " << running->pc.job_instruction_count << endl;
 	for (i = 0; i < running->pc.job_instruction_count * 4; i += 4) {
 		if (valid[i] == true) {
 			running->pc.itCache[i] = cache[i];
@@ -532,7 +569,6 @@ void CPU::writePCBCache() {
 			running->pc.itCache[i + 3] = cache[i + 3];
 		}
 	}
-	cout << endl << " Finished this " << endl;
 	p = i;
 	for (i = i; i < (running->b.input_buffer * 4) + p; i += 4) {
 		if (valid[i] == true) {
@@ -556,8 +592,6 @@ void CPU::writePCBCache() {
 	}
 	p = i;
 	j = 0;
-	cout << endl << "P is " << p << endl;
-	cout << endl << "The temp buff is " << running->b.temp_buffer << endl;
 	for (i = i; i < (running->b.temp_buffer * 4) + p; i += 4) {
 		if (valid[i] == true) {
 			running->pc.tempCache[j] = cache[i];
@@ -570,7 +604,6 @@ void CPU::writePCBCache() {
 	uint8_t l;
 	for (l = 0; l < 16; ++l) {
 		running->pc.registers[l] = getReg(l);
-		std::cout << (int)registers[l];
 	}
 	running->pc.program_counter = this->pc;
 }

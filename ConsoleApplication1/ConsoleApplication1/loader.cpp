@@ -30,7 +30,6 @@ void loader::load_file() {
 			if (line.find("JOB") != std::string::npos) {
 				info = new PCB_info;
 				start = current;
-				//cout << "Job encountered." << "\n";
 				string num1 = "0x";
 				string num2 = "0x";
 				string num3 = "0x";
@@ -117,7 +116,6 @@ void loader::load_file() {
 					index = 0;
 				}
 				info->pc.pages.push_back(current);
-				std::cout << "Value added to pages vector " << info->pc.pages.at(0) <<" " << current << std::endl;
 				if (info->pc.pages.size() <= 4) {
 					info->pc.valid.push_back(true);
 					info->pc.in_mem.push_back(true);
@@ -126,7 +124,6 @@ void loader::load_file() {
 					info->pc.valid.push_back(false);
 					info->pc.in_mem.push_back(false);
 				}
-				std::cout << "Current page " << current << std::endl;
 				++current;
 				info->pc.job_size = (current - start);
 			}
@@ -147,8 +144,6 @@ void loader::load_file() {
 							info->pc.valid.push_back(false);
 							info->pc.in_mem.push_back(false);
 						}
-						std::cout << "Value added to pages vector " << info->pc.pages.at(0) << " " << current << std::endl;
-						std::cout << "Current page " << current << std::endl;
 						++current;
 					}
 					int32_t number = strtoul(line.c_str(), nullptr, 16);
@@ -173,6 +168,8 @@ void loader::move_new_ready(int index) {
 	process->pc.process_status = READY;
 	ready->push_back(process);
 
+	process->waiting.push_back(std::chrono::high_resolution_clock::now());
+
 	move_new_ready_busy = false;
 }
 
@@ -185,6 +182,7 @@ void loader::move_waiting_ready(int index) {
 void loader::move_running(PCB_info* process) {
 	int index;
 	process->start = std::chrono::high_resolution_clock::now();
+	process->waiting.push_back(std::chrono::high_resolution_clock::now());
 	for (int i = 0; i < ready->size(); ++i) {
 		if (process->pc.job_number == ready->at(i)->pc.job_number) {
 			index = i;
@@ -195,8 +193,6 @@ void loader::move_running(PCB_info* process) {
 	running->push_back(process);
 }
 void loader::move_waiting(PCB_info* process) {
-	cout << endl << "The process is " << process->pc.job_number << endl;
-	cout << endl << "The size of running is " << running->size() << endl;
 	if (running->size() == 0) {
 		return;
 	}
@@ -205,14 +201,11 @@ void loader::move_waiting(PCB_info* process) {
 		if (process->pc.job_number == running->at(i)->pc.job_number) {
 			index = i;
 		}
-//		if (index == running->size() && index != i){
-
-//		}
 	}
-//	PCB_info* process = running->at(index);
 	running->erase(running->begin() + index);
 	process->pc.process_status = WAIT;
 	waiting->push_back(process);
+	process->waiting.push_back(std::chrono::high_resolution_clock::now());
 }
 void loader::move_waiting_running(PCB_info* process) {
 	int index;
@@ -223,7 +216,7 @@ void loader::move_waiting_running(PCB_info* process) {
 	}
 	waiting->erase(waiting->begin() + index);
 	running->push_back(process);
-	cout << endl << process->pc.job_number << " added back to the running queue " << endl;
+	process->waiting.push_back(std::chrono::high_resolution_clock::now());
 }
 void loader::move_terminate(int index) {
 	PCB_info* process = running->at(index);

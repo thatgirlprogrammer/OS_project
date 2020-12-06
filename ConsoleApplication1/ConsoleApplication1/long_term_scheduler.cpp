@@ -24,7 +24,6 @@ void long_term_scheduler::schedule() {
 				int32_t data2 = dsk->read(pcb->pc.pages.at(j), 1);
 				int32_t data3 = dsk->read(pcb->pc.pages.at(j), 2);
 				int32_t data4 = dsk->read(pcb->pc.pages.at(j), 3);
-				std::cout << "I got from page " << pcb->pc.pages.at(j) << " the values " << data1 << " " << data2 << " " << data3 << " " << data4 << std::endl;
 				
 				cache[k] = data1 >> 24;
 				cache[k + 1] = data1 >> 16;
@@ -50,7 +49,6 @@ void long_term_scheduler::schedule() {
 				
 				if (j < 4) {
 					page_t->addPage(frame, pcb->pc.job_number, pcb->pc.pages.at(j));
-					std::cout << "My frame number is " << frame << std::endl;
 					pcb->pc.frames.push_back(frame);
 					write_to_ram(frame, data1, data2, data3, data4);
 					frame = ram->freeFrame();
@@ -72,35 +70,6 @@ void long_term_scheduler::schedule() {
 						else {
 							data = data4;
 						}
-						/*
-						if (k < pcb->pc.job_instruction_count * 4) {
-							pcb->pc.itCache[k] = data >> 24;
-							pcb->pc.itCache[k + 1] = data >> 16;
-							pcb->pc.itCache[k + 2] = data >> 8;
-							pcb->pc.itCache[k + 3] = data;
-							start_input = k + 4;
-						}
-						else if (k - start_input < pcb->b.input_buffer * 4) {
-							pcb->pc.ipCache[k - start_input] = data >> 24;
-							pcb->pc.ipCache[(k - start_input) + 1] = data >> 16;
-							pcb->pc.ipCache[(k - start_input) + 2] = data >> 8;
-							pcb->pc.ipCache[(k - start_input) + 3] = data;
-							start_output = k + 4;
-						}
-						else if (k - start_output < pcb->b.output_buffer * 4) {
-							pcb->pc.oCache[k - start_output] = data >> 24;
-							pcb->pc.oCache[(k - start_output) + 1] = data >> 16;
-							pcb->pc.oCache[(k - start_output) + 2] = data >> 8;
-							pcb->pc.oCache[(k - start_output) + 3] = data;
-							start_temp = k + 4;
-						}
-						else {
-							pcb->pc.tempCache[k - start_temp] = data >> 24;
-							pcb->pc.tempCache[(k - start_temp) + 1] = data >> 16;
-							pcb->pc.tempCache[(k - start_temp) + 2] = data >> 8;
-							pcb->pc.tempCache[(k - start_temp) + 3] = data;
-						}
-						k += 4;*/
 					}
 				}
 				
@@ -116,7 +85,6 @@ void long_term_scheduler::schedule() {
 				pcb->pc.itCache[l + 3] = cache[l + 3];
 				
 			}
-			cout << endl << " Finished this " << endl;
 			
 			p = l;
 			for (l = l; l < (pcb->b.input_buffer * 4) + p; l += 4) {
@@ -140,8 +108,6 @@ void long_term_scheduler::schedule() {
 			}
 			p = l;
 			j = 0;
-			cout << endl << "P is " << p << endl;
-			cout << endl << "The temp buff is " << pcb->b.temp_buffer << endl;
 			for (l = l; l < (pcb->b.temp_buffer * 4) + p; l += 4) {
 			
 					pcb->pc.tempCache[j] = cache[l];

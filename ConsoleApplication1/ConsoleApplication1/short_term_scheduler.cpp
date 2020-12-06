@@ -4,8 +4,6 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 	if (load->get_waiting()->size() > 0) {
 		PCB_info* process = load->get_waiting()->at(0);
 		cpus->at(cpu_number)->reset_valid();
-		//load->move_waiting_ready(0);
-		//load->move_running(load->get_ready()->size() - 1);
 		bool found = true;
 		for (int i = 0; i < process->pc.valid.size(); ++i) {
 			if (process->pc.valid.at(i) == true && process->pc.in_mem.at(i) == false) {
@@ -102,7 +100,6 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 					process->pc.in_mem.at(i) = true;
 					int index = mem->freeFrame();
 					page_t->addPage(index, process->pc.job_number, process->pc.pages.at(i));
-					std::cout << "My frame number is " << index << std::endl;
 					process->pc.frames.push_back(index);
 					mem->setMem(index, data1, data2, data3, data4);
 				}
@@ -112,6 +109,7 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 			}
 		}
 		if (found) {
+			process->pc.num_cpus.push_back(cpu_number);
 			load->move_waiting_running(process);
 			process->pc.process_status = WAIT;
 			int j;
@@ -125,7 +123,6 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 				if (j % 16 == 0 && j != 0) {
 					++index;
 					val = process->pc.valid.at(index);
-					std::cout << val;
 				}
 				if (val) {
 					cpus->at(cpu_number)->writeOneCache(j, process->pc.itCache[j]);
@@ -144,7 +141,6 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 				if (j % 16 == 0) {
 					++index;
 					val = process->pc.valid.at(index);
-					std::cout << val;
 				}
 				if (val) {
 					cpus->at(cpu_number)->writeOneCache(j, process->pc.ipCache[i]);
@@ -212,43 +208,37 @@ void short_term_scheduler::schedule(int cpu_number, loader* ld) {
 	if (ld->get_ready()->size() > 0) {
 		PCB_info* process = ld->get_ready()->at(0);
 		cpus->at(cpu_number)->reset_valid();
-		//uint16_t b = process->pc.job_memory_address;
 		vector<unsigned int> vec = process->pc.pages;
 		int16_t j = 0;
 		for (int i = 0; i < 4; ++i) {
 			int frame = page_t->getPage(process->pc.job_number, process->pc.pages.at(i));
-			std::cout << "My frame is from " << frame << std::endl;
 			cpus->at(cpu_number)->set_valid(j, true);
 			cpus->at(cpu_number)->set_valid(j + 1, true);
 			cpus->at(cpu_number)->set_valid(j + 2, true);
 			cpus->at(cpu_number)->set_valid(j + 3, true);
 			cpus->at(cpu_number)->writeCache(j, mem->getMem(frame, 0));
-			std::cout << "At " << j << " in CPU we wrote " <<  mem->getMem(frame, 0) << std::endl;
 			cpus->at(cpu_number)->set_valid(j + 4, true);
 			cpus->at(cpu_number)->set_valid(j + 5, true);
 			cpus->at(cpu_number)->set_valid(j + 6, true);
 			cpus->at(cpu_number)->set_valid(j + 7, true);
 			cpus->at(cpu_number)->writeCache(j + 4, mem->getMem(frame, 1));
-			std::cout << "At " << j + 4 << " in CPU we wrote " << mem->getMem(frame, 1) << std::endl;
 			cpus->at(cpu_number)->set_valid(j + 8, true);
 			cpus->at(cpu_number)->set_valid(j + 9, true);
 			cpus->at(cpu_number)->set_valid(j + 10, true);
 			cpus->at(cpu_number)->set_valid(j + 11, true);
 			cpus->at(cpu_number)->writeCache(j + 8, mem->getMem(frame, 2));
-			std::cout << "At " << j + 8 << " in CPU we wrote " << mem->getMem(frame, 2) << std::endl;
 			cpus->at(cpu_number)->set_valid(j + 12, true);
 			cpus->at(cpu_number)->set_valid(j + 13, true);
 			cpus->at(cpu_number)->set_valid(j + 14, true);
 			cpus->at(cpu_number)->set_valid(j + 15, true);
 			cpus->at(cpu_number)->writeCache(j + 12, mem->getMem(frame, 3));
-			std::cout << "At " << j + 12 << " in CPU we wrote " << mem->getMem(frame, 3) << std::endl;
 			j += 16;
 		}
 		process->pc.my_cpu = cpu_number;
+		process->pc.num_cpus.push_back(cpu_number);
 		cpus->at(cpu_number)->set_running(process);
 		cpus->at(cpu_number)->setDone();
 		cpus->at(cpu_number)->setPC();
-		//cpus->at(cpu_number)->setBase(b);
 		load->move_running(process);
 	}
 }

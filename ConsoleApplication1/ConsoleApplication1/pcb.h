@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <chrono>
+#include <string>
 
 namespace OSSim {
 	
@@ -43,10 +44,15 @@ namespace OSSim {
 		uint8_t tempCache[72 * 4] = { 0 };
 		PROCESS_STATUS process_status = NEW;
 		int program_counter = 0;
+		std::vector<unsigned int> num_cpus;
 		std::vector<unsigned int> pages;
 		std::vector<bool> valid;
 		std::vector<bool> in_mem;
 		std::vector<unsigned int> frames;
+		bool on_zero = false;
+		bool on_one = false;
+		bool on_two = false;
+		bool on_three = false;
 	};
 
 	struct PCB_info {
@@ -57,6 +63,8 @@ namespace OSSim {
 		std::chrono::steady_clock::time_point enter_new;
 		std::chrono::steady_clock::time_point start;
 		std::chrono::steady_clock::time_point end;
+		std::vector<std::chrono::steady_clock::time_point> waiting;
+		std::string wait;
 		int ios;
 		unsigned int total_memory_in_use;
 	};
