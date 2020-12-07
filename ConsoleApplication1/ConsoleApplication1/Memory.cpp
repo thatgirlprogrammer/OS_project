@@ -39,7 +39,7 @@ std::string Memory::dump() {
 
 		output << " ";
 		value = fr[k]->getData(1);
-		output << setfill('0') << setw(3) << right << hex << i << " | ";
+	//	output << setfill('0') << setw(3) << right << hex << i << " | ";
 		small_value = value >> 24;
 		output << setfill('0') << setw(2) << right << hex << (int)small_value;
 		small_value = value >> 16;
@@ -51,7 +51,7 @@ std::string Memory::dump() {
 
 		output << " ";
 		value = fr[k]->getData(2);
-		output << setfill('0') << setw(3) << right << hex << i << " | ";
+	//	output << setfill('0') << setw(3) << right << hex << i << " | ";
 		small_value = value >> 24;
 		output << setfill('0') << setw(2) << right << hex << (int)small_value;
 		small_value = value >> 16;
@@ -64,7 +64,7 @@ std::string Memory::dump() {
 		output << " ";
 		
 		value = fr[k]->getData(3);
-		output << setfill('0') << setw(3) << right << hex << i << " | ";
+	//	output << setfill('0') << setw(3) << right << hex << i << " | ";
 		small_value = value >> 24;
 		output << setfill('0') << setw(2) << right << hex << (int)small_value;
 		small_value = value >> 16;
